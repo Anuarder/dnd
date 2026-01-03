@@ -1,0 +1,99 @@
+#!/usr/bin/env sh
+#
+# Git Hook: post-checkout
+# Validates branch names when creating new branches
+# If invalid, deletes the branch and switches back to previous branch
+#
+
+# Arguments from git:
+# $1 = ref of the previous HEAD
+# $2 = ref of the new HEAD
+# $3 = flag indicating whether it was a branch checkout (1) or file checkout (0)
+
+PREV_HEAD=$1
+NEW_HEAD=$2
+BRANCH_CHECKOUT=$3
+
+# Only run for branch checkouts
+if [ "$BRANCH_CHECKOUT" != "1" ]; then
+  exit 0
+fi
+
+# Get the current branch name
+BRANCH_NAME=$(git symbolic-ref --short HEAD 2>/dev/null)
+
+# Skip if we can't determine the branch name (detached HEAD state)
+if [ -z "$BRANCH_NAME" ]; then
+  exit 0
+fi
+
+# Skip validation for protected branches
+if [ "$BRANCH_NAME" = "main" ] || [ "$BRANCH_NAME" = "master" ] || [ "$BRANCH_NAME" = "develop" ] || [ "$BRANCH_NAME" = "development" ]; then
+  exit 0
+fi
+
+# Get the previous branch name (where we came from)
+PREV_BRANCH=$(git reflog show --format="%gd %gs" | grep "checkout: moving from" | head -1 | sed 's/.*moving from \([^ ]*\) to.*/\1/')
+
+# Check if this is a new branch (doesn't exist on remote)
+# We check if the branch exists on the remote to determine if it's newly created
+REMOTE_BRANCH=$(git rev-parse --verify --quiet "origin/$BRANCH_NAME" 2>/dev/null)
+
+# If the branch exists on remote, it's not a new branch - skip validation
+if [ -n "$REMOTE_BRANCH" ]; then
+  exit 0
+fi
+
+# Validate branch name format: (feature|feat|fix|hotfix|bugfix|maintenance|infra|epic|renovate)/kan-<NUMBER>
+PATTERN="^(renovate|feature|feat|hotfix|fix|bugfix|maintenance|infra|epic)/kan-[0-9]+$"
+
+if ! echo "$BRANCH_NAME" | grep -qE "$PATTERN"; then
+  echo ""
+  echo "❌ Invalid branch name: $BRANCH_NAME"
+  echo ""
+  echo "Branch name must follow the convention:"
+  echo "  <type>/kan-<number>"
+  echo ""
+  echo "Allowed types:"
+  echo "  - feature (or feat)"
+  echo "  - fix (or hotfix or bugfix)"
+  echo "  - maintenance"
+  echo "  - infra"
+  echo "  - epic"
+  echo "  - renovate"
+  echo ""
+  echo "Examples of valid branch names:"
+  echo "  ✅ feature/kan-123"
+  echo "  ✅ fix/kan-0"
+  echo "  ✅ epic/kan-9999"
+  echo "  ✅ infra/kan-1325"
+  echo ""
+  echo "Examples of invalid branch names:"
+  echo "  ❌ feature           (missing /kan-<number>)"
+  echo "  ❌ kan-123           (missing type prefix)"
+  echo "  ❌ some-branch-name  (doesn't follow convention)"
+  echo ""
+
+  # Switch back to the previous branch
+  if [ -n "$PREV_BRANCH" ]; then
+    echo "⚠️  Switching back to: $PREV_BRANCH"
+    git checkout -q "$PREV_BRANCH" 2>/dev/null
+
+    # Delete the invalid branch
+    git branch -D "$BRANCH_NAME" 2>/dev/null
+    echo "🗑️  Deleted invalid branch: $BRANCH_NAME"
+  else
+    echo "⚠️  Please delete this branch manually:"
+    echo "  git checkout <previous-branch>"
+    echo "  git branch -D $BRANCH_NAME"
+  fi
+
+  echo ""
+  echo "Please create a branch with the correct format:"
+  echo "  git checkout -b <type>/kan-<number>"
+  echo ""
+  exit 1
+fi
+
+exit 0
+

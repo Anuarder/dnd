@@ -1,0 +1,62 @@
+#!/usr/bin/env sh
+#
+# Git Hook: commit-msg
+# Validates commit message length
+#
+
+set -e
+
+if [ -z "$1" ]; then
+  echo "❌ Error: Commit message file not provided"
+  exit 1
+fi
+
+COMMIT_MSG_FILE=$1
+
+# Check if we're in a rebase state - skip validation during rebases
+GIT_DIR=$(git rev-parse --git-dir 2>/dev/null)
+if [ -d "$GIT_DIR/rebase-merge" ] || [ -d "$GIT_DIR/rebase-apply" ]; then
+  exit 0
+fi
+
+# Read the commit message
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Skip validation for merge commits
+if echo "$COMMIT_MSG" | grep -qE "^Merge "; then
+  exit 0
+fi
+
+# Get the first line (header)
+HEADER=$(echo "$COMMIT_MSG" | head -n 1)
+HEADER_LENGTH=${#HEADER}
+
+# Minimum length check (at least 3 characters for meaningful message)
+if [ $HEADER_LENGTH -lt 3 ]; then
+  echo "❌ Commit message is too short!"
+  echo ""
+  echo "Minimum length: 3 characters"
+  echo "Your message length: $HEADER_LENGTH characters"
+  echo ""
+  echo "Please provide a more descriptive commit message."
+  echo ""
+  echo "Your commit message:"
+  echo "  $HEADER"
+  exit 1
+fi
+
+# Maximum length check (100 characters for better readability)
+if [ $HEADER_LENGTH -gt 100 ]; then
+  echo "❌ Commit message is too long!"
+  echo ""
+  echo "Maximum length: 100 characters"
+  echo "Your message length: $HEADER_LENGTH characters"
+  echo ""
+  echo "Please keep your commit message concise."
+  echo ""
+  echo "Your commit message:"
+  echo "  $HEADER"
+  exit 1
+fi
+
+exit 0

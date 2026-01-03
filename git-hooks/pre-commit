@@ -1,0 +1,60 @@
+#!/usr/bin/env sh
+#
+# Git Hook: pre-commit
+# Runs frontend linting and formatting on staged files
+#
+
+# Get the root directory of the git repository
+ROOT_DIR=$(git rev-parse --show-toplevel 2>/dev/null)
+
+if [ -z "$ROOT_DIR" ]; then
+  echo "❌ Error: Not in a git repository"
+  exit 1
+fi
+
+# Get staged files in frontend directory
+STAGED_FRONTEND_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep "^frontend/" | grep -E "\.(vue|ts|js|tsx)$" || true)
+
+if [ -n "$STAGED_FRONTEND_FILES" ]; then
+  # Convert absolute paths to relative paths from frontend directory
+  FRONTEND_FILES=$(echo "$STAGED_FRONTEND_FILES" | sed 's|^frontend/||' | tr '\n' ' ')
+
+  # Only run linting if we have files after transformation
+  if [ -n "$FRONTEND_FILES" ] && [ "$FRONTEND_FILES" != " " ]; then
+    # Call the frontend lint utility with project directory and files
+    "$ROOT_DIR/git-hooks/utils/frontend-lint.sh" "$ROOT_DIR/frontend" $FRONTEND_FILES
+    FRONTEND_EXIT_CODE=$?
+
+    if [ $FRONTEND_EXIT_CODE -ne 0 ]; then
+      exit $FRONTEND_EXIT_CODE
+    fi
+
+    # Re-stage formatted files
+    echo "$STAGED_FRONTEND_FILES" | tr '\n' '\0' | xargs -0 git add
+  fi
+fi
+
+# Get staged files in frontend-admin directory
+STAGED_FRONTEND_ADMIN_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep "^frontend-admin/" | grep -E "\.(vue|ts|js|tsx)$" || true)
+
+if [ -n "$STAGED_FRONTEND_ADMIN_FILES" ]; then
+  # Convert absolute paths to relative paths from frontend-admin directory
+  FRONTEND_ADMIN_FILES=$(echo "$STAGED_FRONTEND_ADMIN_FILES" | sed 's|^frontend-admin/||' | tr '\n' ' ')
+
+  # Only run linting if we have files after transformation
+  if [ -n "$FRONTEND_ADMIN_FILES" ] && [ "$FRONTEND_ADMIN_FILES" != " " ]; then
+    # Call the frontend lint utility with project directory and files
+    "$ROOT_DIR/git-hooks/utils/frontend-lint.sh" "$ROOT_DIR/frontend-admin" $FRONTEND_ADMIN_FILES
+    FRONTEND_ADMIN_EXIT_CODE=$?
+
+    if [ $FRONTEND_ADMIN_EXIT_CODE -ne 0 ]; then
+      exit $FRONTEND_ADMIN_EXIT_CODE
+    fi
+
+    # Re-stage formatted files
+    echo "$STAGED_FRONTEND_ADMIN_FILES" | tr '\n' '\0' | xargs -0 git add
+  fi
+fi
+
+exit 0
+

@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router';
 
-import { AuthRoutes } from '~modules/auth';
+import { AuthRoutes } from '~auth';
 
 const router = createBrowserRouter([
   { // Temp solution, add guards later
@@ -10,6 +10,9 @@ const router = createBrowserRouter([
   },
   {
     ...AuthRoutes.SignInPage,
+  },
+  {
+    ...AuthRoutes.AuthCallbackPage,
   },
     // Example with loader:
     // loader: async () => {

@@ -49,6 +49,9 @@ export default defineConfig(({ mode }) => {
         '~shared': fileURLToPath(new URL('./src/shared', import.meta.url)),
         '~entities': fileURLToPath(new URL('./src/entities', import.meta.url)),
         '~modules': fileURLToPath(new URL('./src/modules', import.meta.url)),
+        '~auth': fileURLToPath(new URL('./src/modules/auth', import.meta.url)),
+        '~gamer': fileURLToPath(new URL('./src/modules/gamer', import.meta.url)),
+        '~master': fileURLToPath(new URL('./src/modules/master', import.meta.url)),
       },
     },
     server: {

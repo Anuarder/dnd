@@ -26,10 +26,20 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"],
+      "~app": ["./src/app"],
       "~app/*": ["./src/app/*"],
+      "~shared": ["./src/shared"],
       "~shared/*": ["./src/shared/*"],
+      "~entities": ["./src/entities"],
       "~entities/*": ["./src/entities/*"],
-      "~modules/*": ["./src/modules/*"]
+      "~modules": ["./src/modules"],
+      "~modules/*": ["./src/modules/*"],
+      "~auth": ["./src/modules/auth"],
+      "~auth/*": ["./src/modules/auth/*"],
+      "~gamer": ["./src/modules/gamer"],
+      "~gamer/*": ["./src/modules/gamer/*"],
+      "~master": ["./src/modules/master"],
+      "~master/*": ["./src/modules/master/*"]
     }
   },
   "include": ["src/**/*"]

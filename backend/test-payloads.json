@@ -1,0 +1,203 @@
+{
+  "examples": {
+    "minimal": {
+      "description": "Минимальный payload - только обязательные поля",
+      "payload": {
+        "user_id": "550e8400-e29b-41d4-a716-446655440000",
+        "character_options": {
+          "name": "Test Character",
+          "level": 1,
+          "gender": "Male",
+          "race": "Human",
+          "class": "Fighter",
+          "stats": {
+            "strength": { "is_master": false, "value": 10 },
+            "dexterity": { "is_master": false, "value": 10 },
+            "constitution": { "is_master": false, "value": 10 },
+            "intelligence": { "is_master": false, "value": 10 },
+            "wisdom": { "is_master": false, "value": 10 },
+            "charisma": { "is_master": false, "value": 10 }
+          },
+          "history": ["A simple test character"],
+          "master_bonus": 2,
+          "skills": [],
+          "items": [],
+          "ac": 10,
+          "hp": 10,
+          "initiative": 0,
+          "speed": 30,
+          "hp_dice": "1d10",
+          "max_hp": 10,
+          "temp_hp": 0,
+          "death_saves": 0,
+          "inspirations": 0,
+          "exp": 0
+        }
+      }
+    },
+    "full_character": {
+      "description": "Полный персонаж со всеми полями",
+      "payload": {
+        "user_id": "550e8400-e29b-41d4-a716-446655440000",
+        "character_options": {
+          "name": "Aragorn",
+          "level": 15,
+          "gender": "Male",
+          "race": "Human",
+          "sub_race": "Ranger",
+          "class": "Ranger",
+          "sub_class": "Beast Master",
+          "stats": {
+            "strength": { "is_master": true, "value": 18 },
+            "dexterity": { "is_master": true, "value": 16 },
+            "constitution": { "is_master": false, "value": 14 },
+            "intelligence": { "is_master": false, "value": 12 },
+            "wisdom": { "is_master": false, "value": 15 },
+            "charisma": { "is_master": false, "value": 13 }
+          },
+          "history": [
+            "Aragorn, also known as Strider, is the heir of Isildur",
+            "He is the rightful King of Gondor and Arnor",
+            "He is a skilled ranger and warrior"
+          ],
+          "master_bonus": 5,
+          "skills": ["Survival", "Stealth", "Athletics", "Perception"],
+          "items": ["Andúril", "Ranger's Cloak", "Bow", "Arrows"],
+          "ac": 17,
+          "hp": 120,
+          "initiative": 3,
+          "speed": 30,
+          "hp_dice": "10d10+30",
+          "max_hp": 120,
+          "temp_hp": 0,
+          "death_saves": 0,
+          "inspirations": 1,
+          "exp": 120000
+        }
+      }
+    },
+    "wizard_character": {
+      "description": "Маг с высоким интеллектом",
+      "payload": {
+        "user_id": "550e8400-e29b-41d4-a716-446655440000",
+        "character_options": {
+          "name": "Gandalf the Grey",
+          "level": 20,
+          "gender": "Male",
+          "race": "Maia",
+          "sub_race": null,
+          "class": "Wizard",
+          "sub_class": "Evocation",
+          "stats": {
+            "strength": { "is_master": false, "value": 8 },
+            "dexterity": { "is_master": false, "value": 12 },
+            "constitution": { "is_master": false, "value": 14 },
+            "intelligence": { "is_master": true, "value": 20 },
+            "wisdom": { "is_master": true, "value": 18 },
+            "charisma": { "is_master": false, "value": 16 }
+          },
+          "history": [
+            "Gandalf is a Maia, one of the Istari sent to Middle-earth",
+            "He was sent to aid in the fight against Sauron",
+            "He is a powerful wizard and a member of the Fellowship of the Ring"
+          ],
+          "master_bonus": 6,
+          "skills": ["Arcana", "History", "Investigation", "Insight", "Religion"],
+          "items": ["Staff of Power", "Glamdring", "Narya", "Pipe"],
+          "ac": 12,
+          "hp": 80,
+          "initiative": 1,
+          "speed": 30,
+          "hp_dice": "20d6+20",
+          "max_hp": 80,
+          "temp_hp": 0,
+          "death_saves": 0,
+          "inspirations": 0,
+          "exp": 355000
+        }
+      }
+    },
+    "rogue_character": {
+      "description": "Вор с высоким мастерством",
+      "payload": {
+        "user_id": "550e8400-e29b-41d4-a716-446655440000",
+        "character_options": {
+          "name": "Legolas",
+          "level": 12,
+          "gender": "Male",
+          "race": "Elf",
+          "sub_race": "Wood Elf",
+          "class": "Ranger",
+          "sub_class": "Hunter",
+          "stats": {
+            "strength": { "is_master": false, "value": 13 },
+            "dexterity": { "is_master": true, "value": 20 },
+            "constitution": { "is_master": false, "value": 14 },
+            "intelligence": { "is_master": false, "value": 12 },
+            "wisdom": { "is_master": true, "value": 17 },
+            "charisma": { "is_master": false, "value": 11 }
+          },
+          "history": [
+            "Legolas is a Sindar Elf of the Woodland Realm",
+            "He is a member of the Fellowship of the Ring",
+            "He is an expert archer and tracker"
+          ],
+          "master_bonus": 4,
+          "skills": ["Acrobatics", "Stealth", "Survival", "Perception", "Investigation"],
+          "items": ["Longbow", "Dual Scimitars", "Elven Cloak", "Rope"],
+          "ac": 18,
+          "hp": 95,
+          "initiative": 5,
+          "speed": 35,
+          "hp_dice": "12d10+24",
+          "max_hp": 95,
+          "temp_hp": 0,
+          "death_saves": 0,
+          "inspirations": 2,
+          "exp": 96000
+        }
+      }
+    },
+    "flat_structure": {
+      "description": "Плоская структура (без вложенного character_options)",
+      "payload": {
+        "user_id": "550e8400-e29b-41d4-a716-446655440000",
+        "name": "Frodo Baggins",
+        "level": 5,
+        "gender": "Male",
+        "race": "Hobbit",
+        "sub_race": null,
+        "class": "Rogue",
+        "sub_class": "Thief",
+        "stats": {
+          "strength": { "is_master": false, "value": 8 },
+          "dexterity": { "is_master": true, "value": 16 },
+          "constitution": { "is_master": false, "value": 12 },
+          "intelligence": { "is_master": false, "value": 14 },
+          "wisdom": { "is_master": false, "value": 13 },
+          "charisma": { "is_master": false, "value": 15 }
+        },
+        "history": [
+          "Frodo Baggins is a Hobbit of the Shire",
+          "He inherited the One Ring from his uncle Bilbo"
+        ],
+        "master_bonus": 3,
+        "skills": ["Stealth", "Sleight of Hand", "Investigation", "Perception"],
+        "items": ["Sting", "Mithril Shirt", "The One Ring"],
+        "ac": 15,
+        "hp": 35,
+        "initiative": 3,
+        "speed": 25,
+        "hp_dice": "5d8+5",
+        "max_hp": 35,
+        "temp_hp": 0,
+        "death_saves": 0,
+        "inspirations": 0,
+        "exp": 6500
+      }
+    }
+  },
+  "curl_examples": {
+    "create_basic": "curl -X POST https://your-project.supabase.co/functions/v1/character \\\n  -H 'Content-Type: application/json' \\\n  -H 'Authorization: Bearer YOUR_ANON_KEY' \\\n  -d '{\n    \"user_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"character_options\": {\n      \"name\": \"Aragorn\",\n      \"level\": 15,\n      \"gender\": \"Male\",\n      \"race\": \"Human\",\n      \"class\": \"Ranger\",\n      \"stats\": {\n        \"strength\": { \"is_master\": true, \"value\": 18 },\n        \"dexterity\": { \"is_master\": true, \"value\": 16 },\n        \"constitution\": { \"is_master\": false, \"value\": 14 },\n        \"intelligence\": { \"is_master\": false, \"value\": 12 },\n        \"wisdom\": { \"is_master\": false, \"value\": 15 },\n        \"charisma\": { \"is_master\": false, \"value\": 13 }\n      },\n      \"history\": [\"A skilled ranger\"],\n      \"master_bonus\": 5,\n      \"skills\": [\"Survival\", \"Stealth\"],\n      \"items\": [\"Sword\", \"Bow\"],\n      \"ac\": 17,\n      \"hp\": 120,\n      \"initiative\": 3,\n      \"speed\": 30,\n      \"hp_dice\": \"10d10+30\",\n      \"max_hp\": 120,\n      \"temp_hp\": 0,\n      \"death_saves\": 0,\n      \"inspirations\": 0,\n      \"exp\": 120000\n    }\n  }'"
+  }
+}

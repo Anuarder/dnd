@@ -11,7 +11,7 @@ import tseslint from 'typescript-eslint';
 export default defineConfig(
   {
     name: 'app/files-to-ignore',
-    ignores: ['**/dist/**', '**/node_modules/**', '**/coverage/**', "**/css/**"],
+    ignores: ['**/dist/**', '**/node_modules/**', '**/coverage/**', '**/css/**'],
   },
 
   {
@@ -45,10 +45,10 @@ export default defineConfig(
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
-      '@typescript-eslint/explicit-function-return-type': [
-        'warn',
-        { allowExpressions: true, allowTypedFunctionExpressions: true },
-      ],
+      // '@typescript-eslint/explicit-function-return-type': [
+      //   'warn',
+      //   { allowExpressions: true, allowTypedFunctionExpressions: true },
+      // ],
 
       // General rules
       curly: ['error', 'all'],

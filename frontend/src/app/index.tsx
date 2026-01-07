@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import { RoutesProvider, TanstackQueryProvider } from './providers';
 
-function startApp(): void {
+function startApp() {
   const rootElement = document.getElementById('root');
 
   if (!rootElement) {

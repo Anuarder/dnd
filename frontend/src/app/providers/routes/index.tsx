@@ -1,12 +1,14 @@
 import type { ReactElement } from 'react';
-import { createBrowserRouter, Navigate, RouterProvider } from 'react-router';
+import { RouterProvider, createBrowserRouter } from 'react-router';
 
+import { useAuthStateListener } from '~entities/auth';
+
+import { HomeRoutes } from '~/pages/home';
 import { AuthRoutes } from '~auth';
 
 const router = createBrowserRouter([
-  { // Temp solution, add guards later
-    path: '/',
-    element: <Navigate to={AuthRoutes.SignInPage.path} replace />,
+  {
+    ...HomeRoutes.HomePage,
   },
   {
     ...AuthRoutes.SignInPage,
@@ -14,11 +16,11 @@ const router = createBrowserRouter([
   {
     ...AuthRoutes.AuthCallbackPage,
   },
-    // Example with loader:
-    // loader: async () => {
-    //   const data = await fetchData();
-    //   return data;
-    // },
+  // Example with loader:
+  // loader: async () => {
+  //   const data = await fetchData();
+  //   return data;
+  // },
   // Add more routes here, for example:
   // {
   //   path: '/about',
@@ -34,6 +36,9 @@ const router = createBrowserRouter([
 ]);
 
 function RoutesProvider(): ReactElement {
+  // Listen to auth state changes and sync with TanStack Query cache
+  useAuthStateListener();
+
   return <RouterProvider router={router} />;
 }
 

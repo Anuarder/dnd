@@ -1,9 +1,6 @@
-import { RouteObject } from 'react-router';
-
 import { AuthCallbackPage } from './pages/auth-callback';
 import { SignInPage } from './pages/sign-in';
-
-type Route = RouteObject & { path: string; Component: React.ComponentType };
+import { Route } from '~shared/types';
 
 export const AuthRoutes = {
   SignInPage: {

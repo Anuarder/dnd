@@ -1,39 +1,35 @@
-import { ReactElement, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useEffect } from 'react';
 
-import { supabase } from '~shared/lib';
+import { useAuthUser } from '~entities/auth';
 
-export function AuthCallbackPage(): ReactElement {
+export function AuthCallbackPage() {
   const navigate = useNavigate();
-  const [error, setError] = useState<string | null>(null);
+  const { user, error } = useAuthUser();
 
   useEffect(() => {
-    supabase.auth
-      .getSession()
-      .then(({ data: { session }, error: sessionError }) => {
-        if (sessionError) {
-          setError(sessionError.message);
-          return;
-        }
+    if (user) {
+      navigate('/', { replace: true });
+    }
+  }, [user, navigate]);
 
-        if (session) {
-          // Successfully authenticated, redirect to home or dashboard
-          navigate('/', { replace: true });
-        } else {
-          setError('No session found. Please try signing in again.');
-        }
-      })
-      .catch(() => {
-        setError('An unexpected error occurred.');
-      });
-  }, [navigate]);
+  function handleBackToSignIn() {
+    navigate('/sign-in', { replace: true });
+  }
 
   if (error) {
+    const errorMessage = 'Something went wrong. Please try again.';
+
     return (
-      <div className="flex min-h-dvh items-center justify-center bg-[#191022] p-4 text-center text-white">
+      <div className="bg-dark-primary flex min-h-dvh items-center justify-center p-4 text-center text-white">
         <div className="flex flex-col items-center gap-4">
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-500/20">
-            <svg className="h-8 w-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg
+              className="h-8 w-8 text-red-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -43,10 +39,10 @@ export function AuthCallbackPage(): ReactElement {
             </svg>
           </div>
           <h2 className="text-xl font-bold">Authentication Error</h2>
-          <p className="max-w-sm text-slate-400">{error}</p>
+          <p className="max-w-sm text-slate-400">{errorMessage}</p>
           <button
             type="button"
-            onClick={() => { navigate('/sign-in', { replace: true }); }}
+            onClick={handleBackToSignIn}
             className="mt-2 rounded-lg bg-purple-600 px-6 py-2 font-medium transition-colors hover:bg-purple-700"
           >
             Back to Sign In
@@ -57,12 +53,12 @@ export function AuthCallbackPage(): ReactElement {
   }
 
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-[#191022] p-4 text-center text-white">
+    <div className="bg-dark-primary flex min-h-dvh items-center justify-center p-4 text-center text-white">
       <div className="flex flex-col items-center gap-4">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-purple-500/30 border-t-purple-500" />
-        <p className="text-lg text-slate-300">Completing sign in...</p>
+        <div className="border-primary/30 border-t-primary h-10 w-10 animate-spin rounded-full border-4" />
+        <p className="text-xl font-semibold text-white">Completing sign in...</p>
+        <p className="text-sm text-slate-400">Please wait a moment</p>
       </div>
     </div>
   );
 }
-

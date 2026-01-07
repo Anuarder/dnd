@@ -2,4 +2,6 @@
 
 @theme {
   --font-display: "Space Grotesk", sans-serif;
+  --color-primary: #7f13ec;
+  --color-dark-primary: #191022;
 }

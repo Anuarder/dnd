@@ -1,3 +1,5 @@
+import { motion } from 'motion/react';
+
 import AuthImage from './assets/auth-image.jpg';
 
 import { useAuthSignInWithOAuthMutation } from '~entities/auth';
@@ -41,7 +43,12 @@ export function SignInPage() {
   return (
     <div className="flex min-h-dvh items-center justify-center bg-dark-primary p-4 text-center text-pretty text-white">
       <div className="flex flex-col items-center gap-6">
-        <div className="glow-effect relative max-w-[400px] overflow-hidden rounded-2xl border border-white/5 bg-linear-to-b from-dark-secondary to-dark-primary shadow-2xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="glow-effect relative max-w-[400px] overflow-hidden rounded-2xl border border-white/5 bg-linear-to-b from-dark-secondary to-dark-primary shadow-2xl"
+        >
           <img
             width="400"
             height="400"
@@ -49,9 +56,14 @@ export function SignInPage() {
             className="max-w-full object-cover object-center"
             alt="Mystical purple hooded figure holding a glowing magical die in a dark fantasy setting"
           />
-        </div>
+        </motion.div>
 
-        <div className="flex flex-col gap-2">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.3, ease: 'easeOut' }}
+          className="flex flex-col gap-2"
+        >
           <h1 className="font-display text-4xl leading-tight font-bold tracking-tight text-white">
             Your Journey Awaits
           </h1>
@@ -59,9 +71,14 @@ export function SignInPage() {
           <p className="text-lg leading-relaxed font-normal text-slate-400">
             Step into a world of endless possibilities. The realm is calling.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="flex w-full max-w-[320px] flex-col gap-3">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.5, ease: 'easeOut' }}
+          className="flex w-full max-w-[320px] flex-col gap-3"
+        >
           <button
             type="button"
             onClick={handleGoogleSignIn}
@@ -82,11 +99,16 @@ export function SignInPage() {
               <p className="mt-1 text-xs text-red-300">Something went wrong. Please try again.</p>
             </div>
           )}
-        </div>
+        </motion.div>
 
-        <p className="max-w-[280px] text-xs text-slate-500">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.7, ease: 'easeOut' }}
+          className="max-w-[280px] text-xs text-slate-500"
+        >
           By continuing, you agree to our Terms of Service and Privacy Policy.
-        </p>
+        </motion.p>
       </div>
     </div>
   );

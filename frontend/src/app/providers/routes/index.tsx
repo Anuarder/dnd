@@ -1,18 +1,32 @@
-import type { ReactElement } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router';
 
 import { useAuthStateListener } from '~entities/auth';
 
 import { HomeRoutes } from '~/pages/home';
 import { AuthRoutes } from '~auth';
+import { AuthRoute, ProtectedRoute } from './guards';
 
 const router = createBrowserRouter([
+  // Protected routes (require authentication)
   {
-    ...HomeRoutes.HomePage,
+    Component: ProtectedRoute,
+    children: [
+      {
+        ...HomeRoutes.HomePage,
+      },
+      // Add more protected routes here
+    ],
   },
+  // Auth routes (redirect to home if already authenticated)
   {
-    ...AuthRoutes.SignInPage,
+    Component: AuthRoute,
+    children: [
+      {
+        ...AuthRoutes.SignInPage,
+      },
+    ],
   },
+  // Public routes (no authentication required)
   {
     ...AuthRoutes.AuthCallbackPage,
   },
@@ -35,7 +49,7 @@ const router = createBrowserRouter([
   // },
 ]);
 
-function RoutesProvider(): ReactElement {
+function RoutesProvider() {
   // Listen to auth state changes and sync with TanStack Query cache
   useAuthStateListener();
 

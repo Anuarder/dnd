@@ -7,17 +7,34 @@
  * - PUT/PATCH: обновление существующего персонажа
  * - DELETE: удаление персонажа
  * 
+ * НОВЫЕ ПОЛЯ (автоматически валидируются в handlers):
+ * - money: { gold, silver, copper }
+ * - character_size: tiny | small | medium | large | huge | gargantuan
+ * - features: [{ name, use }]
+ * - spells: [{ name }]
+ * - spell_slots: [{ lvl, count }]
+ * - path: string
+ * - isMulticlass: boolean
+ * - multiClass: [{ class, level }]
+ * - history: string (изменен с array на string)
+ * - carrying: number (рассчитывается автоматически на бэкенде)
+ * 
  * Все запросы должны быть в формате JSON.
  * Все ответы возвращаются в формате JSON.
+ * 
+ * Примеры payload смотри в: payload-examples.json
  */
 
-import { initSupabaseClient } from "../../shared/supabase.ts";
+// ИМПОРТЫ ИЗ SHARED МОДУЛЯ
+import { getSupabaseClient } from "../../shared/supabase.ts";
 import {
   errorResponse,
   methodNotAllowedResponse,
   invalidContentTypeResponse,
   invalidJsonResponse,
 } from "../../shared/response.ts";
+
+// ИМПОРТЫ ИЗ CHARACTER МОДУЛЯ
 import {
   handleGet,
   handleCreate,
@@ -37,12 +54,12 @@ Deno.serve(async (req: Request) => {
 
     // ========== ИНИЦИАЛИЗАЦИЯ SUPABASE КЛИЕНТА ==========
     
-    const supabase = initSupabaseClient();
+    const supabase = getSupabaseClient();
     if (!supabase) {
       return errorResponse(
         "Server misconfiguration",
         500,
-        "Failed to initialize Supabase client"
+        "Failed to initialize Supabase client. Check SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables."
       );
     }
 

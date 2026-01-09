@@ -1,0 +1,981 @@
+openapi: 3.0.3
+info:
+  title: D&D Character Management API
+  description: |
+    REST API для управления персонажами D&D (Dungeons & Dragons).
+    Поддерживает полный CRUD функционал для создания, чтения, обновления и удаления персонажей.
+    
+    **Основные возможности:**
+    - Создание новых персонажей с полным набором характеристик D&D
+    - Получение персонажа или списка персонажей пользователя
+    - Обновление характеристик персонажа
+    - Удаление персонажей
+    
+    Все операции требуют user_id для обеспечения безопасности доступа к данным.
+  version: 1.0.0
+  contact:
+    name: API Support
+
+servers:
+  - url: https://pqpvvczttkyshewfczhi.supabase.co/functions/v1
+    description: Supabase Edge Functions
+
+tags:
+  - name: Characters
+    description: Операции с персонажами D&D
+
+paths:
+  /characters:
+    get:
+      tags:
+        - Characters
+      summary: Получение персонажа или списка персонажей
+      description: |
+        Возвращает одного персонажа (если указан character_id) или всех персонажей пользователя.
+        
+        **Поведение:**
+        - Если `character_id` указан - возвращает конкретного персонажа
+        - Если `character_id` не указан - возвращает всех персонажей пользователя (отсортированных по дате создания)
+      operationId: getCharacter
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          description: ID пользователя-владельца персонажей
+          schema:
+            type: string
+            format: uuid
+          example: "00db078e-c56e-49aa-8be0-50ab3378d0f7"
+        - name: character_id
+          in: query
+          required: false
+          description: ID конкретного персонажа (опционально)
+          schema:
+            type: string
+            format: uuid
+          example: "2552fafa-fbe5-4cc3-9679-068502ddfc71"
+      responses:
+        '200':
+          description: Успешное получение данных
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/SingleCharacterResponse'
+                  - $ref: '#/components/schemas/MultipleCharactersResponse'
+              examples:
+                singleCharacter:
+                  summary: Один персонаж
+                  value:
+                    success: true
+                    message: "Character retrieved successfully"
+                    data:
+                      character_id: "2552fafa-fbe5-4cc3-9679-068502ddfc71"
+                      user_id: "00db078e-c56e-49aa-8be0-50ab3378d0f7"
+                      created_at: "2026-01-05T10:30:00Z"
+                      updated_at: "2026-01-05T10:30:00Z"
+                      character_options:
+                        name: "Арагорн"
+                        level: 5
+                        gender: "Мужской"
+                        race: "Человек"
+                        sub_race: null
+                        class: "Следопыт"
+                        sub_class: "Охотник"
+                        # NEW: ADDED ISMULTICLASS AND MULTICLASS TO EXAMPLE
+                        isMulticlass: false
+                        multiClass: []
+                        stats:
+                          strength:
+                            value: 16
+                            is_master: true
+                          dexterity:
+                            value: 14
+                            is_master: false
+                          constitution:
+                            value: 15
+                            is_master: true
+                          intelligence:
+                            value: 10
+                            is_master: false
+                          wisdom:
+                            value: 13
+                            is_master: false
+                          charisma:
+                            value: 12
+                            is_master: false
+                        # UPDATED: CHANGED HISTORY EXAMPLE TO STRING
+                        history: "Следопыт из Дунэдайн"
+                        master_bonus: 3
+                        skills: []
+                        items: []
+                        ac: 16
+                        hp: 42
+                        max_hp: 42
+                        temp_hp: 0
+                        initiative: 2
+                        speed: 30
+                        hp_dice: "1d10"
+                        death_saves: 0
+                        inspirations: 1
+                        exp: 6500
+                        # NEW: ADDED NEW FIELDS TO EXAMPLE
+                        money:
+                          gold: 0
+                          silver: 0
+                          copper: 10
+                        character_size: "medium"
+                        features:
+                          - name: "action-surge"
+                            use: 1
+                        spells:
+                          - name: "cure-wounds"
+                        spell_slots:
+                          - lvl: 1
+                            count: 2
+                        path: "Hunter"
+                        carrying: 240
+                multipleCharacters:
+                  summary: Список персонажей
+                  value:
+                    success: true
+                    message: "Characters retrieved successfully"
+                    data:
+                      characters:
+                        - character_id: "2552fafa-fbe5-4cc3-9679-068502ddfc71"
+                          user_id: "00db078e-c56e-49aa-8be0-50ab3378d0f7"
+                          character_options:
+                            name: "Арагорн"
+                            level: 5
+                        - character_id: "3662fbfb-0cf6-5dd4-a78a-179613eefd82"
+                          user_id: "00db078e-c56e-49aa-8be0-50ab3378d0f7"
+                          character_options:
+                            name: "Гэндальф"
+                            level: 12
+                      count: 2
+        '400':
+          description: Неверный запрос (отсутствует обязательный параметр user_id)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: "Missing required parameter: user_id"
+        '404':
+          description: Персонаж не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: "Character not found"
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    
+    post:
+      tags:
+        - Characters
+      summary: Создание нового персонажа
+      description: |
+        Создаёт нового персонажа D&D с указанными характеристиками.
+        
+        **Валидация:**
+        - `user_id` обязателен и должен быть строкой
+        - `character_options` обязателен и должен содержать все необходимые поля персонажа
+        - Данные проходят валидацию перед сохранением в базу данных
+      operationId: createCharacter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCharacterRequest'
+            example:
+              user_id: "00db078e-c56e-49aa-8be0-50ab3378d0f7"
+              character_options:
+                name: "Леголас"
+                level: 7
+                gender: "Мужской"
+                race: "Эльф"
+                sub_race: "Лесной эльф"
+                class: "Воин"
+                sub_class: "Мастер боя"
+                # NEW: ADDED ISMULTICLASS AND MULTICLASS TO EXAMPLE
+                isMulticlass: true
+                multiClass:
+                  - class: "Плут"
+                    level: 2
+                stats:
+                  strength:
+                    value: 13
+                    is_master: false
+                  dexterity:
+                    value: 18
+                    is_master: true
+                  constitution:
+                    value: 14
+                    is_master: false
+                  intelligence:
+                    value: 12
+                    is_master: false
+                  wisdom:
+                    value: 15
+                    is_master: false
+                  charisma:
+                    value: 11
+                    is_master: false
+                # UPDATED: CHANGED HISTORY EXAMPLE TO STRING
+                history: "Принц лесных эльфов, мастер стрельбы из лука"
+                master_bonus: 3
+                skills: []
+                items: []
+                ac: 17
+                hp: 56
+                max_hp: 56
+                temp_hp: 0
+                initiative: 4
+                speed: 35
+                hp_dice: "1d10"
+                death_saves: 0
+                inspirations: 0
+                exp: 23000
+                # NEW: ADDED NEW FIELDS TO EXAMPLE
+                money:
+                  gold: 100
+                  silver: 50
+                  copper: 25
+                character_size: "medium"
+                features:
+                  - name: "second-wind"
+                    use: 1
+                spells: []
+                spell_slots: []
+                path: "Battle Master"
+                carrying: 195
+      responses:
+        '201':
+          description: Персонаж успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleCharacterResponse'
+              example:
+                success: true
+                message: "Character created successfully"
+                data:
+                  character_id: "2552fafa-fbe5-4cc3-9679-068502ddfc71"
+                  user_id: "00db078e-c56e-49aa-8be0-50ab3378d0f7"
+                  created_at: "2026-01-05T12:00:00Z"
+                  updated_at: "2026-01-05T12:00:00Z"
+                  character_options:
+                    name: "Леголас"
+                    level: 7
+        '400':
+          description: Неверный запрос или ошибка валидации
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingField:
+                  summary: Отсутствует обязательное поле
+                  value:
+                    success: false
+                    message: "Missing required field: user_id"
+                validationError:
+                  summary: Ошибка валидации
+                  value:
+                    success: false
+                    message: "Validation failed"
+                    details: "Invalid character level: must be between 1 and 20"
+        '415':
+          description: Неподдерживаемый тип контента (не application/json)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    
+    put:
+      tags:
+        - Characters
+      summary: Обновление существующего персонажа
+      description: |
+        Обновляет данные существующего персонажа.
+        
+        **Безопасность:**
+        - Проверяется, что пользователь является владельцем персонажа
+        - Обновляется только персонаж, принадлежащий указанному user_id
+        
+        **Валидация:**
+        - Все три поля обязательны: user_id, character_id, character_options
+        - Данные проходят валидацию перед сохранением
+      operationId: updateCharacter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCharacterRequest'
+            example:
+              user_id: "00db078e-c56e-49aa-8be0-50ab3378d0f7"
+              character_id: "2552fafa-fbe5-4cc3-9679-068502ddfc71"
+              character_options:
+                name: "Арагорн"
+                level: 6
+                hp: 38
+                max_hp: 50
+                exp: 8000
+      responses:
+        '200':
+          description: Персонаж успешно обновлён
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleCharacterResponse'
+              example:
+                success: true
+                message: "Character updated successfully"
+                data:
+                  character_id: "2552fafa-fbe5-4cc3-9679-068502ddfc71"
+                  user_id: "00db078e-c56e-49aa-8be0-50ab3378d0f7"
+                  updated_at: "2026-01-05T13:30:00Z"
+                  character_options:
+                    name: "Арагорн"
+                    level: 6
+        '400':
+          description: Неверный запрос или ошибка валидации
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Персонаж не найден или доступ запрещён
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: "Character not found or access denied"
+                details: "Make sure the character exists and belongs to you"
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    
+    patch:
+      tags:
+        - Characters
+      summary: Частичное обновление персонажа
+      description: Идентично PUT запросу - обновляет существующего персонажа
+      operationId: patchCharacter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCharacterRequest'
+      responses:
+        '200':
+          description: Персонаж успешно обновлён
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleCharacterResponse'
+        '400':
+          $ref: '#/paths/~1character/put/responses/400'
+        '404':
+          $ref: '#/paths/~1character/put/responses/404'
+        '500':
+          $ref: '#/paths/~1character/put/responses/500'
+    
+    delete:
+      tags:
+        - Characters
+      summary: Удаление персонажа
+      description: |
+        Удаляет персонажа из базы данных.
+        
+        **Безопасность:**
+        - Проверяется, что пользователь является владельцем персонажа
+        - Удаляется только персонаж, принадлежащий указанному user_id
+        
+        **Внимание:** После удаления персонаж невозможно восстановить.
+      operationId: deleteCharacter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteCharacterRequest'
+            example:
+              user_id: "00db078e-c56e-49aa-8be0-50ab3378d0f7"
+              character_id: "2552fafa-fbe5-4cc3-9679-068502ddfc71"
+      responses:
+        '200':
+          description: Персонаж успешно удалён
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteCharacterResponse'
+              example:
+                success: true
+                message: "Character deleted successfully"
+                data:
+                  deleted_character_id: "2552fafa-fbe5-4cc3-9679-068502ddfc71"
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Персонаж не найден или доступ запрещён
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: "Character not found or access denied"
+                details: "Make sure the character exists and belongs to you"
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    CharacterStat:
+      type: object
+      description: Структура одной характеристики персонажа (сила, ловкость и т.д.)
+      required:
+        - value
+        - is_master
+      properties:
+        value:
+          type: integer
+          description: Значение характеристики (обычно от 1 до 20)
+          minimum: 1
+          maximum: 30
+          example: 16
+        is_master:
+          type: boolean
+          description: Является ли эта характеристика мастерской (даёт бонус к спасброскам)
+          example: true
+    
+    # NEW: ADDED MONEY SCHEMA
+    CharacterMoney:
+      type: object
+      description: Деньги персонажа
+      required:
+        - gold
+        - silver
+        - copper
+      properties:
+        gold:
+          type: integer
+          description: Золото
+          minimum: 0
+          example: 0
+        silver:
+          type: integer
+          description: Серебро
+          minimum: 0
+          example: 0
+        copper:
+          type: integer
+          description: Медь
+          minimum: 0
+          example: 10
+    
+    # NEW: ADDED FEATURE SCHEMA
+    CharacterFeature:
+      type: object
+      description: Способность персонажа (например "action-surge")
+      required:
+        - name
+        - use
+      properties:
+        name:
+          type: string
+          description: Название способности
+          example: "action-surge"
+        use:
+          type: integer
+          description: Количество использований
+          minimum: 0
+          example: 1
+    
+    # NEW: ADDED SPELL SCHEMA
+    CharacterSpell:
+      type: object
+      description: Заклинание персонажа
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Название заклинания
+          example: "fireball"
+    
+    # NEW: ADDED SPELL SLOT SCHEMA
+    CharacterSpellSlot:
+      type: object
+      description: Слот заклинаний
+      required:
+        - lvl
+        - count
+      properties:
+        lvl:
+          type: integer
+          description: Уровень слота
+          minimum: 1
+          maximum: 9
+          example: 1
+        count:
+          type: integer
+          description: Количество слотов
+          minimum: 0
+          example: 1
+    
+    # NEW: ADDED MULTICLASS SCHEMA
+    CharacterMultiClass:
+      type: object
+      description: Мультикласс персонажа (дополнительный класс)
+      required:
+        - class
+        - level
+      properties:
+        class:
+          type: string
+          description: Название класса
+          example: "Плут"
+        level:
+          type: integer
+          description: Уровень в этом классе
+          minimum: 1
+          maximum: 20
+          example: 3
+    
+    CharacterStats:
+      type: object
+      description: Все характеристики персонажа (6 основных характеристик D&D)
+      required:
+        - strength
+        - dexterity
+        - constitution
+        - intelligence
+        - wisdom
+        - charisma
+      properties:
+        strength:
+          $ref: '#/components/schemas/CharacterStat'
+          description: Сила - влияет на физические атаки и переноску
+        dexterity:
+          $ref: '#/components/schemas/CharacterStat'
+          description: Ловкость - влияет на инициативу, AC и дальние атаки
+        constitution:
+          $ref: '#/components/schemas/CharacterStat'
+          description: Телосложение - влияет на HP
+        intelligence:
+          $ref: '#/components/schemas/CharacterStat'
+          description: Интеллект - влияет на знания и магию волшебников
+        wisdom:
+          $ref: '#/components/schemas/CharacterStat'
+          description: Мудрость - влияет на восприятие и магию жрецов
+        charisma:
+          $ref: '#/components/schemas/CharacterStat'
+          description: Харизма - влияет на социальные взаимодействия и магию бардов/колдунов
+    
+    CharacterOptions:
+      type: object
+      description: Полная структура данных персонажа D&D
+      required:
+        - name
+        - level
+        - gender
+        - race
+        - class
+        - stats
+        - history
+        - master_bonus
+        - skills
+        - items
+        - ac
+        - hp
+        - initiative
+        - speed
+        - hp_dice
+        - max_hp
+        - temp_hp
+        - death_saves
+        - inspirations
+        - exp
+        # NEW: ADDED NEW REQUIRED FIELDS
+        - money
+        - character_size
+        - features
+        - spells
+        - spell_slots
+        - path
+        - carrying
+        # NEW: ADDED ISMULTICLASS AND MULTICLASS TO REQUIRED FIELDS
+        - isMulticlass
+        - multiClass
+      properties:
+        name:
+          type: string
+          description: Имя персонажа
+          minLength: 1
+          maxLength: 100
+          example: "Арагорн"
+        level:
+          type: integer
+          description: Уровень персонажа
+          minimum: 1
+          maximum: 20
+          example: 5
+        gender:
+          type: string
+          description: Пол персонажа
+          example: "Мужской"
+        race:
+          type: string
+          description: Раса персонажа (эльф, дварф, человек и т.д.)
+          example: "Человек"
+        sub_race:
+          type: string
+          nullable: true
+          description: Подраса персонажа (например "высший эльф")
+          example: null
+        class:
+          type: string
+          description: Класс персонажа (воин, маг, плут и т.д.)
+          example: "Следопыт"
+        sub_class:
+          type: string
+          nullable: true
+          description: Подкласс персонажа (например "чемпион")
+          example: "Охотник"
+        # NEW: ADDED ISMULTICLASS FIELD
+        isMulticlass:
+          type: boolean
+          description: Является ли персонаж мультиклассом
+          example: false
+        # NEW: ADDED MULTICLASS FIELD (EXPANDABLE ARRAY)
+        multiClass:
+          type: array
+          description: Дополнительные классы персонажа (для мультикласса, можно расширять)
+          items:
+            $ref: '#/components/schemas/CharacterMultiClass'
+          example:
+            - class: "Плут"
+              level: 3
+        stats:
+          $ref: '#/components/schemas/CharacterStats'
+        # UPDATED: CHANGED HISTORY FROM ARRAY TO STRING
+        history:
+          type: string
+          description: История персонажа (предыстория)
+          example: "Вырос в маленькой деревне и стал искателем приключений"
+        master_bonus:
+          type: integer
+          description: Бонус мастерства (зависит от уровня, +2 на 1-4 уровне, +3 на 5-8 и т.д.)
+          minimum: 2
+          maximum: 6
+          example: 3
+        skills:
+          type: array
+          description: Навыки персонажа
+          items: {}
+          example: []
+        items:
+          type: array
+          description: Предметы в инвентаре
+          items: {}
+          example: []
+        ac:
+          type: integer
+          description: Класс брони (Armor Class)
+          minimum: 1
+          example: 16
+        hp:
+          type: integer
+          description: Текущие хиты
+          minimum: 0
+          example: 42
+        max_hp:
+          type: integer
+          description: Максимальные хиты
+          minimum: 1
+          example: 42
+        temp_hp:
+          type: integer
+          description: Временные хиты
+          minimum: 0
+          example: 0
+        initiative:
+          type: integer
+          description: Инициатива (бонус к броску инициативы)
+          example: 2
+        speed:
+          type: integer
+          description: Скорость передвижения (в футах)
+          minimum: 0
+          example: 30
+        hp_dice:
+          type: string
+          description: Кость хитов (например "1d8", "1d10")
+          pattern: '^\d+d\d+$'
+          example: "1d10"
+        death_saves:
+          type: integer
+          description: Спасброски от смерти (обычно от 0 до 3)
+          minimum: 0
+          example: 0
+        inspirations:
+          type: integer
+          description: Количество вдохновений
+          minimum: 0
+          example: 1
+        exp:
+          type: integer
+          description: Опыт персонажа
+          minimum: 0
+          example: 6500
+        # NEW: ADDED MONEY FIELD
+        money:
+          $ref: '#/components/schemas/CharacterMoney'
+        # NEW: ADDED CHARACTER_SIZE FIELD
+        character_size:
+          type: string
+          description: Размер персонажа
+          enum:
+            - tiny
+            - small
+            - medium
+            - large
+            - huge
+            - gargantuan
+          example: "medium"
+        # NEW: ADDED FEATURES FIELD
+        features:
+          type: array
+          description: Способности персонажа
+          items:
+            $ref: '#/components/schemas/CharacterFeature'
+          example:
+            - name: "action-surge"
+              use: 1
+        # NEW: ADDED SPELLS FIELD
+        spells:
+          type: array
+          description: Заклинания персонажа
+          items:
+            $ref: '#/components/schemas/CharacterSpell'
+          example:
+            - name: "fireball"
+        # NEW: ADDED SPELL_SLOTS FIELD
+        spell_slots:
+          type: array
+          description: Слоты заклинаний
+          items:
+            $ref: '#/components/schemas/CharacterSpellSlot'
+          example:
+            - lvl: 1
+              count: 1
+        # NEW: ADDED PATH FIELD
+        path:
+          type: string
+          description: Путь персонажа
+          example: "Way of the Open Hand"
+        # NEW: ADDED CARRYING FIELD (CALCULATED ON BACKEND)
+        carrying:
+          type: integer
+          description: Грузоподъёмность персонажа в фунтах (рассчитывается на бэкенде - strength * 15, умножается на 2 для каждого размера больше medium)
+          minimum: 0
+          example: 240
+    
+    CharacterRecord:
+      type: object
+      description: Запись персонажа в базе данных (с метаданными Supabase)
+      required:
+        - character_id
+        - user_id
+        - character_options
+        - created_at
+        - updated_at
+      properties:
+        character_id:
+          type: string
+          format: uuid
+          description: Уникальный ID персонажа
+          example: "2552fafa-fbe5-4cc3-9679-068502ddfc71"
+        user_id:
+          type: string
+          format: uuid
+          description: ID пользователя-владельца персонажа
+          example: "00db078e-c56e-49aa-8be0-50ab3378d0f7"
+        character_options:
+          $ref: '#/components/schemas/CharacterOptions'
+        created_at:
+          type: string
+          format: date-time
+          description: Дата и время создания записи
+          example: "2026-01-05T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: Дата и время последнего обновления записи
+          example: "2026-01-05T10:30:00Z"
+    
+    CreateCharacterRequest:
+      type: object
+      description: Запрос на создание нового персонажа
+      required:
+        - user_id
+        - character_options
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          description: ID пользователя-владельца
+          example: "00db078e-c56e-49aa-8be0-50ab3378d0f7"
+        character_options:
+          $ref: '#/components/schemas/CharacterOptions'
+    
+    UpdateCharacterRequest:
+      type: object
+      description: Запрос на обновление существующего персонажа
+      required:
+        - user_id
+        - character_id
+        - character_options
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          description: ID пользователя (для проверки прав доступа)
+          example: "00db078e-c56e-49aa-8be0-50ab3378d0f7"
+        character_id:
+          type: string
+          format: uuid
+          description: ID персонажа для обновления
+          example: "2552fafa-fbe5-4cc3-9679-068502ddfc71"
+        character_options:
+          $ref: '#/components/schemas/CharacterOptions'
+    
+    DeleteCharacterRequest:
+      type: object
+      description: Запрос на удаление персонажа
+      required:
+        - user_id
+        - character_id
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          description: ID пользователя (для проверки прав доступа)
+          example: "00db078e-c56e-49aa-8be0-50ab3378d0f7"
+        character_id:
+          type: string
+          format: uuid
+          description: ID персонажа для удаления
+          example: "2552fafa-fbe5-4cc3-9679-068502ddfc71"
+    
+    SingleCharacterResponse:
+      type: object
+      description: Ответ с данными одного персонажа
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Character retrieved successfully"
+        data:
+          $ref: '#/components/schemas/CharacterRecord'
+    
+    MultipleCharactersResponse:
+      type: object
+      description: Ответ со списком персонажей
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Characters retrieved successfully"
+        data:
+          type: object
+          properties:
+            characters:
+              type: array
+              items:
+                $ref: '#/components/schemas/CharacterRecord'
+            count:
+              type: integer
+              description: Количество персонажей в списке
+              example: 2
+    
+    DeleteCharacterResponse:
+      type: object
+      description: Ответ при успешном удалении персонажа
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Character deleted successfully"
+        data:
+          type: object
+          properties:
+            deleted_character_id:
+              type: string
+              format: uuid
+              example: "2552fafa-fbe5-4cc3-9679-068502ddfc71"
+    
+    ErrorResponse:
+      type: object
+      description: Ответ при ошибке
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          description: Описание ошибки
+          example: "Missing required field: user_id"
+        details:
+          type: string
+          description: Дополнительные детали ошибки (опционально)
+          example: "Expected a valid UUID string"
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
+      description: Supabase API Key (anon key)
+
+security:
+  - ApiKeyAuth: []
+

@@ -34,6 +34,67 @@ export interface CharacterStats {
   charisma: CharacterStat;
 }
 
+// NEW: ADDED MONEY INTERFACE
+/**
+ * Деньги персонажа
+ */
+export interface CharacterMoney {
+  /** Золото */
+  gold: number;
+  /** Серебро */
+  silver: number;
+  /** Медь */
+  copper: number;
+}
+
+// NEW: ADDED CHARACTER SIZE TYPE
+/**
+ * Размер персонажа
+ */
+export type CharacterSize = "tiny" | "small" | "medium" | "large" | "huge" | "gargantuan";
+
+// NEW: ADDED FEATURE INTERFACE
+/**
+ * Способность персонажа (например "action-surge")
+ */
+export interface CharacterFeature {
+  /** Название способности */
+  name: string;
+  /** Количество использований */
+  use: number;
+}
+
+// NEW: ADDED SPELL INTERFACE
+/**
+ * Заклинание персонажа
+ */
+export interface CharacterSpell {
+  /** Название заклинания */
+  name: string;
+}
+
+// NEW: ADDED SPELL SLOT INTERFACE
+/**
+ * Слоты заклинаний
+ */
+export interface CharacterSpellSlot {
+  /** Уровень слота */
+  lvl: number;
+  /** Количество слотов */
+  count: number;
+}
+
+// NEW: ADDED MULTICLASS INTERFACE
+/**
+ * Мультикласс персонажа
+ */
+export interface CharacterMultiClass {
+  /** Название класса */
+  class: string;
+  /** Уровень в этом классе */
+  level: number;
+}
+
 /**
  * Полная структура данных персонажа (хранится в поле character_options)
  */
@@ -52,10 +113,17 @@ export interface CharacterOptions {
   class: string;
   /** Подкласс персонажа (опционально, например "чемпион") */
   sub_class: string | null;
+  // NEW: ADDED ISMULTICLASS FIELD
+  /** Является ли персонаж мультиклассом */
+  isMulticlass: boolean;
+  // NEW: ADDED MULTICLASS FIELD (EXPANDABLE ARRAY)
+  /** Дополнительные классы персонажа (для мультикласса) */
+  multiClass: CharacterMultiClass[];
   /** Характеристики персонажа */
   stats: CharacterStats;
-  /** История персонажа (массив строк или объектов) */
-  history: unknown[];
+  // UPDATED: CHANGED HISTORY FROM ARRAY TO STRING
+  /** История персонажа */
+  history: string;
   /** Бонус мастерства (зависит от уровня) */
   master_bonus: number;
   /** Навыки персонажа */
@@ -82,6 +150,27 @@ export interface CharacterOptions {
   inspirations: number;
   /** Опыт персонажа */
   exp: number;
+  // NEW: ADDED MONEY FIELD
+  /** Деньги персонажа */
+  money: CharacterMoney;
+  // NEW: ADDED CHARACTER_SIZE FIELD
+  /** Размер персонажа */
+  character_size: CharacterSize;
+  // NEW: ADDED FEATURES FIELD
+  /** Способности персонажа */
+  features: CharacterFeature[];
+  // NEW: ADDED SPELLS FIELD
+  /** Заклинания персонажа */
+  spells: CharacterSpell[];
+  // NEW: ADDED SPELL_SLOTS FIELD
+  /** Слоты заклинаний */
+  spell_slots: CharacterSpellSlot[];
+  // NEW: ADDED PATH FIELD
+  /** Путь персонажа */
+  path: string;
+  // NEW: ADDED CARRYING FIELD (CALCULATED ON BACKEND)
+  /** Грузоподъёмность персонажа (рассчитывается: strength * 15, умножается на 2 для каждого размера больше medium) */
+  carrying: number;
 }
 
 /**

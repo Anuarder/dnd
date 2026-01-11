@@ -19,6 +19,7 @@ const races: Race[] = [
 
 export function SecondStepForm({ onNext }: { onNext: () => void }) {
   const [selected, setSelected] = useState<string>(races[0]?.id ?? '');
+  const isNextDisabled = !selected;
 
   return (
     <div className="flex flex-col gap-4">
@@ -43,7 +44,14 @@ export function SecondStepForm({ onNext }: { onNext: () => void }) {
           <button
             type="button"
             onClick={() => onNext()}
-            className="bg-primary active:bg-primary/90 flex h-12 items-center justify-center gap-2 rounded-lg px-4 text-white"
+            disabled={isNextDisabled}
+            aria-disabled={isNextDisabled}
+            className={
+              `flex h-12 items-center justify-center gap-2 rounded-lg px-4 ` +
+              (isNextDisabled
+                ? 'bg-primary/40 text-white cursor-not-allowed opacity-60'
+                : 'bg-primary text-white active:bg-primary/90')
+            }
           >
             Next
           </button>

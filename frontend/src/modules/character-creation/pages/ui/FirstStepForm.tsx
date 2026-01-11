@@ -55,6 +55,8 @@ export function FirstStepForm({
     onNext(data);
   }
 
+  const isNextDisabled = !name.trim();
+
   return (
     <form onSubmit={handleSubmit} className="w-full">
       <div className="flex flex-col gap-4 pb-18">
@@ -170,7 +172,14 @@ export function FirstStepForm({
           <button
             type="button"
             onClick={handleSubmit}
-            className="bg-primary active:bg-primary/90 relative flex h-14 w-full items-center justify-center gap-3 rounded-xl px-6 font-medium text-white shadow-lg duration-300 active:scale-95"
+            disabled={isNextDisabled}
+            aria-disabled={isNextDisabled}
+            className={
+              `relative flex h-14 w-full items-center justify-center gap-3 rounded-xl px-6 font-medium shadow-lg duration-300 active:scale-95 ` +
+              (isNextDisabled
+                ? 'bg-primary/40 text-white cursor-not-allowed opacity-60'
+                : 'bg-primary text-white active:bg-primary/90')
+            }
           >
             <span>Next</span>
             <ArrowRight size={18} />

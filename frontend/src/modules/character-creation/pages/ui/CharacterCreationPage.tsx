@@ -2,10 +2,11 @@ import { motion } from 'motion/react';
 import { StepHeader } from './StepHeader';
 import { FirstStepForm } from './FirstStepForm';
 import SecondStepForm from './SecondStepForm';
+import ClassSelection from './ClassSelection';
 import { useState } from 'react';
 
 export function CharacterCreationPage() {
-  const steps = ['Basics', 'Race', 'Third', 'Finish'];
+  const steps = ['Basics', 'Race', 'Class', 'Finish'];
   const [current, setCurrent] = useState<number>(0);
 
   function goNext() {
@@ -38,13 +39,15 @@ export function CharacterCreationPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05, ease: 'easeOut' }}
-          className="w-full z-[1]"
+          className="w-full z-[1] pa-2"
         >
           {current === 0 && <FirstStepForm onNext={goNext} />}
 
           {current === 1 && <SecondStepForm onNext={goNext} />}
 
-          {current > 1 && (
+          {current === 2 && <ClassSelection onNext={goNext} />}
+
+          {current > 2 && (
             <div>
               <p>Step {current + 1} content placeholder</p>
             </div>

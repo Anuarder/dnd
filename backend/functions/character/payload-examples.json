@@ -1,0 +1,547 @@
+{
+  "CREATE_CHARACTER_MINIMAL": {
+    "description": "Минимальный payload для создания персонажа (с дефолтными значениями новых полей)",
+    "method": "POST",
+    "endpoint": "/characters",
+    "payload": {
+      "user_id": "00db078e-c56e-49aa-8be0-50ab3378d0f7",
+      "character_options": {
+        "name": "Арагорн",
+        "level": 1,
+        "gender": "Мужской",
+        "race": "Человек",
+        "sub_race": null,
+        "class": "Следопыт",
+        "sub_class": null,
+        "isMulticlass": false,
+        "multiClass": [],
+        "stats": {
+          "strength": { "value": 16, "is_master": true },
+          "dexterity": { "value": 14, "is_master": false },
+          "constitution": { "value": 15, "is_master": true },
+          "intelligence": { "value": 10, "is_master": false },
+          "wisdom": { "value": 13, "is_master": false },
+          "charisma": { "value": 12, "is_master": false }
+        },
+        "history": "Вырос в лесах Севера, изучал искусство следопыта",
+        "master_bonus": 2,
+        "skills": [],
+        "items": [],
+        "ac": 15,
+        "hp": 12,
+        "max_hp": 12,
+        "temp_hp": 0,
+        "initiative": 2,
+        "speed": 30,
+        "hp_dice": "1d10",
+        "death_saves": 0,
+        "inspirations": 0,
+        "exp": 0,
+        "money": {
+          "gold": 0,
+          "silver": 0,
+          "copper": 10
+        },
+        "character_size": "medium",
+        "features": [],
+        "spells": [],
+        "spell_slots": [],
+        "path": ""
+      }
+    }
+  },
+
+  "CREATE_CHARACTER_WARRIOR": {
+    "description": "Создание воина с особенностями и способностями",
+    "method": "POST",
+    "endpoint": "/characters",
+    "payload": {
+      "user_id": "00db078e-c56e-49aa-8be0-50ab3378d0f7",
+      "character_options": {
+        "name": "Леголас",
+        "level": 7,
+        "gender": "Мужской",
+        "race": "Эльф",
+        "sub_race": "Лесной эльф",
+        "class": "Воин",
+        "sub_class": "Мастер боя",
+        "isMulticlass": false,
+        "multiClass": [],
+        "stats": {
+          "strength": { "value": 13, "is_master": false },
+          "dexterity": { "value": 18, "is_master": true },
+          "constitution": { "value": 14, "is_master": false },
+          "intelligence": { "value": 12, "is_master": false },
+          "wisdom": { "value": 15, "is_master": false },
+          "charisma": { "value": 11, "is_master": false }
+        },
+        "history": "Принц лесных эльфов, непревзойденный лучник",
+        "master_bonus": 3,
+        "skills": ["Восприятие", "Акробатика", "Выживание"],
+        "items": ["Длинный лук", "Колчан со стрелами", "Два эльфийских ножа"],
+        "ac": 17,
+        "hp": 56,
+        "max_hp": 56,
+        "temp_hp": 0,
+        "initiative": 4,
+        "speed": 35,
+        "hp_dice": "7d10",
+        "death_saves": 0,
+        "inspirations": 1,
+        "exp": 23000,
+        "money": {
+          "gold": 150,
+          "silver": 75,
+          "copper": 50
+        },
+        "character_size": "medium",
+        "features": [
+          {
+            "name": "action-surge",
+            "use": 1
+          },
+          {
+            "name": "second-wind",
+            "use": 1
+          }
+        ],
+        "spells": [],
+        "spell_slots": [],
+        "path": "Battle Master"
+      }
+    }
+  },
+
+  "CREATE_CHARACTER_MULTICLASS_SPELLCASTER": {
+    "description": "Мультикласс: Воин/Маг с заклинаниями",
+    "method": "POST",
+    "endpoint": "/characters",
+    "payload": {
+      "user_id": "00db078e-c56e-49aa-8be0-50ab3378d0f7",
+      "character_options": {
+        "name": "Гэндальф Серый",
+        "level": 12,
+        "gender": "Мужской",
+        "race": "Человек",
+        "sub_race": null,
+        "class": "Маг",
+        "sub_class": "Школа Воплощения",
+        "isMulticlass": true,
+        "multiClass": [
+          {
+            "class": "Воин",
+            "level": 2
+          }
+        ],
+        "stats": {
+          "strength": { "value": 12, "is_master": false },
+          "dexterity": { "value": 14, "is_master": false },
+          "constitution": { "value": 16, "is_master": true },
+          "intelligence": { "value": 20, "is_master": true },
+          "wisdom": { "value": 16, "is_master": true },
+          "charisma": { "value": 14, "is_master": false }
+        },
+        "history": "Древний маг, путешествующий по Средиземью и помогающий народам в борьбе со злом",
+        "master_bonus": 4,
+        "skills": ["Магия", "История", "Расследование", "Проницательность"],
+        "items": ["Посох Маэдроса", "Книга заклинаний", "Зелье лечения"],
+        "ac": 14,
+        "hp": 82,
+        "max_hp": 82,
+        "temp_hp": 5,
+        "initiative": 2,
+        "speed": 30,
+        "hp_dice": "10d6+2d10",
+        "death_saves": 0,
+        "inspirations": 2,
+        "exp": 120000,
+        "money": {
+          "gold": 500,
+          "silver": 200,
+          "copper": 100
+        },
+        "character_size": "medium",
+        "features": [
+          {
+            "name": "action-surge",
+            "use": 1
+          },
+          {
+            "name": "arcane-recovery",
+            "use": 1
+          },
+          {
+            "name": "sculpt-spells",
+            "use": 999
+          }
+        ],
+        "spells": [
+          { "name": "fireball" },
+          { "name": "magic-missile" },
+          { "name": "shield" },
+          { "name": "counterspell" },
+          { "name": "lightning-bolt" },
+          { "name": "fly" },
+          { "name": "dispel-magic" }
+        ],
+        "spell_slots": [
+          { "lvl": 1, "count": 4 },
+          { "lvl": 2, "count": 3 },
+          { "lvl": 3, "count": 3 },
+          { "lvl": 4, "count": 3 },
+          { "lvl": 5, "count": 2 },
+          { "lvl": 6, "count": 1 }
+        ],
+        "path": "Evocation Wizard"
+      }
+    }
+  },
+
+  "CREATE_CHARACTER_GIANT": {
+    "description": "Огромный персонаж (huge size) с увеличенной грузоподъемностью",
+    "method": "POST",
+    "endpoint": "/characters",
+    "payload": {
+      "user_id": "00db078e-c56e-49aa-8be0-50ab3378d0f7",
+      "character_options": {
+        "name": "Громобой",
+        "level": 10,
+        "gender": "Мужской",
+        "race": "Великан",
+        "sub_race": "Каменный великан",
+        "class": "Варвар",
+        "sub_class": "Путь Берсерка",
+        "isMulticlass": false,
+        "multiClass": [],
+        "stats": {
+          "strength": { "value": 22, "is_master": true },
+          "dexterity": { "value": 10, "is_master": false },
+          "constitution": { "value": 20, "is_master": true },
+          "intelligence": { "value": 8, "is_master": false },
+          "wisdom": { "value": 12, "is_master": false },
+          "charisma": { "value": 8, "is_master": false }
+        },
+        "history": "Великан-варвар из горных племен, известный своей невероятной силой",
+        "master_bonus": 4,
+        "skills": ["Атлетика", "Выживание", "Восприятие"],
+        "items": ["Огромная дубина", "Шкуры животных", "Мешок с камнями"],
+        "ac": 16,
+        "hp": 145,
+        "max_hp": 145,
+        "temp_hp": 0,
+        "initiative": 0,
+        "speed": 40,
+        "hp_dice": "10d12",
+        "death_saves": 0,
+        "inspirations": 0,
+        "exp": 64000,
+        "money": {
+          "gold": 20,
+          "silver": 50,
+          "copper": 100
+        },
+        "character_size": "huge",
+        "features": [
+          {
+            "name": "rage",
+            "use": 4
+          },
+          {
+            "name": "reckless-attack",
+            "use": 999
+          },
+          {
+            "name": "frenzy",
+            "use": 4
+          }
+        ],
+        "spells": [],
+        "spell_slots": [],
+        "path": "Path of the Berserker"
+      }
+    },
+    "note": "Carrying capacity будет рассчитан автоматически: 22 * 15 * 4 = 1320 фунтов (huge size)"
+  },
+
+  "CREATE_CHARACTER_SMALL": {
+    "description": "Маленький персонаж (small/tiny size)",
+    "method": "POST",
+    "endpoint": "/characters",
+    "payload": {
+      "user_id": "00db078e-c56e-49aa-8be0-50ab3378d0f7",
+      "character_options": {
+        "name": "Бильбо Бэггинс",
+        "level": 5,
+        "gender": "Мужской",
+        "race": "Хоббит",
+        "sub_race": null,
+        "class": "Плут",
+        "sub_class": "Вор",
+        "isMulticlass": false,
+        "multiClass": [],
+        "stats": {
+          "strength": { "value": 10, "is_master": false },
+          "dexterity": { "value": 18, "is_master": true },
+          "constitution": { "value": 14, "is_master": false },
+          "intelligence": { "value": 12, "is_master": false },
+          "wisdom": { "value": 13, "is_master": false },
+          "charisma": { "value": 15, "is_master": true }
+        },
+        "history": "Хоббит из Шира, пустившийся в невероятные приключения",
+        "master_bonus": 3,
+        "skills": ["Скрытность", "Ловкость рук", "Проницательность", "Убеждение"],
+        "items": ["Кольцо невидимости", "Мифриловая кольчуга", "Жало (короткий меч)"],
+        "ac": 16,
+        "hp": 35,
+        "max_hp": 35,
+        "temp_hp": 0,
+        "initiative": 4,
+        "speed": 25,
+        "hp_dice": "5d8",
+        "death_saves": 0,
+        "inspirations": 2,
+        "exp": 6500,
+        "money": {
+          "gold": 300,
+          "silver": 150,
+          "copper": 75
+        },
+        "character_size": "small",
+        "features": [
+          {
+            "name": "sneak-attack",
+            "use": 999
+          },
+          {
+            "name": "cunning-action",
+            "use": 999
+          },
+          {
+            "name": "fast-hands",
+            "use": 999
+          }
+        ],
+        "spells": [],
+        "spell_slots": [],
+        "path": "Thief"
+      }
+    },
+    "note": "Carrying capacity: 10 * 15 * 1 = 150 фунтов (small size не изменяет базовую формулу)"
+  },
+
+  "UPDATE_CHARACTER_ADD_MULTICLASS": {
+    "description": "Обновление персонажа: добавление мультикласса",
+    "method": "PUT",
+    "endpoint": "/characters",
+    "payload": {
+      "user_id": "00db078e-c56e-49aa-8be0-50ab3378d0f7",
+      "character_id": "2552fafa-fbe5-4cc3-9679-068502ddfc71",
+      "character_options": {
+        "name": "Арагорн",
+        "level": 8,
+        "gender": "Мужской",
+        "race": "Человек",
+        "sub_race": null,
+        "class": "Следопыт",
+        "sub_class": "Охотник",
+        "isMulticlass": true,
+        "multiClass": [
+          {
+            "class": "Воин",
+            "level": 3
+          }
+        ],
+        "stats": {
+          "strength": { "value": 17, "is_master": true },
+          "dexterity": { "value": 15, "is_master": false },
+          "constitution": { "value": 16, "is_master": true },
+          "intelligence": { "value": 11, "is_master": false },
+          "wisdom": { "value": 14, "is_master": false },
+          "charisma": { "value": 13, "is_master": false }
+        },
+        "history": "Вождь дунэдайн, наследник трона Гондора. Теперь изучает боевые приёмы воина",
+        "master_bonus": 3,
+        "skills": ["Выживание", "Восприятие", "Атлетика", "Скрытность"],
+        "items": ["Андурил", "Длинный лук", "Кольчуга"],
+        "ac": 17,
+        "hp": 68,
+        "max_hp": 68,
+        "temp_hp": 0,
+        "initiative": 2,
+        "speed": 30,
+        "hp_dice": "5d10+3d10",
+        "death_saves": 0,
+        "inspirations": 1,
+        "exp": 34000,
+        "money": {
+          "gold": 250,
+          "silver": 120,
+          "copper": 50
+        },
+        "character_size": "medium",
+        "features": [
+          {
+            "name": "favored-enemy",
+            "use": 999
+          },
+          {
+            "name": "action-surge",
+            "use": 1
+          },
+          {
+            "name": "second-wind",
+            "use": 1
+          }
+        ],
+        "spells": [
+          { "name": "cure-wounds" },
+          { "name": "hunters-mark" }
+        ],
+        "spell_slots": [
+          { "lvl": 1, "count": 3 }
+        ],
+        "path": "Hunter Ranger / Fighter"
+      }
+    }
+  },
+
+  "UPDATE_CHARACTER_LEVEL_UP": {
+    "description": "Обновление персонажа: повышение уровня с новыми заклинаниями",
+    "method": "PUT",
+    "endpoint": "/characters",
+    "payload": {
+      "user_id": "00db078e-c56e-49aa-8be0-50ab3378d0f7",
+      "character_id": "3662fbfb-0cf6-5dd4-a78a-179613eefd82",
+      "character_options": {
+        "name": "Гэндальф",
+        "level": 13,
+        "gender": "Мужской",
+        "race": "Человек",
+        "sub_race": null,
+        "class": "Маг",
+        "sub_class": "Школа Воплощения",
+        "isMulticlass": true,
+        "multiClass": [
+          {
+            "class": "Воин",
+            "level": 2
+          }
+        ],
+        "stats": {
+          "strength": { "value": 12, "is_master": false },
+          "dexterity": { "value": 14, "is_master": false },
+          "constitution": { "value": 16, "is_master": true },
+          "intelligence": { "value": 20, "is_master": true },
+          "wisdom": { "value": 16, "is_master": true },
+          "charisma": { "value": 14, "is_master": false }
+        },
+        "history": "Древний маг. Повысил уровень, изучил новые заклинания 7 круга",
+        "master_bonus": 5,
+        "skills": ["Магия", "История", "Расследование", "Проницательность"],
+        "items": ["Посох Маэдроса", "Книга заклинаний", "Зелье лечения"],
+        "ac": 14,
+        "hp": 88,
+        "max_hp": 88,
+        "temp_hp": 0,
+        "initiative": 2,
+        "speed": 30,
+        "hp_dice": "11d6+2d10",
+        "death_saves": 0,
+        "inspirations": 3,
+        "exp": 140000,
+        "money": {
+          "gold": 750,
+          "silver": 300,
+          "copper": 150
+        },
+        "character_size": "medium",
+        "features": [
+          {
+            "name": "action-surge",
+            "use": 1
+          },
+          {
+            "name": "arcane-recovery",
+            "use": 1
+          },
+          {
+            "name": "sculpt-spells",
+            "use": 999
+          }
+        ],
+        "spells": [
+          { "name": "fireball" },
+          { "name": "magic-missile" },
+          { "name": "shield" },
+          { "name": "counterspell" },
+          { "name": "lightning-bolt" },
+          { "name": "fly" },
+          { "name": "dispel-magic" },
+          { "name": "teleport" },
+          { "name": "plane-shift" }
+        ],
+        "spell_slots": [
+          { "lvl": 1, "count": 4 },
+          { "lvl": 2, "count": 3 },
+          { "lvl": 3, "count": 3 },
+          { "lvl": 4, "count": 3 },
+          { "lvl": 5, "count": 2 },
+          { "lvl": 6, "count": 1 },
+          { "lvl": 7, "count": 1 }
+        ],
+        "path": "Evocation Wizard"
+      }
+    }
+  },
+
+  "GET_SINGLE_CHARACTER": {
+    "description": "Получение одного персонажа по ID",
+    "method": "GET",
+    "endpoint": "/characters?user_id=00db078e-c56e-49aa-8be0-50ab3378d0f7&character_id=2552fafa-fbe5-4cc3-9679-068502ddfc71"
+  },
+
+  "GET_ALL_CHARACTERS": {
+    "description": "Получение всех персонажей пользователя",
+    "method": "GET",
+    "endpoint": "/characters?user_id=00db078e-c56e-49aa-8be0-50ab3378d0f7"
+  },
+
+  "DELETE_CHARACTER": {
+    "description": "Удаление персонажа",
+    "method": "DELETE",
+    "endpoint": "/characters",
+    "payload": {
+      "user_id": "00db078e-c56e-49aa-8be0-50ab3378d0f7",
+      "character_id": "2552fafa-fbe5-4cc3-9679-068502ddfc71"
+    }
+  },
+
+  "NOTES": {
+    "NEW_FIELDS_DEFAULTS": {
+      "money": { "gold": 0, "silver": 0, "copper": 10 },
+      "character_size": "medium",
+      "features": [],
+      "spells": [],
+      "spell_slots": [],
+      "path": "",
+      "isMulticlass": false,
+      "multiClass": [],
+      "history": ""
+    },
+    "CARRYING_CALCULATION": {
+      "formula": "strength * 15 * size_multiplier",
+      "size_multipliers": {
+        "tiny": 1,
+        "small": 1,
+        "medium": 1,
+        "large": 2,
+        "huge": 4,
+        "gargantuan": 8
+      },
+      "note": "Carrying рассчитывается автоматически на бэкенде, НЕ нужно передавать с фронтенда"
+    },
+    "HISTORY_CHANGE": "Поле history изменено с array на string. Теперь это простая строка с предысторией персонажа.",
+    "MULTICLASS_EXPANDABLE": "Массив multiClass можно расширять, добавляя любое количество дополнительных классов"
+  }
+}
+

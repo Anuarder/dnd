@@ -17,15 +17,15 @@ const races: Race[] = [
   { id: 'halfling', name: 'Halfling', description: 'Lucky and nimble', bonuses: ['+2 Dexterity'], icon: <Clover size={18} /> },
 ];
 
-export function SecondStepForm({ onNext }: { onNext: () => void }) {
+export function SecondStepForm({ onNext }: { onNext: (payload?: { race: string }) => void }) {
   const [selected, setSelected] = useState<string>(races[0]?.id ?? '');
   const isNextDisabled = !selected;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 w-full">
       <h2 className="text-xl font-semibold text-white text-left">Choose your race</h2>
 
-      <div className="grid gap-3">
+      <div className="grid gap-3 pb-28">
         {races.map((r) => (
           <RadioClass
             key={r.id}
@@ -39,21 +39,23 @@ export function SecondStepForm({ onNext }: { onNext: () => void }) {
             icon={r.icon}
           />
         ))}
+      </div>
 
-        <div className="mt-2 flex justify-end">
+      <div className="fixed inset-x-0 bottom-6 flex justify-center z-50 pointer-events-none">
+        <div className="w-full max-w-[400px] px-4 pointer-events-auto">
           <button
             type="button"
-            onClick={() => onNext()}
+            onClick={() => onNext({ race: selected })}
             disabled={isNextDisabled}
             aria-disabled={isNextDisabled}
             className={
-              `flex h-12 items-center justify-center gap-2 rounded-lg px-4 ` +
+              `relative flex h-14 w-full items-center justify-center gap-3 rounded-xl px-6 font-medium shadow-lg duration-300 active:scale-95 ` +
               (isNextDisabled
                 ? 'bg-primary/40 text-white cursor-not-allowed opacity-60'
                 : 'bg-primary text-white active:bg-primary/90')
             }
           >
-            Next
+            <span>Next</span>
           </button>
         </div>
       </div>

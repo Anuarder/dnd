@@ -57,7 +57,7 @@ export function SixthStepForm({ stats, onNext, maxSelection = 4 }: Props) {
         <div className="text-2xl font-bold text-white">Skills</div>
       </div>
 
-      <div className="grid gap-2">
+  <div className="grid gap-2 pb-28">
         {SKILLS.map((s) => {
           const abilityValue = stats[s.ability] ?? 8;
           const bonus = computeBonus(abilityValue);
@@ -79,14 +79,23 @@ export function SixthStepForm({ stats, onNext, maxSelection = 4 }: Props) {
         })}
       </div>
 
-      <div className="mt-2 flex justify-end">
-        <button
-          type="button"
-          onClick={handleNext}
-          className="bg-primary active:bg-primary/90 flex h-12 items-center justify-center gap-2 rounded-lg px-4 text-white"
-        >
-          Finish
-        </button>
+      <div className="fixed inset-x-0 bottom-6 flex justify-center z-50 pointer-events-none">
+        <div className="w-full max-w-[400px] px-4 pointer-events-auto">
+          <button
+            type="button"
+            onClick={handleNext}
+            disabled={selectedCount === 0}
+            aria-disabled={selectedCount === 0}
+            className={
+              `relative flex h-14 w-full items-center justify-center gap-3 rounded-xl px-6 font-medium shadow-lg duration-300 active:scale-95 ` +
+              (selectedCount === 0
+                ? 'bg-primary/40 text-white cursor-not-allowed opacity-60'
+                : 'bg-primary text-white active:bg-primary/90')
+            }
+          >
+            <span>Next</span>
+          </button>
+        </div>
       </div>
     </div>
   );

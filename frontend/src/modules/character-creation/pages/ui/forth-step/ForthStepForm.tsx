@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import CharacteristicItem from './CharacteristicItem';
+import { ArrowRight } from 'lucide-react';
 
 type Stat = {
   key: string;
@@ -57,7 +58,7 @@ export function ForthStepForm({ onNext }: { onNext?: (payload?: { stats: Record<
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 w-full">
       <div className="flex items-center justify-between">
         <div>
           <div className="text-sm text-slate-400">Points remaining</div>
@@ -70,7 +71,7 @@ export function ForthStepForm({ onNext }: { onNext?: (payload?: { stats: Record<
         </div>
       </div>
 
-      <div className="grid gap-3">
+      <div className="grid gap-3 pb-28">
         {initialStats.map((s) => {
           const val = stats[s.key] ?? INITIAL_VALUE;
           return (
@@ -89,14 +90,19 @@ export function ForthStepForm({ onNext }: { onNext?: (payload?: { stats: Record<
         })}
       </div>
 
-      <div className="mt-2 flex justify-end">
-        <button
-          type="button"
-          onClick={() => onNext?.({ stats })}
-          className="bg-primary active:bg-primary/90 flex h-12 items-center justify-center gap-2 rounded-lg px-4 text-white"
-        >
-          Finish
-        </button>
+      <div className="fixed inset-x-0 bottom-6 flex justify-center z-50 pointer-events-none">
+        <div className="w-full max-w-[400px] px-4 pointer-events-auto">
+          <button
+            type="button"
+            onClick={() => onNext?.({ stats })}
+            className={
+              `relative flex h-14 w-full items-center justify-center gap-3 rounded-xl px-6 font-medium shadow-lg duration-300 active:scale-95 bg-primary text-white active:bg-primary/90`
+            }
+          >
+            <span>Next</span>
+            <ArrowRight size={18} />
+          </button>
+        </div>
       </div>
     </div>
   );

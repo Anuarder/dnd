@@ -5,9 +5,10 @@ type StepHeaderProps = {
   steps: string[];
   current: number; // zero-based index
   totalSteps?: number; // optional override for display
+  onBack?: () => void;
 };
 
-export function StepHeader({ steps, current, totalSteps }: StepHeaderProps) {
+export function StepHeader({ steps, current, totalSteps, onBack }: StepHeaderProps) {
   const navigate = useNavigate();
   const total = totalSteps ?? steps.length;
   const stepNumber = Math.min(Math.max(current + 1, 1), total);
@@ -18,8 +19,15 @@ export function StepHeader({ steps, current, totalSteps }: StepHeaderProps) {
       <div className="flex items-center justify-between h-10 mb-1">
         <ArrowLeft
           size={18}
-          onClick={() => navigate('/')}
-          className='w-10'
+          onClick={() => {
+            if (current > 0 && typeof onBack === 'function') {
+              onBack();
+              return;
+            }
+
+            navigate('/');
+          }}
+          className="w-10"
         />
 
 

@@ -25,13 +25,29 @@ export function SeventhStepForm({ onNext }: Props) {
   const cantripsSelected = useMemo(() => Object.entries(selected).filter(([id, v]) => v && cantrips.some((c) => c.id === id)).length, [selected, cantrips]);
   const level1Selected = useMemo(() => Object.entries(selected).filter(([id, v]) => v && level1.some((c) => c.id === id)).length, [selected, level1]);
 
-  function toggle(id: string, level: number) {
+  // compute which ids should be disabled (not selectable) because the level limit is reached
+  const disabledIds = useMemo(() => {
+    const map: Record<string, boolean> = {};
+    if (cantripsSelected >= CANTRIP_LIMIT) {
+      cantrips.forEach((c) => {
+        if (!selected[c.id]) map[c.id] = true;
+      });
+    }
+    if (level1Selected >= LEVEL1_LIMIT) {
+      level1.forEach((c) => {
+        if (!selected[c.id]) map[c.id] = true;
+      });
+    }
+    return map;
+  }, [cantrips, level1, cantripsSelected, level1Selected, selected]);
+
+  function toggle(id: string) {
     setSelected((prev) => {
       const isSelected = !!prev[id];
       if (isSelected) return { ...prev, [id]: false };
-      // enforce per-level limits
-      if (level === 0 && cantripsSelected >= CANTRIP_LIMIT) return prev;
-      if (level === 1 && level1Selected >= LEVEL1_LIMIT) return prev;
+      // if disabled by limits, ignore
+      const isDisabled = disabledIds[id];
+      if (isDisabled) return prev;
       return { ...prev, [id]: true };
     });
   }
@@ -63,24 +79,33 @@ export function SeventhStepForm({ onNext }: Props) {
         <div className="text-sm text-slate-400">Level 1 {level1Selected} from {LEVEL1_LIMIT}</div>
       </div>
 
-      <div className="space-y-4">
+  <div className="space-y-4 pb-28">
         {(tab === 'all' || tab === 'cantrips') && (
-          <SpellSection title="Cantrips" spells={filteredCantrips} selected={selected} toggle={(id) => toggle(id, 0)} />
+          <SpellSection title="Cantrips" spells={filteredCantrips} selected={selected} toggle={(id) => toggle(id)} disabledIds={disabledIds} />
         )}
 
         {(tab === 'all' || tab === 'level1') && (
-          <SpellSection title="Level 1" spells={filteredLevel1} selected={selected} toggle={(id) => toggle(id, 1)} />
+          <SpellSection title="Level 1" spells={filteredLevel1} selected={selected} toggle={(id) => toggle(id)} disabledIds={disabledIds} />
         )}
       </div>
 
-      <div className="mt-2 flex justify-end">
-        <button
-          type="button"
-          onClick={handleNext}
-          className="bg-primary active:bg-primary/90 flex h-12 items-center justify-center gap-2 rounded-lg px-4 text-white"
-        >
-          Finish
-        </button>
+      <div className="fixed inset-x-0 bottom-6 flex justify-center z-50 pointer-events-none">
+        <div className="w-full max-w-[400px] px-4 pointer-events-auto">
+          <button
+            type="button"
+            onClick={handleNext}
+            disabled={Object.values(selected).filter(Boolean).length === 0}
+            aria-disabled={Object.values(selected).filter(Boolean).length === 0}
+            className={
+              `relative flex h-14 w-full items-center justify-center gap-3 rounded-xl px-6 font-medium shadow-lg duration-300 active:scale-95 ` +
+              (Object.values(selected).filter(Boolean).length === 0
+                ? 'bg-primary/40 text-white cursor-not-allowed opacity-60'
+                : 'bg-primary text-white active:bg-primary/90')
+            }
+          >
+            <span>Finish</span>
+          </button>
+        </div>
       </div>
     </div>
   );

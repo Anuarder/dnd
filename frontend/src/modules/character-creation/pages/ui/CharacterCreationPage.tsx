@@ -47,7 +47,7 @@ export function CharacterCreationPage() {
           transition={{ duration: 0.45, ease: 'easeOut' }}
           className="relative z-[1] w-full rounded-2xl"
         >
-          <StepHeader steps={steps} current={current} />
+          <StepHeader steps={steps} current={current} onBack={() => setCurrent((c) => Math.max(c - 1, 0))} />
         </motion.div>
 
         <motion.div

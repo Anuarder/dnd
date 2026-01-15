@@ -6,10 +6,10 @@ type Props = {
   spells: Spell[];
   selected: Record<string, boolean>;
   toggle: (id: string) => void;
-  limits?: { [level: number]: number };
+  disabledIds?: Record<string, boolean>;
 };
 
-export function SpellSection({ title, spells, selected, toggle }: Props) {
+export function SpellSection({ title, spells, selected, toggle, disabledIds }: Props) {
   return (
     <div className="space-y-2">
       <div className="text-lg font-semibold text-white">{title}</div>
@@ -21,8 +21,9 @@ export function SpellSection({ title, spells, selected, toggle }: Props) {
             name={sp.name}
             school={sp.school}
             level={sp.level}
+            description={sp.description}
             checked={!!selected[sp.id]}
-            disabled={false}
+            disabled={!!(disabledIds && disabledIds[sp.id])}
             onToggle={toggle}
           />
         ))}

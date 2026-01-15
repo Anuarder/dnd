@@ -107,7 +107,10 @@ export function FifthStepForm({ onNext }: { onNext?: (payload?: { background?: s
           <button
             type="button"
             onClick={handleNextClick}
-            className="bg-primary active:bg-primary/90 relative flex h-14 w-full items-center justify-center gap-3 rounded-xl px-6 font-medium text-white shadow-lg duration-300 active:scale-95"
+            className={
+              `relative flex h-14 w-full items-center justify-center gap-3 rounded-xl px-6 font-medium shadow-lg duration-300 active:scale-95 ` +
+              'bg-primary text-white active:bg-primary/90'
+            }
           >
             <span>Choose background</span>
             <ArrowRight size={18} />

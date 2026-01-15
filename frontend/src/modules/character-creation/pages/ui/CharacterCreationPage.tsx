@@ -1,8 +1,8 @@
 import { motion } from 'motion/react';
 import { StepHeader } from './StepHeader';
-import { FirstStepForm } from './FirstStepForm';
-import SecondStepForm from './SecondStepForm';
-import ClassSelection from './ClassSelection';
+import { FirstStepForm } from './FirstStep/FirstStepForm';
+import { SecondStepForm } from './SecondStep/SecondStepForm';
+import { ThirdStepForm } from './ThirdStep/ThirdStepForm';
 import { useState } from 'react';
 
 export function CharacterCreationPage() {
@@ -45,7 +45,7 @@ export function CharacterCreationPage() {
 
           {current === 1 && <SecondStepForm onNext={goNext} />}
 
-          {current === 2 && <ClassSelection onNext={goNext} />}
+          {current === 2 && <ThirdStepForm onNext={goNext} />}
 
           {current > 2 && (
             <div>

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, PanInfo, useAnimation } from 'motion/react';
 import ClassCard from './ClassCard';
 import { BookOpen, Music, Zap, Feather, ArrowRight } from 'lucide-react';
 
@@ -56,46 +55,57 @@ const classes: ClassDef[] = [
   },
 ];
 
-export default function ClassSelection({ onNext }: { onNext: (id?: string) => void }) {
+export function ThirdStepForm({ onNext }: { onNext: (id?: string) => void }) {
 
-	const controls = useAnimation()
 
   const [index, setIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [containerWidth, setContainerWidth] = useState<number>(0);
 
-  function handleDragEnd(
-		_e: MouseEvent | TouchEvent | PointerEvent,
-		info: PanInfo
-	) {
-		const offset = info.offset.x;
-		const threshold = 80;
-		let ind = index
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const debounceRef = useRef<number | null>(null);
 
-		if (offset < -threshold && index < classes.length - 1) {
-			ind = Math.min(classes.length - 1, index + 1)
-		} else if (offset > threshold && index > 0) {
-			ind = Math.max(0, index - 1)
-		}
+  const setIndexDebounced = (i: number) => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
 
-		setIndex(ind)
-
-		controls.start({
-			x: -ind * containerWidth,
-		});
-
-	}
+    debounceRef.current = window.setTimeout(() => {
+      setIndex(i);
+    }, 120); // ← задержка (100–200мс идеально)
+  };
 
 
   useEffect(() => {
-    function updateWidth() {
-      const w = containerRef.current?.offsetWidth ?? 0;
-      setContainerWidth(w);
-    }
+    if (!scrollRef.current) return;
 
-    updateWidth();
-    window.addEventListener('resize', updateWidth);
-    return () => window.removeEventListener('resize', updateWidth);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // выбираем карточку с наибольшим intersectionRatio
+        let bestEntry: IntersectionObserverEntry | null = null;
+
+        entries.forEach((entry) => {
+          if (!bestEntry || entry.intersectionRatio > bestEntry.intersectionRatio) {
+            bestEntry = entry;
+          }
+        });
+
+        if (bestEntry && (bestEntry as IntersectionObserverEntry).isIntersecting) {
+          const i = Number(
+            ((bestEntry as IntersectionObserverEntry).target as HTMLElement).dataset.index
+          );
+          setIndexDebounced(i);
+        }
+      },
+      {
+        root: scrollRef.current,
+        threshold: [0.5, 0.6, 0.7, 0.8, 0.9],
+      }
+    );
+
+    cardRefs.current.forEach((el) => el && observer.observe(el));
+
+    return () => observer.disconnect();
   }, []);
 
 
@@ -107,18 +117,18 @@ export default function ClassSelection({ onNext }: { onNext: (id?: string) => vo
     <div className="w-full">
       <div className="relative">
         <div className="overflow-hidden" ref={containerRef}>
-          <motion.div
-            className="flex"
-            drag="x"
-            dragElastic={0.2}
-            dragMomentum={false}
-            onDragEnd={handleDragEnd}
-            animate={controls}
-            transition={{ type: 'spring', stiffness: 200, damping: 30 }}
-            style={containerWidth ? { width: `${classes.length * containerWidth}px` } : { width: `${classes.length * 100}%` }}
+          <div
+            ref={scrollRef}
+            className="flex gap-4 snap-x snap-mandatory overflow-x-auto no-scrollbar"
           >
-            {classes.map((c) => (
-              <div key={c.id} style={containerWidth ? { width: `${containerWidth}px` } : { width: `${100 / classes.length}%` }}>
+            <div className='shrink-0 snap-center'></div>
+            {classes.map((c, i) => (
+              <div
+                key={c.id}
+                ref={(el) => {cardRefs.current[i] = el}}
+                data-index={i}
+                className='shrink-0 snap-center'
+              >
                 <ClassCard
                   title={c.name}
                   description={c.description}
@@ -129,7 +139,8 @@ export default function ClassSelection({ onNext }: { onNext: (id?: string) => vo
                 />
               </div>
             ))}
-          </motion.div>
+            <div className='shrink-0 snap-center'></div>
+          </div>
         </div>
       </div>
 

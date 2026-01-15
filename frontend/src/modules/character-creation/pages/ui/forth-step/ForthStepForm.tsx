@@ -26,7 +26,7 @@ function computeBonus(value: number) {
   return Math.floor(value / 2) - 5;
 }
 
-export function ForthStepForm({ onNext }: { onNext?: () => void }) {
+export function ForthStepForm({ onNext }: { onNext?: (payload?: { stats: Record<string, number> }) => void }) {
   const [stats, setStats] = useState<Record<string, number>>(
     Object.fromEntries(initialStats.map((s) => [s.key, s.value]))
   );
@@ -92,7 +92,7 @@ export function ForthStepForm({ onNext }: { onNext?: () => void }) {
       <div className="mt-2 flex justify-end">
         <button
           type="button"
-          onClick={() => onNext?.()}
+          onClick={() => onNext?.({ stats })}
           className="bg-primary active:bg-primary/90 flex h-12 items-center justify-center gap-2 rounded-lg px-4 text-white"
         >
           Finish

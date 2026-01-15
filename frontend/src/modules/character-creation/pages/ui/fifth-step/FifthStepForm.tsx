@@ -36,7 +36,7 @@ const backgrounds: BackgroundDef[] = [
   },
 ];
 
-export function FifthStepForm({ onNext }: { onNext?: (id?: string) => void }) {
+export function FifthStepForm({ onNext }: { onNext?: (payload?: { background?: string }) => void }) {
   const [index, setIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -83,7 +83,7 @@ export function FifthStepForm({ onNext }: { onNext?: (id?: string) => void }) {
   }, []);
 
   function handleNextClick() {
-    if (backgrounds[index]) onNext?.(backgrounds[index].id);
+    if (backgrounds[index]) onNext?.({ background: backgrounds[index].id });
   }
 
   return (

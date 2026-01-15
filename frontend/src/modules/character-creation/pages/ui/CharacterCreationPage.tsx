@@ -5,13 +5,26 @@ import { SecondStepForm } from './second-step/SecondStepForm';
 import { ThirdStepForm } from './third-step/ThirdStepForm';
 import { ForthStepForm } from './forth-step/ForthStepForm';
 import { FifthStepForm } from './fifth-step/FifthStepForm';
+import { SixthStepForm } from './sixth-step/SixthStepForm';
+import { SeventhStepForm } from './seventh-step/SeventhStepForm';
 import { useState } from 'react';
 
 export function CharacterCreationPage() {
-  const steps = ['Basics', 'Race', 'Class', 'Stats', 'Background'];
+  const steps = ['Basics', 'Race', 'Class', 'Stats', 'Background', 'Skills', 'Spells'];
   const [current, setCurrent] = useState<number>(0);
 
-  function goNext() {
+  const [character, setCharacter] = useState<{
+    stats?: Record<string, number>;
+    background?: string;
+    skills?: string[];
+  }>({});
+
+  function goNext(payload?: any) {
+    // Accept structured payloads from steps (e.g. { stats }, { background }, { skills })
+    if (payload) {
+      setCharacter((prev) => ({ ...prev, ...(payload as object) }));
+    }
+
     setCurrent((c) => Math.min(c + 1, steps.length - 1));
   }
 
@@ -52,6 +65,19 @@ export function CharacterCreationPage() {
           {current === 3 && <ForthStepForm onNext={goNext} />}
 
           {current === 4 && <FifthStepForm onNext={goNext} />}
+
+          {current === 5 && (
+            <SixthStepForm
+              stats={character.stats ?? {}}
+              onNext={(p: any) => goNext(p)}
+            />
+          )}
+
+          {current === 6 && (
+            <SeventhStepForm
+              onNext={(p: any) => goNext(p)}
+            />
+          )}
         </motion.div>
       </div>
     </div>

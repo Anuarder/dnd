@@ -1,12 +1,14 @@
 import { motion } from 'motion/react';
 import { StepHeader } from './StepHeader';
-import { FirstStepForm } from './FirstStep/FirstStepForm';
-import { SecondStepForm } from './SecondStep/SecondStepForm';
-import { ThirdStepForm } from './ThirdStep/ThirdStepForm';
+import { FirstStepForm } from './first-step/FirstStepForm';
+import { SecondStepForm } from './second-step/SecondStepForm';
+import { ThirdStepForm } from './third-step/ThirdStepForm';
+import { ForthStepForm } from './forth-step/ForthStepForm';
+import { FifthStepForm } from './fifth-step/FifthStepForm';
 import { useState } from 'react';
 
 export function CharacterCreationPage() {
-  const steps = ['Basics', 'Race', 'Class', 'Finish'];
+  const steps = ['Basics', 'Race', 'Class', 'Stats', 'Background'];
   const [current, setCurrent] = useState<number>(0);
 
   function goNext() {
@@ -47,11 +49,9 @@ export function CharacterCreationPage() {
 
           {current === 2 && <ThirdStepForm onNext={goNext} />}
 
-          {current > 2 && (
-            <div>
-              <p>Step {current + 1} content placeholder</p>
-            </div>
-          )}
+          {current === 3 && <ForthStepForm onNext={goNext} />}
+
+          {current === 4 && <FifthStepForm onNext={goNext} />}
         </motion.div>
       </div>
     </div>

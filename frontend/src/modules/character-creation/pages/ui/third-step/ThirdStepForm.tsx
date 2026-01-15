@@ -55,7 +55,7 @@ const classes: ClassDef[] = [
   },
 ];
 
-export function ThirdStepForm({ onNext }: { onNext: (id?: string) => void }) {
+export function ThirdStepForm({ onNext }: { onNext: (payload?: { class?: string }) => void }) {
 
 
   const [index, setIndex] = useState(0);
@@ -110,7 +110,7 @@ export function ThirdStepForm({ onNext }: { onNext: (id?: string) => void }) {
 
 
   function handleNextClick() {
-    if (classes[index]) onNext(classes[index].id);
+    if (classes[index]) onNext?.({ class: classes[index].id });
   }
 
   return (

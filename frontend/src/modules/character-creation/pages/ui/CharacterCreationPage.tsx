@@ -13,19 +13,18 @@ export function CharacterCreationPage() {
   const steps = ['Basics', 'Race', 'Class', 'Stats', 'Background', 'Skills', 'Spells'];
   const [current, setCurrent] = useState<number>(0);
 
-  const [character, setCharacter] = useState<{
-    stats?: Record<string, number>;
-    background?: string;
-    skills?: string[];
-  }>({});
+  const [character, setCharacter] = useState<Record<string, any>>({});
 
   function goNext(payload?: any) {
     // Accept structured payloads from steps (e.g. { stats }, { background }, { skills })
-    if (payload) {
-      setCharacter((prev) => ({ ...prev, ...(payload as object) }));
-    }
+    // Use functional updater so we merge with the latest state and can log the merged object immediately.
+    setCharacter((prev) => {
+      const merged = payload ? ({ ...prev, ...(payload as object) } as Record<string, any>) : prev;
+      return merged;
+    });
 
     setCurrent((c) => Math.min(c + 1, steps.length - 1));
+    
   }
 
   // goBack intentionally omitted until a back button is added

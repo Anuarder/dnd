@@ -5,7 +5,7 @@ import { useAuthStateListener } from '~entities/auth';
 import { HomeRoutes } from '~/pages/home';
 import { AuthRoutes } from '~auth';
 import { OnboardingRoutes } from '~/modules/onboarding/pages';
-import { CharacterCreationRoutes } from '~/modules/character-creation/pages';
+import { CharacterCreationRoutes } from '~/pages/character-creation';
 import { MasterRoutes } from '~/modules/master/pages';
 import { AuthRoute, ProtectedRoute, OnboardingRoute, RootGuard } from './guards';
 

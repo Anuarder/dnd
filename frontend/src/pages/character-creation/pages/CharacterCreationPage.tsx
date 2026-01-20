@@ -1,12 +1,12 @@
 import { motion } from 'motion/react';
-import { StepHeader } from './StepHeader';
-import { FirstStepForm } from './first-step/FirstStepForm';
-import { SecondStepForm } from './second-step/SecondStepForm';
-import { ThirdStepForm } from './third-step/ThirdStepForm';
-import { ForthStepForm } from './forth-step/ForthStepForm';
-import { FifthStepForm } from './fifth-step/FifthStepForm';
-import { SixthStepForm } from './sixth-step/SixthStepForm';
-import { SeventhStepForm } from './seventh-step/SeventhStepForm';
+import { StepHeader } from './ui/StepHeader';
+import { FirstStepForm } from './ui/first-step/FirstStepForm';
+import { SecondStepForm } from './ui/second-step/SecondStepForm';
+import { ThirdStepForm } from './ui/third-step/ThirdStepForm';
+import { ForthStepForm } from './ui/forth-step/ForthStepForm';
+import { FifthStepForm } from './ui/fifth-step/FifthStepForm';
+import { SixthStepForm } from './ui/sixth-step/SixthStepForm';
+import { SeventhStepForm } from './ui/seventh-step/SeventhStepForm';
 import { useState } from 'react';
 
 export function CharacterCreationPage() {

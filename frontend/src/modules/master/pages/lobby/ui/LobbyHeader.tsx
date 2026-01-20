@@ -31,7 +31,6 @@ const LobbyHeader: React.FC<Props> = ({ tab, onBack }) => {
 
         <div className="flex-1 text-center text-lg font-semibold">{title}</div>
 
-        {/* right placeholder to keep title centered */}
         <div className="w-10 h-10" aria-hidden />
       </div>
     </header>

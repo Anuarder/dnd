@@ -64,6 +64,9 @@ const router = createBrowserRouter([
           {
             ...MasterRoutes.LobbyCreatePage,
           },
+          {
+            ...MasterRoutes.MasterLobbyPage,
+          },
         ],
       },
     ],

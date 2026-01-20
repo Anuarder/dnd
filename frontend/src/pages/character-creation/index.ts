@@ -1,4 +1,4 @@
-import { CharacterCreationPage } from './pages/CharacterCreationPage';
+import { CharacterCreationPage } from './ui/CharacterCreationPage';
 import { Route } from '~shared/types';
 
 export const CharacterCreationRoutes = {

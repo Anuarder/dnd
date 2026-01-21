@@ -89,7 +89,7 @@ export function SixthStepForm({ stats, onNext, maxSelection = 4 }: Props) {
             className={
               `relative flex h-14 w-full items-center justify-center gap-3 rounded-xl px-6 font-medium shadow-lg duration-300 active:scale-95 ` +
               (selectedCount === 0
-                ? 'bg-primary/40 text-white cursor-not-allowed opacity-60'
+                ? 'bg-purple-950 text-slate-400 cursor-not-allowed'
                 : 'bg-primary text-white active:bg-primary/90')
             }
           >

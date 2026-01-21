@@ -29,6 +29,7 @@ export const MaxPlayersSelect: React.FC<Props> = ({ value, onChange, options = [
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="mt-2 w-full flex items-center justify-between rounded-[12px] border border-white/10 bg-white/5 px-3 py-2 text-left text-white"
+        style={{ background: 'linear-gradient(90deg, rgba(127,19,236,0.08) 0%, rgba(147,51,234,0.08) 100%)' }}
         aria-haspopup="listbox"
         aria-expanded={open}
       >
@@ -37,7 +38,7 @@ export const MaxPlayersSelect: React.FC<Props> = ({ value, onChange, options = [
       </button>
 
       {open && (
-        <div className="absolute left-0 right-0 z-5000 mt-2 max-h-44 overflow-auto rounded-lg border border-white/6 bg-dark-primary p-1">
+        <div className="absolute left-0 right-0 z-5000 mt-2 max-h-[120px] overflow-auto rounded-lg border border-white/6 bg-dark-primary p-1">
           {options.map((n) => (
             <button
               key={n}

@@ -1,6 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import ClassCard from './ClassCard';
 import { BookOpen, Music, Zap, Feather, ArrowRight } from 'lucide-react';
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react';
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 type ClassDef = {
   id: string;
@@ -59,75 +64,27 @@ export function ThirdStepForm({ onNext }: { onNext: (payload?: { class?: string 
 
 
   const [index, setIndex] = useState(0);
-  const containerRef = useRef<HTMLDivElement | null>(null);
-
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const debounceRef = useRef<number | null>(null);
-
-  const setIndexDebounced = (i: number) => {
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current);
-    }
-
-    debounceRef.current = window.setTimeout(() => {
-      setIndex(i);
-    }, 120); // ← задержка (100–200мс идеально)
-  };
-
-
-  useEffect(() => {
-    if (!scrollRef.current) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // выбираем карточку с наибольшим intersectionRatio
-        let bestEntry: IntersectionObserverEntry | null = null;
-
-        entries.forEach((entry) => {
-          if (!bestEntry || entry.intersectionRatio > bestEntry.intersectionRatio) {
-            bestEntry = entry;
-          }
-        });
-
-        if (bestEntry && (bestEntry as IntersectionObserverEntry).isIntersecting) {
-          const i = Number(
-            ((bestEntry as IntersectionObserverEntry).target as HTMLElement).dataset.index
-          );
-          setIndexDebounced(i);
-        }
-      },
-      {
-        root: scrollRef.current,
-        threshold: [0.5, 0.6, 0.7, 0.8, 0.9],
-      }
-    );
-
-    cardRefs.current.forEach((el) => el && observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
-
 
   function handleNextClick() {
     if (classes[index]) onNext?.({ class: classes[index].id });
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full p-4">
       <div className="relative">
-        <div className="overflow-hidden" ref={containerRef}>
-          <div
-            ref={scrollRef}
-            className="flex gap-4 snap-x snap-mandatory overflow-x-auto no-scrollbar"
+        <div className="swiper-box overflow-hidden">
+          <Swiper
+            spaceBetween={25}
+            slidesPerView={1}
+            onSlideChange={(e) => setIndex(e.activeIndex)}
+            centeredSlides
           >
-            <div className='shrink-0 snap-center'></div>
             {classes.map((c, i) => (
-              <div
+              <SwiperSlide
                 key={c.id}
-                ref={(el) => {cardRefs.current[i] = el}}
                 data-index={i}
-                className='shrink-0 snap-center'
+                style={{ display: 'flex' }}
+                className='items-center justify-center'
               >
                 <ClassCard
                   title={c.name}
@@ -137,10 +94,9 @@ export function ThirdStepForm({ onNext }: { onNext: (payload?: { class?: string 
                   primary={c.primary}
                   bg={c.bg}
                 />
-              </div>
+              </SwiperSlide>
             ))}
-            <div className='shrink-0 snap-center'></div>
-          </div>
+          </Swiper>
         </div>
       </div>
 

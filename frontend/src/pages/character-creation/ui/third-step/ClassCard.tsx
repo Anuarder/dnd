@@ -18,7 +18,7 @@ export default function ClassCard({
   bg?: string;
 }) {
   return (
-    <div className="w-[85vw] flex-shrink-0">
+    <div className="min-w-[380px] w-[50vw] flex-shrink-0">
       <div
         className="rounded-2xl overflow-hidden bg-cover bg-center text-left shadow-lg h-[482px]"
         style={{ backgroundImage: bg ? `url(${bg})` : undefined }}

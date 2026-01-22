@@ -5,6 +5,7 @@ import { useAuthStateListener } from '~entities/auth';
 import { HomeRoutes } from '~/pages/home';
 import { AuthRoutes } from '~auth';
 import { OnboardingRoutes } from '~/modules/onboarding/pages';
+import { CharacterCreationRoutes } from '~/pages/character-creation';
 import { AuthRoute, ProtectedRoute, OnboardingRoute, RootGuard } from './guards';
 
 const router = createBrowserRouter([
@@ -50,6 +51,14 @@ const router = createBrowserRouter([
           },
           {
             ...OnboardingRoutes.FinishPage,
+          },
+        ],
+      },
+      {
+        Component: ProtectedRoute,
+        children: [
+          {
+            ...CharacterCreationRoutes.CharacterCreationPage,
           },
         ],
       },

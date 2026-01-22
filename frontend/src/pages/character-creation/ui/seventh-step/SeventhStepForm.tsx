@@ -64,7 +64,8 @@ export function SeventhStepForm({ onNext }: Props) {
           placeholder="Search spells by name..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full rounded-[12px] border border-white/10 bg-white/5 px-3 py-2 text-white"
+          className="w-full rounded-[16px] border border-white/10 px-3 py-2 text-white placeholder:text-slate-400 focus:outline-none"
+          style={{ background: 'linear-gradient(90deg, rgba(127,19,236,0.2) 0%, rgba(147,51,234,0.2) 100%)' }}
         />
       </div>
 
@@ -99,7 +100,7 @@ export function SeventhStepForm({ onNext }: Props) {
             className={
               `relative flex h-14 w-full items-center justify-center gap-3 rounded-xl px-6 font-medium shadow-lg duration-300 active:scale-95 ` +
               (Object.values(selected).filter(Boolean).length === 0
-                ? 'bg-primary/40 text-white cursor-not-allowed opacity-60'
+                ? 'bg-purple-950 text-slate-400 cursor-not-allowed'
                 : 'bg-primary text-white active:bg-primary/90')
             }
           >

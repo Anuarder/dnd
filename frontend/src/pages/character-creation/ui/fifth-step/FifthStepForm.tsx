@@ -1,9 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import BackgroundCard from './BackgroundCard';
 import hermitImg from './assets/path-hermit.png';
 import soldierImg from './assets/path-warior.png';
 import criminalImg from './assets/path-rob.png';
 import { ArrowRight } from 'lucide-react';
+
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react';
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 type BackgroundDef = {
   id: string;
@@ -38,49 +44,6 @@ const backgrounds: BackgroundDef[] = [
 
 export function FifthStepForm({ onNext }: { onNext?: (payload?: { background?: string }) => void }) {
   const [index, setIndex] = useState(0);
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const debounceRef = useRef<number | null>(null);
-
-  const setIndexDebounced = (i: number) => {
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current);
-    }
-
-    debounceRef.current = window.setTimeout(() => {
-      setIndex(i);
-    }, 120);
-  };
-
-  useEffect(() => {
-    if (!scrollRef.current) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        let bestEntry: IntersectionObserverEntry | null = null;
-
-        entries.forEach((entry) => {
-          if (!bestEntry || entry.intersectionRatio > bestEntry.intersectionRatio) {
-            bestEntry = entry;
-          }
-        });
-
-        if (bestEntry && (bestEntry as IntersectionObserverEntry).isIntersecting) {
-          const i = Number(((bestEntry as IntersectionObserverEntry).target as HTMLElement).dataset.index);
-          setIndexDebounced(i);
-        }
-      },
-      {
-        root: scrollRef.current,
-        threshold: [0.5, 0.6, 0.7, 0.8, 0.9],
-      }
-    );
-
-    cardRefs.current.forEach((el) => el && observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
 
   function handleNextClick() {
     if (backgrounds[index]) onNext?.({ background: backgrounds[index].id });
@@ -89,16 +52,24 @@ export function FifthStepForm({ onNext }: { onNext?: (payload?: { background?: s
   return (
     <div className="w-full">
       <div className="relative">
-        <div className="overflow-hidden" ref={containerRef}>
-          <div ref={scrollRef} className="flex gap-4 snap-x snap-mandatory overflow-x-auto no-scrollbar">
-            <div className="shrink-0 snap-center" />
+        <div className="swiper-box overflow-hidden">
+          <Swiper
+            spaceBetween={25}
+            slidesPerView={1}
+            onSlideChange={(e) => setIndex(e.activeIndex)}
+            centeredSlides
+          >
             {backgrounds.map((b, i) => (
-              <div key={b.id} ref={(el) => { cardRefs.current[i] = el; }} data-index={i} className="shrink-0 snap-center">
+              <SwiperSlide
+                key={b.id}
+                data-index={i}
+                style={{ display: 'flex' }}
+                className='items-center justify-center'
+              >
                 <BackgroundCard title={b.name} description={b.description} bg={b.bg} />
-              </div>
+              </SwiperSlide>
             ))}
-            <div className="shrink-0 snap-center" />
-          </div>
+          </Swiper>
         </div>
       </div>
 

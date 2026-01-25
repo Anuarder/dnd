@@ -7,6 +7,7 @@ import { AuthRoutes } from '~auth';
 import { OnboardingRoutes } from '~/modules/onboarding/pages';
 import { CharacterCreationRoutes } from '~/pages/character-creation';
 import { MasterRoutes } from '~/modules/master';
+import { PlayerRoutes } from '~/modules/player/pages';
 import { AuthRoute, ProtectedRoute, OnboardingRoute, RootGuard } from './guards';
 
 const router = createBrowserRouter([
@@ -23,6 +24,12 @@ const router = createBrowserRouter([
           },
           {
             ...MasterRoutes.MainPage,
+          },
+          {
+            ...PlayerRoutes.MainPage,
+          },
+          {
+            ...PlayerRoutes.ArchivePage,
           },
           // Add more protected routes here
         ],

@@ -1,4 +1,5 @@
 import { type ReactElement, type ReactNode } from 'react';
+import classNames from 'classnames';
 
 function UiButton({
   children,
@@ -6,6 +7,7 @@ function UiButton({
   variant = 'primary',
   size = 'md',
   fullWidth = false,
+  className,
   icon,
   disabled = false,
   type = 'button',
@@ -15,6 +17,7 @@ function UiButton({
   variant?: 'primary' | 'secondary';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
+  className?: string;
   icon?: ReactNode;
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
@@ -40,7 +43,7 @@ function UiButton({
   return (
     <button
       type={type}
-      className={`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${widthClass}`}
+      className={classNames(`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${widthClass}`, className)}
       onClick={onClick}
       disabled={disabled}
     >

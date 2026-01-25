@@ -55,4 +55,3 @@ class OnboardingManager {
 const onboardingManager = new OnboardingManager();
 
 export { onboardingManager };
-

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+
 import SkillItem from './SkillItem';
 
 type Props = {
@@ -40,13 +41,17 @@ export function SixthStepForm({ stats, onNext, maxSelection = 4 }: Props) {
   function toggle(id: string) {
     setSelected((prev) => {
       const already = !!prev[id];
-      if (!already && selectedCount >= maxSelection) return prev; // don't allow more than max
+      if (!already && selectedCount >= maxSelection) {
+        return prev;
+      }
       return { ...prev, [id]: !already };
     });
   }
 
   function handleNext() {
-    const picks = Object.entries(selected).filter(([, v]) => v).map(([k]) => k);
+    const picks = Object.entries(selected)
+      .filter(([, v]) => v)
+      .map(([k]) => k);
     onNext?.({ skills: picks });
   }
 
@@ -57,7 +62,7 @@ export function SixthStepForm({ stats, onNext, maxSelection = 4 }: Props) {
         <div className="text-2xl font-bold text-white">Skills</div>
       </div>
 
-  <div className="grid gap-2 pb-28">
+      <div className="grid gap-2 pb-28">
         {SKILLS.map((s) => {
           const abilityValue = stats[s.ability] ?? 8;
           const bonus = computeBonus(abilityValue);
@@ -79,8 +84,8 @@ export function SixthStepForm({ stats, onNext, maxSelection = 4 }: Props) {
         })}
       </div>
 
-      <div className="fixed inset-x-0 bottom-6 flex justify-center z-50 pointer-events-none">
-        <div className="w-full max-w-[400px] px-4 pointer-events-auto">
+      <div className="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex justify-center">
+        <div className="pointer-events-auto w-full max-w-[400px] px-4">
           <button
             type="button"
             onClick={handleNext}
@@ -89,8 +94,8 @@ export function SixthStepForm({ stats, onNext, maxSelection = 4 }: Props) {
             className={
               `relative flex h-14 w-full items-center justify-center gap-3 rounded-xl px-6 font-medium shadow-lg duration-300 active:scale-95 ` +
               (selectedCount === 0
-                ? 'bg-purple-950 text-slate-400 cursor-not-allowed'
-                : 'bg-primary text-white active:bg-primary/90')
+                ? 'cursor-not-allowed bg-purple-950 text-slate-400'
+                : 'bg-primary active:bg-primary/90 text-white')
             }
           >
             <span>Next</span>

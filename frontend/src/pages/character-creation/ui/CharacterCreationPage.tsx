@@ -1,13 +1,14 @@
 import { motion } from 'motion/react';
-import { StepHeader } from './StepHeader';
-import { FirstStepForm } from './first-step/FirstStepForm';
-import { SecondStepForm } from './second-step/SecondStepForm';
-import { ThirdStepForm } from './third-step/ThirdStepForm';
-import { ForthStepForm } from './forth-step/ForthStepForm';
-import { FifthStepForm } from './fifth-step/FifthStepForm';
-import { SixthStepForm } from './sixth-step/SixthStepForm';
-import { SeventhStepForm } from './seventh-step/SeventhStepForm';
 import { useState } from 'react';
+
+import { StepHeader } from './StepHeader';
+import { FifthStepForm } from './fifth-step/FifthStepForm';
+import { FirstStepForm } from './first-step/FirstStepForm';
+import { ForthStepForm } from './forth-step/ForthStepForm';
+import { SecondStepForm } from './second-step/SecondStepForm';
+import { SeventhStepForm } from './seventh-step/SeventhStepForm';
+import { SixthStepForm } from './sixth-step/SixthStepForm';
+import { ThirdStepForm } from './third-step/ThirdStepForm';
 
 export function CharacterCreationPage() {
   const steps = ['Basics', 'Race', 'Class', 'Stats', 'Background', 'Skills', 'Spells'];
@@ -24,14 +25,13 @@ export function CharacterCreationPage() {
     });
 
     setCurrent((c) => Math.min(c + 1, steps.length - 1));
-    
   }
 
   // goBack intentionally omitted until a back button is added
 
   return (
     <div className="bg-dark-primary flex min-h-dvh justify-center px-2 pt-2 pb-9 text-center text-pretty text-white">
-      <div className="flex w-full max-w-[640px] flex-col items-center gap-5 pa-2">
+      <div className="pa-2 flex w-full max-w-[640px] flex-col items-center gap-5">
         <div
           className="absolute inset-x-0 top-0 z-0 h-full"
           style={{
@@ -46,14 +46,18 @@ export function CharacterCreationPage() {
           transition={{ duration: 0.45, ease: 'easeOut' }}
           className="relative z-[1] w-full rounded-2xl"
         >
-          <StepHeader steps={steps} current={current} onBack={() => setCurrent((c) => Math.max(c - 1, 0))} />
+          <StepHeader
+            steps={steps}
+            current={current}
+            onBack={() => setCurrent((c) => Math.max(c - 1, 0))}
+          />
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05, ease: 'easeOut' }}
-          className="w-full z-[1] pa-2"
+          className="pa-2 z-[1] w-full"
         >
           {current === 0 && <FirstStepForm onNext={goNext} />}
 
@@ -66,17 +70,10 @@ export function CharacterCreationPage() {
           {current === 4 && <FifthStepForm onNext={goNext} />}
 
           {current === 5 && (
-            <SixthStepForm
-              stats={character.stats ?? {}}
-              onNext={(p: any) => goNext(p)}
-            />
+            <SixthStepForm stats={character.stats ?? {}} onNext={(p: any) => goNext(p)} />
           )}
 
-          {current === 6 && (
-            <SeventhStepForm
-              onNext={(p: any) => goNext(p)}
-            />
-          )}
+          {current === 6 && <SeventhStepForm onNext={(p: any) => goNext(p)} />}
         </motion.div>
       </div>
     </div>

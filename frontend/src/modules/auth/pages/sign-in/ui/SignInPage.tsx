@@ -1,8 +1,8 @@
 import { motion } from 'motion/react';
 
-import AuthImage from './assets/auth-image.jpg';
-
 import { useAuthSignInWithOAuthMutation } from '~entities/auth';
+
+import AuthImage from './assets/auth-image.jpg';
 
 function GoogleIcon() {
   return (
@@ -41,13 +41,13 @@ export function SignInPage() {
   }
 
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-dark-primary p-4 text-center text-pretty text-white">
+    <div className="bg-dark-primary flex min-h-dvh items-center justify-center p-4 text-center text-pretty text-white">
       <div className="flex flex-col items-center gap-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="glow-effect relative max-w-[400px] overflow-hidden rounded-2xl border border-white/5 bg-linear-to-b from-dark-secondary to-dark-primary shadow-2xl"
+          className="glow-effect from-dark-secondary to-dark-primary relative max-w-[400px] overflow-hidden rounded-2xl border border-white/5 bg-linear-to-b shadow-2xl"
         >
           <img
             width="400"

@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import BackgroundCard from './BackgroundCard';
-import hermitImg from './assets/path-hermit.png';
-import soldierImg from './assets/path-warior.png';
-import criminalImg from './assets/path-rob.png';
 import { ArrowRight } from 'lucide-react';
-
-// Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { useState } from 'react';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import BackgroundCard from './BackgroundCard';
+import hermitImg from './assets/path-hermit.png';
+import criminalImg from './assets/path-rob.png';
+import soldierImg from './assets/path-warior.png';
 
 type BackgroundDef = {
   id: string;
@@ -42,11 +42,19 @@ const backgrounds: BackgroundDef[] = [
   },
 ];
 
-export function FifthStepForm({ onNext }: { onNext?: (payload?: { background?: string }) => void }) {
+export function FifthStepForm({
+  onNext,
+}: {
+  onNext?: (payload?: { background?: string }) => void;
+}) {
   const [index, setIndex] = useState(0);
 
   function handleNextClick() {
-    if (backgrounds[index]) onNext?.({ background: backgrounds[index].id });
+    if (backgrounds[index]) {
+      {
+        onNext?.({ background: backgrounds[index].id });
+      }
+    }
   }
 
   return (
@@ -64,7 +72,7 @@ export function FifthStepForm({ onNext }: { onNext?: (payload?: { background?: s
                 key={b.id}
                 data-index={i}
                 style={{ display: 'flex' }}
-                className='items-center justify-center'
+                className="items-center justify-center"
               >
                 <BackgroundCard title={b.name} description={b.description} bg={b.bg} />
               </SwiperSlide>
@@ -73,14 +81,14 @@ export function FifthStepForm({ onNext }: { onNext?: (payload?: { background?: s
         </div>
       </div>
 
-      <div className="fixed inset-x-0 bottom-6 flex justify-center z-50 pointer-events-none">
-        <div className="w-full max-w-[400px] px-4 pointer-events-auto">
+      <div className="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex justify-center">
+        <div className="pointer-events-auto w-full max-w-[400px] px-4">
           <button
             type="button"
             onClick={handleNextClick}
             className={
               `relative flex h-14 w-full items-center justify-center gap-3 rounded-xl px-6 font-medium shadow-lg duration-300 active:scale-95 ` +
-              'bg-primary text-white active:bg-primary/90'
+              'bg-primary active:bg-primary/90 text-white'
             }
           >
             <span>Choose background</span>

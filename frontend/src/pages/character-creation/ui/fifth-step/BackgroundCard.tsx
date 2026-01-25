@@ -8,18 +8,21 @@ export default function BackgroundCard({
   bg?: string;
 }) {
   return (
-    <div className="min-w-[380px] w-[50vw] flex-shrink-0">
+    <div className="w-[50vw] min-w-[380px] flex-shrink-0">
       <div
-        className="rounded-2xl overflow-hidden bg-cover bg-center text-left shadow-lg h-[500px]"
+        className="h-[500px] overflow-hidden rounded-2xl bg-cover bg-center text-left shadow-lg"
         style={{ backgroundImage: bg ? `url(${bg})` : undefined }}
       >
         <div
-          className="p-6 h-full flex flex-col justify-end"
-          style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0) 100%)' }}
+          className="flex h-full flex-col justify-end p-6"
+          style={{
+            background:
+              'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0) 100%)',
+          }}
         >
           <div>
             <div className="text-2xl font-semibold text-white">{title}</div>
-            {description && <div className="text-sm text-slate-300 mt-1">{description}</div>}
+            {description && <div className="mt-1 text-sm text-slate-300">{description}</div>}
           </div>
         </div>
       </div>

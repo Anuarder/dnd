@@ -1,5 +1,5 @@
-import { type ReactElement, type ReactNode } from 'react';
 import classNames from 'classnames';
+import { type ReactElement, type ReactNode } from 'react';
 
 function UiButton({
   children,
@@ -43,7 +43,10 @@ function UiButton({
   return (
     <button
       type={type}
-      className={classNames(`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${widthClass}`, className)}
+      className={classNames(
+        `${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${widthClass}`,
+        className
+      )}
       onClick={onClick}
       disabled={disabled}
     >

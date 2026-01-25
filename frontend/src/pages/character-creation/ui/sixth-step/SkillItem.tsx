@@ -27,7 +27,7 @@ export function SkillItem({ id, name, ability, bonus, checked, disabled, onToggl
       htmlFor={id}
       className={`flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-white/10 px-3 py-2 transition ${
         checked ? 'bg-primary/20' : 'bg-white/5'
-      } ${disabled && !checked ? 'opacity-60 cursor-not-allowed' : ''}`}
+      } ${disabled && !checked ? 'cursor-not-allowed opacity-60' : ''}`}
     >
       <div className="flex items-center gap-3">
         <input
@@ -42,7 +42,7 @@ export function SkillItem({ id, name, ability, bonus, checked, disabled, onToggl
         <span
           aria-hidden
           className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-sm border transition-colors ${
-            checked ? 'bg-primary border-primary' : 'bg-transparent border-white/20'
+            checked ? 'bg-primary border-primary' : 'border-white/20 bg-transparent'
           }`}
         >
           {checked ? <Check size={14} className="text-white" /> : null}

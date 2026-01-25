@@ -1,8 +1,9 @@
-import { OnboradingStartPage } from './start';
-import { OnboradingPlayerPage } from './player';
-import { OnboradingMasterPage } from './master';
-import { OnboradingFinishPage } from './finish';
 import { Route } from '~shared/types';
+
+import { OnboradingFinishPage } from './finish';
+import { OnboradingMasterPage } from './master';
+import { OnboradingPlayerPage } from './player';
+import { OnboradingStartPage } from './start';
 
 export const OnboardingRoutes = {
   StartPage: {
@@ -22,4 +23,3 @@ export const OnboardingRoutes = {
     Component: OnboradingFinishPage,
   },
 } as const satisfies Record<string, Route>;
-

@@ -16,7 +16,7 @@ function AuthRoute({ redirectTo = '/' }: AuthRouteProps): ReactElement {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-dvh items-center justify-center bg-dark-primary p-4">
+      <div className="bg-dark-primary flex min-h-dvh items-center justify-center p-4">
         <div className="flex flex-col items-center gap-6">
           {/* Animated key icon */}
           <div className="relative flex items-center justify-center">
@@ -62,4 +62,3 @@ function AuthRoute({ redirectTo = '/' }: AuthRouteProps): ReactElement {
 }
 
 export { AuthRoute };
-

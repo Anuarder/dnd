@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router';
+
 import { onboardingManager } from '~shared/lib/onboarding';
 
 /**
@@ -22,4 +23,3 @@ function RootGuard(): ReactElement {
 }
 
 export { RootGuard };
-

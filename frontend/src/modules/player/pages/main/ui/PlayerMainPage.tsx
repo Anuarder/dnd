@@ -57,7 +57,7 @@ function CampaignBanner({
     >
       <div className="mb-3 flex items-center gap-2">
         <Sparkles size={14} className="text-yellow-400" />
-        <span className="text-xs font-semibold uppercase tracking-wide text-yellow-400">
+        <span className="text-xs font-semibold tracking-wide text-yellow-400 uppercase">
           Last Active Campaign
         </span>
       </div>
@@ -129,7 +129,11 @@ function CharacterList({
       className="space-y-4"
     >
       {characters.map((character) => (
-        <CharacterListItem key={character.id} character={character} onCharacterClick={onCharacterClick} />
+        <CharacterListItem
+          key={character.id}
+          character={character}
+          onCharacterClick={onCharacterClick}
+        />
       ))}
     </motion.div>
   );
@@ -197,7 +201,7 @@ export function PlayerMainPage() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-400"
+            className="mb-4 text-sm font-semibold tracking-wide text-gray-400 uppercase"
           >
             Campaigns
           </motion.h2>
@@ -217,7 +221,7 @@ export function PlayerMainPage() {
             transition={{ duration: 0.3, delay: 0.1, ease: 'easeOut' }}
             className="mb-4"
           >
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-400">
+            <h2 className="text-sm font-semibold tracking-wide text-gray-400 uppercase">
               Your Legends
             </h2>
           </motion.div>
@@ -254,9 +258,14 @@ export function PlayerMainPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
-            className="mt-6 pointer-events-none sticky z-1 bottom-5 mx-auto max-w-4xl"
+            className="pointer-events-none sticky bottom-5 z-1 mx-auto mt-6 max-w-4xl"
           >
-            <UiButton className="pointer-events-auto" onClick={onCreateCharacter} fullWidth icon={<Plus size={20} />}>
+            <UiButton
+              className="pointer-events-auto"
+              onClick={onCreateCharacter}
+              fullWidth
+              icon={<Plus size={20} />}
+            >
               Create New Legend
             </UiButton>
           </motion.div>

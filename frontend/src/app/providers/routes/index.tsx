@@ -2,13 +2,14 @@ import { RouterProvider, createBrowserRouter } from 'react-router';
 
 import { useAuthStateListener } from '~entities/auth';
 
+import { MasterRoutes } from '~/modules/master';
+import { OnboardingRoutes } from '~/modules/onboarding/pages';
+import { PlayerRoutes } from '~/modules/player/pages';
+import { CharacterCreationRoutes } from '~/pages/character-creation';
 import { HomeRoutes } from '~/pages/home';
 import { AuthRoutes } from '~auth';
-import { OnboardingRoutes } from '~/modules/onboarding/pages';
-import { CharacterCreationRoutes } from '~/pages/character-creation';
-import { MasterRoutes } from '~/modules/master';
-import { PlayerRoutes } from '~/modules/player/pages';
-import { AuthRoute, ProtectedRoute, OnboardingRoute, RootGuard } from './guards';
+
+import { AuthRoute, OnboardingRoute, ProtectedRoute, RootGuard } from './guards';
 
 const router = createBrowserRouter([
   // Root guard - checks onboarding for all routes

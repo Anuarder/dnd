@@ -16,7 +16,7 @@ export function StepHeader({ steps, current, totalSteps, onBack }: StepHeaderPro
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between h-10 mb-1">
+      <div className="mb-1 flex h-10 items-center justify-between">
         <ArrowLeft
           size={18}
           onClick={() => {
@@ -30,21 +30,19 @@ export function StepHeader({ steps, current, totalSteps, onBack }: StepHeaderPro
           className="w-10"
         />
 
-
         <div className="flex-1 text-center">
-          <div className="text-md font-medium text-white truncate">{steps[current] ?? 'Step'}</div>
+          <div className="text-md truncate font-medium text-white">{steps[current] ?? 'Step'}</div>
         </div>
 
         <div className="w-10" />
       </div>
 
-      <div className="text-sm text-slate-400 text-left">Step {stepNumber} of {total}</div>
+      <div className="text-left text-sm text-slate-400">
+        Step {stepNumber} of {total}
+      </div>
 
-      <div className="mt-2 h-1 w-full bg-white/5 rounded-full overflow-hidden">
-        <div
-          className="h-full bg-primary transition-all"
-          style={{ width: `${percent}%` }}
-        />
+      <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-white/5">
+        <div className="bg-primary h-full transition-all" style={{ width: `${percent}%` }} />
       </div>
     </div>
   );

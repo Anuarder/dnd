@@ -1,5 +1,5 @@
-import { BookOpen, Crown, Swords, User } from "lucide-react";
 import classNames from 'classnames';
+import { BookOpen, Crown, Swords, User } from 'lucide-react';
 
 const MASTER = {
   logo: Crown,
@@ -16,9 +16,12 @@ const PLAYER = {
   buttonLabel: 'I am a Gamer',
 };
 
-export function DestinyCard(props: { type: 'master' | 'player', events: {
-  onClick: () => void;
-} }) {
+export function DestinyCard(props: {
+  type: 'master' | 'player';
+  events: {
+    onClick: () => void;
+  };
+}) {
   const isMaster = props.type === 'master';
   const cardData = isMaster ? MASTER : PLAYER;
 

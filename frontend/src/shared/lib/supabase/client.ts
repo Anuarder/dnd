@@ -18,4 +18,3 @@ const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_PUBLISHABLE_KEY, {
 });
 
 export { supabase };
-

@@ -1,6 +1,7 @@
+import { Route } from '~shared/types';
+
 import { AuthCallbackPage } from './pages/auth-callback';
 import { SignInPage } from './pages/sign-in';
-import { Route } from '~shared/types';
 
 export const AuthRoutes = {
   SignInPage: {

@@ -1,6 +1,7 @@
-import { ArrowRight, Camera, Mars, Venus, Transgender } from 'lucide-react';
-import { RadioGender } from './RadioGender';
+import { ArrowRight, Camera, Mars, Transgender, Venus } from 'lucide-react';
 import { useRef, useState } from 'react';
+
+import { RadioGender } from './RadioGender';
 
 type FormData = {
   name: string;
@@ -40,7 +41,9 @@ export function FirstStepForm({
   function removeAvatar() {
     setAvatar(null);
     setPreview(null);
-    if (inputRef.current) inputRef.current.value = '';
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
   }
 
   function handleSubmit(e?: React.FormEvent) {
@@ -62,7 +65,7 @@ export function FirstStepForm({
       <div className="flex flex-col gap-4 pb-18">
         <div className="mx-auto">
           <div className="relative inline-block overflow-visible">
-            <div className="h-28 w-28 overflow-hidden rounded-full bg-white/5 flex items-center justify-center">
+            <div className="flex h-28 w-28 items-center justify-center overflow-hidden rounded-full bg-white/5">
               {preview ? (
                 <img src={preview} alt="avatar" className="h-full w-full object-cover" />
               ) : (
@@ -77,7 +80,7 @@ export function FirstStepForm({
                 inputRef.current?.click();
               }}
               aria-label="Choose avatar"
-              className="absolute -bottom-2 -right-2 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-primary text-white shadow-md hover:scale-105 transform transition"
+              className="bg-primary absolute -right-2 -bottom-2 z-10 flex h-9 w-9 transform items-center justify-center rounded-full text-white shadow-md transition hover:scale-105"
             >
               <Camera size={16} />
             </button>
@@ -94,19 +97,17 @@ export function FirstStepForm({
 
         <div className="flex items-center justify-center">
           {preview && (
-            <button
-              type="button"
-              className="text-sm text-red-400 underline"
-              onClick={removeAvatar}
-            >
+            <button type="button" className="text-sm text-red-400 underline" onClick={removeAvatar}>
               Remove
             </button>
           )}
         </div>
 
         <div>
-          <h4 className='text-[38px] text-white text-left'>Who are you?</h4>
-          <p className='text-lg text-slate-300 text-left'>Let's start with the basics of your legend.</p>
+          <h4 className="text-left text-[38px] text-white">Who are you?</h4>
+          <p className="text-left text-lg text-slate-300">
+            Let&apos;s start with the basics of your legend.
+          </p>
         </div>
 
         <div>
@@ -115,7 +116,10 @@ export function FirstStepForm({
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="mt-2 w-full rounded-[16px] border border-white/10 px-3 py-2 text-white placeholder:text-slate-400 focus:outline-none"
-            style={{ background: 'linear-gradient(90deg, rgba(127,19,236,0.2) 0%, rgba(147,51,234,0.2) 100%)' }}
+            style={{
+              background:
+                'linear-gradient(90deg, rgba(127,19,236,0.2) 0%, rgba(147,51,234,0.2) 100%)',
+            }}
             placeholder="Your character's name"
             required
           />
@@ -130,7 +134,9 @@ export function FirstStepForm({
               label="Male"
               selected={gender === 'male'}
               onSelect={() => setGender('male')}
-              icon={<Mars className={gender === 'male' ? 'text-primary' : 'text-slate-400'} size={24} />}
+              icon={
+                <Mars className={gender === 'male' ? 'text-primary' : 'text-slate-400'} size={24} />
+              }
             />
 
             <RadioGender
@@ -139,7 +145,12 @@ export function FirstStepForm({
               label="Female"
               selected={gender === 'female'}
               onSelect={() => setGender('female')}
-              icon={<Venus className={gender === 'female' ? 'text-primary' : 'text-slate-400'} size={24} />}
+              icon={
+                <Venus
+                  className={gender === 'female' ? 'text-primary' : 'text-slate-400'}
+                  size={24}
+                />
+              }
             />
 
             <RadioGender
@@ -148,7 +159,12 @@ export function FirstStepForm({
               label="Other"
               selected={gender === 'other'}
               onSelect={() => setGender('other')}
-              icon={<Transgender className={gender === 'other' ? 'text-primary' : 'text-slate-400'} size={24} />}
+              icon={
+                <Transgender
+                  className={gender === 'other' ? 'text-primary' : 'text-slate-400'}
+                  size={24}
+                />
+              }
             />
           </div>
         </div>
@@ -159,15 +175,17 @@ export function FirstStepForm({
             value={backstory}
             onChange={(e) => setBackstory(e.target.value)}
             className="mt-2 h-28 w-full rounded-[16px] border border-white/10 px-3 py-2 text-white placeholder:text-slate-400 focus:outline-none"
-            style={{ background: 'linear-gradient(90deg, rgba(127,19,236,0.2) 0%, rgba(147,51,234,0.2) 100%)' }}
+            style={{
+              background:
+                'linear-gradient(90deg, rgba(127,19,236,0.2) 0%, rgba(147,51,234,0.2) 100%)',
+            }}
             placeholder="Tell a short pre-history of your character"
           />
         </div>
-
       </div>
 
-      <div className="fixed inset-x-0 bottom-6 flex justify-center z-50 pointer-events-none">
-        <div className="w-full max-w-[400px] px-4 pointer-events-auto">
+      <div className="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex justify-center">
+        <div className="pointer-events-auto w-full max-w-[400px] px-4">
           <button
             type="button"
             onClick={handleSubmit}
@@ -176,8 +194,8 @@ export function FirstStepForm({
             className={
               `relative flex h-14 w-full items-center justify-center gap-3 rounded-xl px-6 font-medium shadow-lg duration-300 active:scale-95 ` +
               (isNextDisabled
-                ? 'bg-purple-950 text-slate-400 cursor-not-allowed'
-                : 'bg-primary text-white active:bg-primary/90')
+                ? 'cursor-not-allowed bg-purple-950 text-slate-400'
+                : 'bg-primary active:bg-primary/90 text-white')
             }
           >
             <span>Next</span>

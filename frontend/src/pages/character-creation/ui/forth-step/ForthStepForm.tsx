@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react';
-import CharacteristicItem from './CharacteristicItem';
 import { ArrowRight } from 'lucide-react';
+import { useMemo, useState } from 'react';
+
+import CharacteristicItem from './CharacteristicItem';
 
 type Stat = {
   key: string;
@@ -27,7 +28,11 @@ function computeBonus(value: number) {
   return Math.floor(value / 2) - 5;
 }
 
-export function ForthStepForm({ onNext }: { onNext?: (payload?: { stats: Record<string, number> }) => void }) {
+export function ForthStepForm({
+  onNext,
+}: {
+  onNext?: (payload?: { stats: Record<string, number> }) => void;
+}) {
   const [stats, setStats] = useState<Record<string, number>>(
     Object.fromEntries(initialStats.map((s) => [s.key, s.value]))
   );
@@ -44,7 +49,9 @@ export function ForthStepForm({ onNext }: { onNext?: (payload?: { stats: Record<
   function increment(key: string) {
     setStats((prev) => {
       const curr = prev[key] ?? INITIAL_VALUE;
-      if (curr >= MAX_VALUE || pointsRemaining <= 0) return prev;
+      if (curr >= MAX_VALUE || pointsRemaining <= 0) {
+        return prev;
+      }
       return { ...prev, [key]: curr + 1 };
     });
   }
@@ -52,13 +59,15 @@ export function ForthStepForm({ onNext }: { onNext?: (payload?: { stats: Record<
   function decrement(key: string) {
     setStats((prev) => {
       const curr = prev[key] ?? INITIAL_VALUE;
-      if (curr <= MIN_VALUE) return prev;
+      if (curr <= MIN_VALUE) {
+        return prev;
+      }
       return { ...prev, [key]: curr - 1 };
     });
   }
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex w-full flex-col gap-4">
       <div className="flex items-center justify-between">
         <div>
           <div className="text-sm text-slate-400">Points remaining</div>
@@ -90,14 +99,12 @@ export function ForthStepForm({ onNext }: { onNext?: (payload?: { stats: Record<
         })}
       </div>
 
-      <div className="fixed inset-x-0 bottom-6 flex justify-center z-50 pointer-events-none">
-        <div className="w-full max-w-[400px] px-4 pointer-events-auto">
+      <div className="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex justify-center">
+        <div className="pointer-events-auto w-full max-w-[400px] px-4">
           <button
             type="button"
             onClick={() => onNext?.({ stats })}
-            className={
-              `relative flex h-14 w-full items-center justify-center gap-3 rounded-xl px-6 font-medium shadow-lg duration-300 active:scale-95 bg-primary text-white active:bg-primary/90`
-            }
+            className={`bg-primary active:bg-primary/90 relative flex h-14 w-full items-center justify-center gap-3 rounded-xl px-6 font-medium text-white shadow-lg duration-300 active:scale-95`}
           >
             <span>Next</span>
             <ArrowRight size={18} />

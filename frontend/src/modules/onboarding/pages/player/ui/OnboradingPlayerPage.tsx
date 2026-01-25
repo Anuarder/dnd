@@ -49,7 +49,7 @@ export function OnboradingPlayerPage() {
             </h1>
 
             <p className="leading-relaxed font-normal text-slate-400">
-              From world-builders to dragon-slayers, we've built the ultimate toolkit for every
+              From world-builders to dragon-slayers, we&apos;ve built the ultimate toolkit for every
               adventurer. Keep the story moving without missing a beat.
             </p>
           </motion.div>

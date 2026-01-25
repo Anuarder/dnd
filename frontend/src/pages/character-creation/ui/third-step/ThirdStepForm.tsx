@@ -1,11 +1,15 @@
+import { ArrowRight, BookOpen, Feather, Music, Zap } from 'lucide-react';
 import React, { useState } from 'react';
-import ClassCard from './ClassCard';
-import { BookOpen, Music, Zap, Feather, ArrowRight } from 'lucide-react';
-// Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import ClassCard from './ClassCard';
+import barbarianBg from './assets/class-barbarian.png';
+import bardBg from './assets/class-bard.png';
+import wizardBg from './assets/class-wizard.png';
 
 type ClassDef = {
   id: string;
@@ -17,10 +21,6 @@ type ClassDef = {
   bg: string;
 };
 
-import bardBg from './assets/class-bard.png';
-import wizardBg from './assets/class-wizard.png';
-import barbarianBg from './assets/class-barbarian.png';
-
 const classes: ClassDef[] = [
   {
     id: 'bard',
@@ -28,7 +28,7 @@ const classes: ClassDef[] = [
     description: 'Versatile performers and spellcasters who inspire allies.',
     features: [
       { label: 'Spellcasting', icon: <BookOpen size={14} /> },
-      { label: "Bardic Inspiration", icon: <Music size={14} /> },
+      { label: 'Bardic Inspiration', icon: <Music size={14} /> },
     ],
     hitDie: 'd8',
     primary: 'Charisma',
@@ -61,12 +61,12 @@ const classes: ClassDef[] = [
 ];
 
 export function ThirdStepForm({ onNext }: { onNext: (payload?: { class?: string }) => void }) {
-
-
   const [index, setIndex] = useState(0);
 
   function handleNextClick() {
-    if (classes[index]) onNext?.({ class: classes[index].id });
+    if (classes[index]) {
+      onNext?.({ class: classes[index].id });
+    }
   }
 
   return (
@@ -84,7 +84,7 @@ export function ThirdStepForm({ onNext }: { onNext: (payload?: { class?: string 
                 key={c.id}
                 data-index={i}
                 style={{ display: 'flex' }}
-                className='items-center justify-center'
+                className="items-center justify-center"
               >
                 <ClassCard
                   title={c.name}
@@ -100,8 +100,8 @@ export function ThirdStepForm({ onNext }: { onNext: (payload?: { class?: string 
         </div>
       </div>
 
-      <div className="fixed inset-x-0 bottom-6 flex justify-center z-50 pointer-events-none">
-        <div className="w-full max-w-[400px] px-4 pointer-events-auto">
+      <div className="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex justify-center">
+        <div className="pointer-events-auto w-full max-w-[400px] px-4">
           <button
             type="button"
             onClick={handleNextClick}

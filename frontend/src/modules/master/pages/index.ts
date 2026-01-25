@@ -1,15 +1,10 @@
-import { LobbyPage } from './lobby';
-import { LobbyCreatePage } from './lobby-create/index';
 import { Route } from '~shared/types';
 
+import { MasterMainPage } from './main';
+
 export const MasterRoutes = {
-  LobbyCreatePage: {
-    path: '/lobby-create',
-    Component: LobbyCreatePage,
-  },
-  MasterLobbyPage: {
-    path: '/master-lobby',
-    Component: LobbyPage,
+  MainPage: {
+    path: '/master',
+    Component: MasterMainPage,
   },
 } as const satisfies Record<string, Route>;
-

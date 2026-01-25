@@ -43,7 +43,7 @@ export function AuthCallbackPage() {
           <button
             type="button"
             onClick={handleBackToSignIn}
-            className="mt-2 rounded-lg bg-purple-600 px-6 py-2 font-medium transition-colors hover:bg-purple-700"
+            className="mt-2 min-h-11 rounded-lg bg-purple-600 px-6 py-2 font-medium transition-all duration-200 ease-out active:scale-95 active:bg-purple-700"
           >
             Back to Sign In
           </button>

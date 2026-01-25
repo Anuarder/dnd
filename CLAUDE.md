@@ -69,6 +69,74 @@
 
 **ALWAYS use Tailwind CSS for styling** - do not write custom CSS unless absolutely necessary.
 
+### Mobile-First Design Philosophy
+
+**CRITICAL**: This project is **mobile-only** - all UX must be optimized for mobile devices first and foremost.
+
+#### Mobile-First UX Principles
+
+- ✅ **Design for touch interactions**
+  - Minimum touch target size: 44x44px (use `min-h-11 min-w-11` or larger)
+  - Add adequate spacing between interactive elements (minimum 8px gap)
+  - Use `active:` states instead of `hover:` for primary feedback
+  - Avoid hover-only interactions - they don't work on mobile
+
+- ✅ **Optimize for thumb reach**
+  - Place primary actions at the bottom of the screen
+  - Keep important navigation within easy thumb reach
+  - Use bottom navigation bars instead of top-only navigation
+
+- ✅ **Use mobile-friendly patterns**
+  - Bottom sheets and slide-up panels instead of modals
+  - Swipe gestures for common actions
+  - Pull-to-refresh for content updates
+  - Full-screen experiences instead of cramped layouts
+
+- ✅ **Responsive sizing**
+  - Use `dvh` (dynamic viewport height) instead of `vh` to account for mobile browser chrome
+  - Use relative units (`rem`, `em`) for scalability
+  - Test on various mobile screen sizes (320px to 428px width)
+
+- ✅ **Performance on mobile**
+  - Minimize animations - mobile devices have less power
+  - Use `will-change` sparingly
+  - Optimize images for mobile bandwidth
+  - Lazy load content below the fold
+
+- ✅ **Typography for mobile**
+  - Minimum body text size: 16px (prevents zoom on iOS)
+  - Adequate line height for readability (1.5-1.6)
+  - Shorter line lengths (45-75 characters)
+
+- ❌ **Avoid desktop patterns**
+  - No hover-dependent interactions
+  - No small click targets (< 44px)
+  - No complex multi-column layouts
+  - No desktop-only navigation patterns
+
+#### Tailwind Mobile-First Classes
+
+```tsx
+// ✅ Correct: Mobile-first with touch-friendly sizing
+<button className="min-h-11 w-full rounded-lg bg-primary px-4 py-3 text-base font-semibold text-white active:scale-95 active:bg-primary/90">
+  Tap Me
+</button>
+
+// ✅ Correct: Use dvh for full-height mobile layouts
+<div className="min-h-dvh">Content</div>
+
+// ✅ Correct: Bottom-aligned primary actions
+<div className="fixed bottom-0 left-0 right-0 p-4">
+  <button className="w-full">Primary Action</button>
+</div>
+
+// ❌ Wrong: Hover-only feedback (doesn't work on mobile)
+<button className="hover:bg-blue-700">Click</button>
+
+// ❌ Wrong: Small touch targets
+<button className="h-6 w-6">×</button>
+```
+
 ### Tailwind CSS Usage
 
 - ✅ **Use Tailwind CSS** for all styling in:
@@ -103,8 +171,10 @@ function Card() {
 ### Key Points
 
 - Tailwind provides utility classes for almost everything: layout, spacing, colors, typography, shadows, borders, transitions
-- Use Tailwind's responsive utilities (`sm:`, `md:`, `lg:`, `xl:`, `2xl:`) for responsive design
-- Use Tailwind's state variants (`hover:`, `focus:`, `active:`, `disabled:`) for interactive states
+- **Mobile-first**: Design for mobile screens first, then enhance for larger screens if needed
+- Use Tailwind's state variants (`active:`, `focus:`, `disabled:`) for interactive states - prioritize `active:` over `hover:` for mobile
+- Use `dvh` (dynamic viewport height) for full-height mobile layouts
+- Ensure touch targets are minimum 44x44px (`min-h-11 min-w-11`)
 - Leverage Tailwind's color palette and spacing scale for consistency
 - Use `@apply` directive in CSS only when absolutely necessary (prefer inline utilities)
 
@@ -128,6 +198,33 @@ import { AuthService } from '@/services';
 import { validateEmail } from './validators';
 import type { User } from '../types';
 ```
+
+## Module Exports (Barrel Files)
+
+**NEVER use `export *` syntax in barrel files (index.ts)**. Always use explicit named exports.
+
+✅ Correct:
+
+```typescript
+// index.ts
+export { useCampaignsQuery, useCreateCampaignMutation } from './model';
+export type { Campaign, CreateCampaignInput } from './types';
+```
+
+❌ Wrong:
+
+```typescript
+// index.ts
+export * from './model';
+export * from './types';
+```
+
+**Reasons:**
+- Explicit exports make it clear what's being exported from a module
+- Prevents accidental exports of internal implementation details
+- Improves IDE autocomplete and refactoring
+- Makes it easier to track where exports are used
+- Avoids naming conflicts between modules
 
 ## Function Declarations
 
@@ -745,6 +842,10 @@ export const config = envSchema.parse(process.env);
 - Do not manually manage server state with useState (use TanStack Query)
 - Do not write custom CSS - use Tailwind CSS utility classes instead
 - Do not create components with single-word names (use `UiButton` not `Button`)
+- **Do not design for desktop first** - this is a mobile-only application
+- Do not use hover-only interactions - they don't work on mobile devices
+- Do not create touch targets smaller than 44x44px
+- Do not use `vh` - use `dvh` for mobile viewport height
 
 ## Do NOT (Node.js/Backend)
 
@@ -775,7 +876,12 @@ This project uses:
 - **Backend**: Node.js + TypeScript + Fastify + Drizzle ORM + PostgreSQL
 - **Testing**: Vitest (frontend & backend)
 - **Architecture**: Feature-Sliced Design (frontend)
+- **Platform**: **Mobile-only** application
 
-**Key Styling Rule**: Always use Tailwind CSS utility classes for styling. Never write custom CSS unless absolutely necessary.
+**Key Rules**:
+- **Mobile-First**: Always design for mobile devices first - this is a mobile-only application
+- **Touch-Friendly**: Minimum 44x44px touch targets, use `active:` states, no hover-only interactions
+- **Tailwind CSS**: Always use Tailwind utility classes for styling. Never write custom CSS unless absolutely necessary
+- **Viewport**: Use `dvh` (dynamic viewport height) instead of `vh` for mobile layouts
 
-Always prioritize code quality, type safety, accessibility, and maintainability!
+Always prioritize code quality, type safety, accessibility, mobile UX, and maintainability!

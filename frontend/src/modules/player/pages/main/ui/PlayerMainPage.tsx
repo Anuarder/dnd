@@ -1,6 +1,6 @@
 import { ArrowRight, Link2, Plus, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
-import { type ReactElement, useEffect, useMemo, useState } from 'react';
+import { type ReactElement, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { UiButton, UiPageHeader } from '~shared/ui';
@@ -140,11 +140,6 @@ function CharacterList({
 }
 
 export function PlayerMainPage() {
-  // Scroll to top on mount
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   // TODO: Replace with API calls using TanStack Query
   const navigate = useNavigate();
   const [characters] = useState<Character[]>(MOCK_CHARACTERS);
@@ -163,11 +158,11 @@ export function PlayerMainPage() {
   const activeLegendName = activeCharacters[0]?.name;
 
   function onCreateCharacter() {
-    console.log('Create new character');
+    navigate('/character/create');
   }
 
   function onCharacterClick(characterId: Character['id']) {
-    console.log('Open character:', characterId);
+    navigate(`/character/${characterId}`);
   }
 
   function onJoinCampaign() {
@@ -262,9 +257,9 @@ export function PlayerMainPage() {
           >
             <UiButton
               className="pointer-events-auto"
-              onClick={onCreateCharacter}
               fullWidth
               icon={<Plus size={20} />}
+              onClick={onCreateCharacter}
             >
               Create New Legend
             </UiButton>

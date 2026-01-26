@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { type ReactElement, useEffect, useMemo, useState } from 'react';
+import { type ReactElement, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import logoSvg from '~shared/assets/logo.svg';
@@ -27,11 +27,6 @@ function EmptyArchiveState(): ReactElement {
 }
 
 export function PlayerArchivePage() {
-  // Scroll to top on mount
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   // TODO: Replace with API calls using TanStack Query
   const navigate = useNavigate();
   const [characters] = useState<Character[]>(MOCK_CHARACTERS);
@@ -44,8 +39,7 @@ export function PlayerArchivePage() {
   const hasArchivedCharacters = archivedCharacters.length > 0;
 
   function onCharacterClick(characterId: Character['id']) {
-    console.log('View archived character:', characterId);
-    // TODO: Navigate to character page where restore/delete actions will be implemented
+    navigate(`/character/${characterId}`);
   }
 
   function onBackClick() {

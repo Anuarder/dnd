@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router';
 
 import { onboardingManager } from '~shared/lib/onboarding';
@@ -9,11 +9,15 @@ import { onboardingManager } from '~shared/lib/onboarding';
  * Redirects to onboarding start page if not completed
  */
 function RootGuard(): ReactElement {
-  const location = useLocation();
+  const { pathname } = useLocation();
   const isOnboardingCompleted = onboardingManager.hasCompleted();
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   // Allow access to onboarding pages without redirect
-  const isOnboardingPage = location.pathname.startsWith('/onboarding');
+  const isOnboardingPage = pathname.startsWith('/onboarding');
 
   if (!isOnboardingCompleted && !isOnboardingPage) {
     return <Navigate to="/onboarding/start" replace />;

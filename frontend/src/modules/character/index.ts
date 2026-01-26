@@ -1,0 +1,1 @@
+export { CharacterRoutes } from './pages';

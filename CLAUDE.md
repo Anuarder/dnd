@@ -529,12 +529,64 @@ const { mutate, isPending } = useUpdateUser();
 - **Build Tool**: Vite
 - **Styling**: Tailwind CSS
 - **Node Version**: >= 20.10.0
-- **Package Manager**: npm >= 10.2.3
+- **Package Manager**: pnpm >= 10.28.1
 
 ### Path Aliases
 
 - `@` - App root directory
 - `@shared` - Shared modules
+
+## Package Manager: pnpm
+
+**CRITICAL**: This project uses **pnpm** as the package manager, NOT npm or yarn.
+
+### Why pnpm?
+
+- **Disk space efficiency**: Uses a content-addressable store for packages
+- **Faster installations**: Packages are linked from a single global store
+- **Strict dependency resolution**: Prevents phantom dependencies
+
+### pnpm Commands
+
+Always use pnpm commands instead of npm:
+
+```bash
+# ✅ Correct: Use pnpm
+pnpm install              # Install dependencies
+pnpm add <package>        # Add a package
+pnpm add -D <package>     # Add a dev dependency
+pnpm remove <package>     # Remove a package
+pnpm run <script>         # Run a script
+pnpm update               # Update dependencies
+pnpm why <package>        # Show why a package is installed
+
+# ❌ Wrong: Do NOT use npm
+npm install
+npm i <package>
+npm uninstall <package>
+```
+
+### Important pnpm Rules
+
+- ✅ **Always use `pnpm install`** when setting up the project
+- ✅ **Use `pnpm add`** to install new packages
+- ✅ **Commit `pnpm-lock.yaml`** to version control (NOT `package-lock.json`)
+- ❌ **NEVER use npm or yarn commands** - they will create conflicting lock files
+- ❌ **NEVER commit `package-lock.json` or `yarn.lock`** - only `pnpm-lock.yaml`
+- ❌ **NEVER mix package managers** in the same project
+
+### pnpm Configuration
+
+The project may have a `.npmrc` or `pnpm-workspace.yaml` file for pnpm configuration. Always respect these settings.
+
+### Installing pnpm
+
+If pnpm is not installed on your system:
+
+```bash
+# Using npm (one-time installation)
+npm install -g pnpm
+```
 
 ## When Creating New Files (Frontend)
 
@@ -865,6 +917,8 @@ export const config = envSchema.parse(process.env);
 - Do not skip tests or linting checks
 - Do not commit directly to `main` or `master` branches
 - Do not commit `.env` files or secrets
+- **Do not use npm or yarn** - always use pnpm for package management
+- Do not commit `package-lock.json` or `yarn.lock` - only commit `pnpm-lock.yaml`
 
 ---
 
@@ -883,5 +937,6 @@ This project uses:
 - **Touch-Friendly**: Minimum 44x44px touch targets, use `active:` states, no hover-only interactions
 - **Tailwind CSS**: Always use Tailwind utility classes for styling. Never write custom CSS unless absolutely necessary
 - **Viewport**: Use `dvh` (dynamic viewport height) instead of `vh` for mobile layouts
+- **Package Manager**: Always use pnpm, never npm or yarn
 
 Always prioritize code quality, type safety, accessibility, mobile UX, and maintainability!

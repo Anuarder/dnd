@@ -27,7 +27,7 @@ export function OnboradingPlayerPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: 'easeOut' }}
-            className="glow-effect from-dark-secondary to-dark-primary shadow-4xl relative z-[1] overflow-hidden rounded-2xl border-2 border-white/5 bg-linear-to-b"
+            className="glow-effect from-dark-secondary to-dark-primary shadow-4xl relative z-1 overflow-hidden rounded-2xl border-2 border-white/5 bg-linear-to-b"
           >
             <img
               width="400"

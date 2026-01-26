@@ -8,7 +8,7 @@ export default function BackgroundCard({
   bg?: string;
 }) {
   return (
-    <div className="w-[50vw] min-w-[380px] flex-shrink-0">
+    <div className="w-[50vw] min-w-[380px] shrink-0">
       <div
         className="h-[500px] overflow-hidden rounded-2xl bg-cover bg-center text-left shadow-lg"
         style={{ backgroundImage: bg ? `url(${bg})` : undefined }}

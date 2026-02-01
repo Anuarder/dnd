@@ -194,7 +194,12 @@ const gradientStyle = {
   backgroundImage: 'linear-gradient(152deg,rgba(127, 19, 236, 1) 18%, rgba(216, 180, 254, 1) 49%)',
 };
 
-export function ClassSelectionForm(props: { gender: 'male' | 'female' | 'other' }) {
+interface ClassSelectionFormProps {
+  gender: 'male' | 'female' | 'other';
+  onNext: (classId: string) => void;
+}
+
+export function ClassSelectionForm({ gender, onNext }: ClassSelectionFormProps) {
   const [selectedClassIndex, setSelectedClassIndex] = useState(0);
   const [emblaREF, emblaAPI] = useEmblaCarousel({ loop: false });
 
@@ -222,9 +227,9 @@ export function ClassSelectionForm(props: { gender: 'male' | 'female' | 'other' 
     () =>
       CHARACTER_CLASSES.map((item) => ({
         ...item,
-        image: props.gender === 'female' ? item.images.female : item.images.male,
+        image: gender === 'female' ? item.images.female : item.images.male,
       })),
-    [props.gender]
+    [gender]
   );
 
   function onSlideClick(index: number): void {
@@ -329,7 +334,14 @@ export function ClassSelectionForm(props: { gender: 'male' | 'female' | 'other' 
         transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
         className="mt-6 px-4 pb-6"
       >
-        <UiButton className="w-full">
+        <UiButton
+          className="w-full"
+          onClick={() => {
+            if (selectedClass) {
+              onNext(selectedClass.id);
+            }
+          }}
+        >
           Select{' '}
           <AnimatePresence mode="wait">
             <motion.span

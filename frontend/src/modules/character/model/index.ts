@@ -1,6 +1,5 @@
-export { CharacterRoutes } from './pages';
+export { useCharacterCreationStore } from './character-creation-store';
 export {
-  useCharacterCreationStore,
   CHARACTER_CLASSES,
   RACES,
   BACKGROUNDS,
@@ -11,7 +10,7 @@ export {
   getRaceById,
   getBackgroundById,
   isClassCaster,
-} from './model';
+} from './mock-data';
 export type {
   CharacterBasicInfo,
   CharacterClass,
@@ -24,4 +23,4 @@ export type {
   Spell,
   CharacterCreationData,
   CharacterCreationStep,
-} from './model';
+} from './types';

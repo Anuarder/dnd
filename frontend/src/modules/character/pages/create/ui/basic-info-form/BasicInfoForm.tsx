@@ -36,9 +36,15 @@ const characterSchema = z.object({
 
 type CharacterFormData = z.infer<typeof characterSchema>;
 
+interface BasicInfoFormSubmitData {
+  name: string;
+  avatar: File | null;
+  gender: 'male' | 'female' | 'other';
+  originStory: string;
+}
 
 interface BasicInfoFormProps {
-  onNext: () => void;
+  onNext: (data: BasicInfoFormSubmitData) => void;
 }
 
 export function BasicInfoForm({ onNext }: BasicInfoFormProps) {
@@ -75,10 +81,14 @@ export function BasicInfoForm({ onNext }: BasicInfoFormProps) {
   }
 
   function onSubmit(data: CharacterFormData): void {
-    console.log('Character data:', data);
-    console.log('Avatar file:', data.avatar[0]);
-    // TODO: Submit data to backend
-    onNext();
+    const avatarFile = data.avatar?.[0] ?? null;
+    
+    onNext({
+      avatar: avatarFile,
+      name: data.name,
+      gender: data.gender,
+      originStory: data.originStory,
+    });
   }
 
   return (

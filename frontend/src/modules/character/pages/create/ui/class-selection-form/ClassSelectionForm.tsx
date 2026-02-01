@@ -190,137 +190,145 @@ const CHARACTER_CLASSES: CharacterClass[] = [
   // },
 ];
 
+const gradientStyle = {
+  backgroundImage: 'linear-gradient(152deg,rgba(127, 19, 236, 1) 18%, rgba(216, 180, 254, 1) 49%)',
+};
+
 export function ClassSelectionForm(props: { gender: 'male' | 'female' | 'other' }) {
   const [selectedClassIndex, setSelectedClassIndex] = useState(0);
   const [emblaREF, emblaAPI] = useEmblaCarousel({ loop: false });
 
   useEffect(() => {
-    emblaAPI?.on('select', (emblaApi) => {
-      setSelectedClassIndex(emblaApi.selectedScrollSnap());
-    });
+    if (!emblaAPI) {
+      return;
+    }
+
+    function onSelect() {
+      if (emblaAPI) {
+        setSelectedClassIndex(emblaAPI.selectedScrollSnap());
+      }
+    }
+
+    emblaAPI.on('select', onSelect);
+
+    return () => {
+      emblaAPI.off('select', onSelect);
+    };
   }, [emblaAPI]);
 
-  const selectedClass = useMemo(() => {
-    return CHARACTER_CLASSES[selectedClassIndex];
-  }, [selectedClassIndex]);
+  const selectedClass = useMemo(() => CHARACTER_CLASSES[selectedClassIndex], [selectedClassIndex]);
 
-  const mappedClasses = useMemo(() => {
-    return CHARACTER_CLASSES.map((item) => ({
-      ...item,
-      image: props.gender === 'female' ? item.images.female : item.images.male,
-    }));
-  }, [props.gender]);
+  const mappedClasses = useMemo(
+    () =>
+      CHARACTER_CLASSES.map((item) => ({
+        ...item,
+        image: props.gender === 'female' ? item.images.female : item.images.male,
+      })),
+    [props.gender]
+  );
 
-  function onSlideClick(index: number) {
+  function onSlideClick(index: number): void {
     emblaAPI?.scrollTo(index);
   }
 
   return (
-    <>
-      <div className="flex max-w-full flex-1 flex-col">
-        <div className="px-4">
-          <h2 className="font-display flex flex-col text-3xl font-bold">
-            <span>Choose Your</span>
-            <span
-              className="bg-clip-text text-transparent"
+    <div className="flex max-w-full flex-1 flex-col">
+      <div className="px-4">
+        <h2 className="font-display flex flex-col text-3xl font-bold">
+          <span>Choose Your</span>
+          <span className="bg-clip-text text-transparent" style={gradientStyle}>
+            Path
+          </span>
+        </h2>
+
+        <p className="font-display mt-3 font-thin text-white/50">
+          Select a class to define your combat style and abilities
+        </p>
+      </div>
+
+      <div className="mt-4 flex flex-1 flex-col overflow-hidden px-4" ref={emblaREF}>
+        <div className="flex flex-1 touch-pan-y touch-pinch-zoom gap-3">
+          {mappedClasses.map((item, index) => (
+            <div
+              className={classNames(
+                'flex min-w-0 flex-[0_0_90%] flex-col justify-end overflow-hidden rounded-3xl border-2 bg-cover bg-top bg-no-repeat duration-200',
+                {
+                  'border-surface-dark': selectedClassIndex !== index,
+                  'border-primary': selectedClassIndex === index,
+                }
+              )}
               style={{
-                backgroundImage:
-                  'linear-gradient(152deg,rgba(127, 19, 236, 1) 18%, rgba(216, 180, 254, 1) 49%)',
+                backgroundImage: `url(${item.image})`,
               }}
+              key={item.id}
+              onClick={() => onSlideClick(index)}
             >
-              Path
-            </span>
-          </h2>
+              <div className="flex h-full w-full flex-col justify-end p-6 backdrop-brightness-30">
+                <div>
+                  <strong className="font-display text-2xl font-semibold tracking-[.5px]">
+                    {item.name}
+                  </strong>
 
-          <p className="font-display mt-3 font-thin text-white/50">
-            Select a class to define your combat style and abilities
-          </p>
-        </div>
+                  <p className="font-display mt-5 text-sm text-white/70">{item.description}</p>
 
-        <div className="mt-4 flex flex-1 flex-col overflow-hidden px-4" ref={emblaREF}>
-          <div className="flex flex-1 touch-pan-y touch-pinch-zoom gap-3">
-            {mappedClasses.map((item, index) => (
-              <div
-                className={classNames(
-                  'flex min-w-0 flex-[0_0_90%] flex-col justify-end overflow-hidden rounded-3xl border-2 bg-cover bg-top bg-no-repeat duration-200',
-                  {
-                    'border-surface-dark': selectedClassIndex !== index,
-                    'border-primary': selectedClassIndex === index,
-                  }
-                )}
-                style={{
-                  backgroundImage: `url(${item.image})`,
-                }}
-                key={item.id}
-                onClick={() => onSlideClick(index)}
-              >
-                <div className="flex h-full w-full flex-col justify-end p-6 backdrop-brightness-30">
-                  <div>
-                    <strong className="font-display text-2xl font-semibold tracking-[.5px]">
-                      {item.name}
-                    </strong>
+                  <div className="mt-4">
+                    <label className="font-display mt-5 text-xs font-semibold text-white/70 uppercase">
+                      Key traits
+                    </label>
 
-                    <p className="font-display mt-5 text-sm text-white/70">{item.description}</p>
+                    <ul className="mt-2 flex flex-col gap-2">
+                      {item.keyTraits.map((trait) => (
+                        <li
+                          key={trait}
+                          className="border-primary/30 font-display w-fit rounded border bg-[#332442]/80 px-4 py-1 text-left text-xs font-medium"
+                        >
+                          {trait}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
 
-                    <div className="mt-4">
-                      <label className="font-display mt-5 text-xs font-semibold text-white/70 uppercase">
-                        Key traits
+                  <div className="mt-5 flex items-start gap-4 border-t border-white/30 pt-5">
+                    <div className="font-display flex flex-col">
+                      <label className="text-xs font-semibold text-white/50 uppercase">
+                        Hit Die
                       </label>
 
-                      <ul className="mt-2 flex flex-col gap-2">
-                        {item.keyTraits.map((key, index) => (
-                          <li
-                            key={`key-${index}`}
-                            className="border-primary/30 font-display w-fit rounded border bg-[#332442]/80 px-4 py-1 text-left text-xs font-medium"
-                          >
-                            {key}
-                          </li>
-                        ))}
-                      </ul>
+                      <span className="text-lg font-bold">{item.hitDie}</span>
                     </div>
 
-                    <div className="mt-5 flex items-start gap-4 border-t border-white/30 pt-5">
-                      <div className="font-display flex flex-col">
-                        <label className="text-xs font-semibold text-white/50 uppercase">
-                          Hit Die
-                        </label>
+                    <div className="font-display flex flex-col">
+                      <label className="text-xs font-semibold text-white/50 uppercase">
+                        Primary Ability
+                      </label>
 
-                        <span className="text-lg font-bold">{item.hitDie}</span>
-                      </div>
-
-                      <div className="font-display flex flex-col">
-                        <label className="text-xs font-semibold text-white/50 uppercase">
-                          Primary Ability
-                        </label>
-
-                        <span className="text-lg font-bold">{item.primaryAbility}</span>
-                      </div>
+                      <span className="text-lg font-bold">{item.primaryAbility}</span>
                     </div>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-6 px-4 pb-6">
-          <UiButton className="w-full">
-            Select{' '}
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={selectedClass?.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2, ease: 'easeOut' }}
-              >
-                {selectedClass?.name}
-              </motion.span>
-            </AnimatePresence>{' '}
-            <ArrowRightIcon size={20} />
-          </UiButton>
+            </div>
+          ))}
         </div>
       </div>
-    </>
+
+      <div className="mt-6 px-4 pb-6">
+        <UiButton className="w-full">
+          Select{' '}
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={selectedClass?.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+            >
+              {selectedClass?.name}
+            </motion.span>
+          </AnimatePresence>{' '}
+          <ArrowRightIcon size={20} />
+        </UiButton>
+      </div>
+    </div>
   );
 }

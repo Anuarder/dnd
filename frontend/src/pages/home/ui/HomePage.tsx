@@ -17,7 +17,7 @@ export function HomePage() {
   }
 
   return (
-    <div className="mesh-gradient flex min-h-dvh flex-col items-center justify-center px-4 py-6 text-white">
+    <div className="mx-auto flex min-h-dvh max-w-4xl flex-col items-center justify-center px-4 py-6 text-white">
       <motion.img
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}

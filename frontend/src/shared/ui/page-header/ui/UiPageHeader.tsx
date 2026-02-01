@@ -8,7 +8,7 @@ function UiPageHeader({
   onBackClick,
 }: {
   title: string;
-  description: string;
+  description?: string;
   onBackClick: () => void;
 }): ReactElement {
   return (
@@ -30,7 +30,7 @@ function UiPageHeader({
 
         <div className="text-pretty">
           <h1 className="font-display text-2xl font-bold text-white">{title}</h1>
-          <p className="text-sm text-gray-400">{description}</p>
+          {description && <p className="text-sm text-gray-400">{description}</p>}
         </div>
       </div>
     </motion.div>

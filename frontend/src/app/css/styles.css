@@ -7,12 +7,15 @@
   --color-surface-dark: #211c27;
 }
 
-.mesh-gradient {
+body {
   background-color: #191022;
   background-image:
     radial-gradient(at 0% 0%, hsla(270, 60%, 40%, 0.3) 0px, transparent 50%),
     radial-gradient(at 100% 100%, hsla(270, 60%, 30%, 0.3) 0px, transparent 50%),
     radial-gradient(at 100% 0%, hsla(240, 50%, 30%, 0.3) 0px, transparent 50%);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 .no-scrollbar {

@@ -132,45 +132,43 @@ export function MasterMainPage() {
   );
 
   return (
-    <div className="mesh-gradient min-h-dvh px-4 py-6 text-white">
-      <div className="mx-auto max-w-4xl">
-        <UiPageHeader
-          title="Dungeoun Master"
-          description="Manage your campaigns and adventures"
-          onBackClick={onBackClick}
-        />
+    <div className="mx-auto min-h-dvh max-w-4xl px-4 py-6 text-white">
+      <UiPageHeader
+        title="Dungeoun Master"
+        description="Manage your campaigns and adventures"
+        onBackClick={onBackClick}
+      />
 
-        {!hasCampaigns ? (
-          <InitialEmptyState onCreateCampaign={onCreateCampaign} />
-        ) : (
-          <>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
-              className="mb-6"
-            >
-              <UiButton onClick={onCreateCampaign} fullWidth icon={<Plus size={20} />}>
-                Create New Campaign
-              </UiButton>
-            </motion.div>
+      {!hasCampaigns ? (
+        <InitialEmptyState onCreateCampaign={onCreateCampaign} />
+      ) : (
+        <>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
+            className="mb-6"
+          >
+            <UiButton onClick={onCreateCampaign} fullWidth icon={<Plus size={20} />}>
+              Create New Campaign
+            </UiButton>
+          </motion.div>
 
-            {hasBothTypes && (
-              <UiTabs
-                tabs={tabs}
-                activeTab={activeTab}
-                onChange={(tabId) => setActiveTab(tabId as TabType)}
-              />
-            )}
-
-            <CampaignList
-              campaigns={filteredCampaigns}
+          {hasBothTypes && (
+            <UiTabs
+              tabs={tabs}
               activeTab={activeTab}
-              onCampaignClick={onCampaignClick}
+              onChange={(tabId) => setActiveTab(tabId as TabType)}
             />
-          </>
-        )}
-      </div>
+          )}
+
+          <CampaignList
+            campaigns={filteredCampaigns}
+            activeTab={activeTab}
+            onCampaignClick={onCampaignClick}
+          />
+        </>
+      )}
     </div>
   );
 }

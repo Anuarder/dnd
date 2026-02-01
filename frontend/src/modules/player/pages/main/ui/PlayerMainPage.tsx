@@ -182,90 +182,88 @@ export function PlayerMainPage() {
   }
 
   return (
-    <div className="mesh-gradient min-h-dvh px-4 py-6 text-white">
-      <div className="mx-auto max-w-4xl">
-        <UiPageHeader
-          title="Player"
-          description="Your campaigns and legends"
-          onBackClick={onBackClick}
+    <div className="mx-auto min-h-dvh max-w-4xl px-4 py-6 text-white">
+      <UiPageHeader
+        title="Player"
+        description="Your campaigns and legends"
+        onBackClick={onBackClick}
+      />
+
+      {/* Campaigns Section */}
+      <section className="mb-8">
+        <motion.h2
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
+          className="mb-4 text-sm font-semibold tracking-wide text-gray-400 uppercase"
+        >
+          Campaigns
+        </motion.h2>
+        <CampaignBanner
+          campaign={lastActiveCampaign}
+          legendName={activeLegendName}
+          onJoinCampaign={onJoinCampaign}
+          onConnectToCampaign={onConnectToCampaign}
         />
+      </section>
 
-        {/* Campaigns Section */}
-        <section className="mb-8">
-          <motion.h2
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="mb-4 text-sm font-semibold tracking-wide text-gray-400 uppercase"
-          >
-            Campaigns
-          </motion.h2>
-          <CampaignBanner
-            campaign={lastActiveCampaign}
-            legendName={activeLegendName}
-            onJoinCampaign={onJoinCampaign}
-            onConnectToCampaign={onConnectToCampaign}
-          />
-        </section>
+      {/* Legends Section */}
+      <section>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: 0.1, ease: 'easeOut' }}
+          className="mb-4"
+        >
+          <h2 className="text-sm font-semibold tracking-wide text-gray-400 uppercase">
+            Your Legends
+          </h2>
+        </motion.div>
 
-        {/* Legends Section */}
-        <section>
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: 0.1, ease: 'easeOut' }}
-            className="mb-4"
-          >
-            <h2 className="text-sm font-semibold tracking-wide text-gray-400 uppercase">
-              Your Legends
-            </h2>
-          </motion.div>
+        {!hasCharacters ? (
+          <CharacterBanner onCreateCharacter={onCreateCharacter} />
+        ) : (
+          <>
+            <CharacterList characters={activeCharacters} onCharacterClick={onCharacterClick} />
 
-          {!hasCharacters ? (
-            <CharacterBanner onCreateCharacter={onCreateCharacter} />
-          ) : (
-            <>
-              <CharacterList characters={activeCharacters} onCharacterClick={onCharacterClick} />
-
-              {hasCharacters && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3, delay: 0.4, ease: 'easeOut' }}
-                  className="mt-6 text-center"
+            {hasCharacters && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0.4, ease: 'easeOut' }}
+                className="mt-6 text-center"
+              >
+                <button
+                  type="button"
+                  onClick={onViewArchive}
+                  className="text-sm text-gray-500 transition-colors duration-200 ease-out active:text-gray-400"
                 >
-                  <button
-                    type="button"
-                    onClick={onViewArchive}
-                    className="text-sm text-gray-500 transition-colors duration-200 ease-out active:text-gray-400"
-                  >
-                    Archived Legends
-                  </button>
-                </motion.div>
-              )}
-            </>
-          )}
-        </section>
-
-        {/* Sticky Create Button */}
-        {hasCharacters && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
-            className="pointer-events-none sticky bottom-5 z-1 mx-auto mt-6 max-w-4xl"
-          >
-            <UiButton
-              className="pointer-events-auto"
-              fullWidth
-              icon={<Plus size={20} />}
-              onClick={onCreateCharacter}
-            >
-              Create New Legend
-            </UiButton>
-          </motion.div>
+                  Archived Legends
+                </button>
+              </motion.div>
+            )}
+          </>
         )}
-      </div>
+      </section>
+
+      {/* Sticky Create Button */}
+      {hasCharacters && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
+          className="pointer-events-none sticky bottom-5 z-1 mx-auto mt-6 max-w-4xl"
+        >
+          <UiButton
+            className="pointer-events-auto"
+            fullWidth
+            icon={<Plus size={20} />}
+            onClick={onCreateCharacter}
+          >
+            Create New Legend
+          </UiButton>
+        </motion.div>
+      )}
     </div>
   );
 }

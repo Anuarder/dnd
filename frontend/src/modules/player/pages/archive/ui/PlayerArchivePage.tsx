@@ -47,29 +47,27 @@ export function PlayerArchivePage() {
   }
 
   return (
-    <div className="mesh-gradient min-h-dvh px-4 py-6 text-white">
-      <div className="mx-auto max-w-4xl">
-        <UiPageHeader
-          title="Archived Legends"
-          description="View your archived characters"
-          onBackClick={onBackClick}
-        />
+    <div className="mx-auto min-h-dvh max-w-4xl px-4 py-6 text-white">
+      <UiPageHeader
+        title="Archived Legends"
+        description="View your archived characters"
+        onBackClick={onBackClick}
+      />
 
-        {!hasArchivedCharacters ? (
-          <EmptyArchiveState />
-        ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3, delay: 0.1, ease: 'easeOut' }}
-            className="space-y-4"
-          >
-            {archivedCharacters.map((character) => (
-              <CharacterCard key={character.id} character={character} onClick={onCharacterClick} />
-            ))}
-          </motion.div>
-        )}
-      </div>
+      {!hasArchivedCharacters ? (
+        <EmptyArchiveState />
+      ) : (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, delay: 0.1, ease: 'easeOut' }}
+          className="space-y-4"
+        >
+          {archivedCharacters.map((character) => (
+            <CharacterCard key={character.id} character={character} onClick={onCharacterClick} />
+          ))}
+        </motion.div>
+      )}
     </div>
   );
 }

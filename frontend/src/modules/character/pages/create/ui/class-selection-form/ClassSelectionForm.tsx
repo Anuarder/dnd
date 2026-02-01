@@ -271,7 +271,7 @@ export function ClassSelectionForm(props: { gender: 'male' | 'female' | 'other' 
                         {item.keyTraits.map((key, index) => (
                           <li
                             key={`key-${index}`}
-                            className="border-primary/30 font-display w-fit rounded border bg-[#332442] px-4 py-1 text-left text-xs font-medium"
+                            className="border-primary/30 font-display w-fit rounded border bg-[#332442]/80 px-4 py-1 text-left text-xs font-medium"
                           >
                             {key}
                           </li>

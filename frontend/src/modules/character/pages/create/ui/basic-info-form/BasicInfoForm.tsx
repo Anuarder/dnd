@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Camera, Mars, Venus, VenusAndMars } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -83,7 +84,12 @@ export function BasicInfoForm({ onNext }: BasicInfoFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 px-4 pb-6">
       {/* Avatar Upload */}
-      <div className="flex flex-col items-center">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+        className="flex flex-col items-center"
+      >
         <div className="relative">
           <label className="border-primary/50 relative block h-36 w-36 cursor-pointer rounded-full border-4 bg-linear-to-b from-gray-800 to-gray-900 transition-all duration-200 ease-out active:scale-95">
             <input
@@ -113,16 +119,25 @@ export function BasicInfoForm({ onNext }: BasicInfoFormProps) {
         {errors.avatar && (
           <span className="mt-2 text-sm text-red-400">{errors.avatar.message?.toString()}</span>
         )}
-      </div>
+      </motion.div>
 
       {/* Section Title */}
-      <div className="text-center">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.1, ease: 'easeOut' }}
+        className="text-center"
+      >
         <h2 className="text-3xl font-bold text-white">Who are you?</h2>
         <p className="mt-2 text-white/60">Let&apos;s start with the basics of your legend.</p>
-      </div>
+      </motion.div>
 
       {/* Character Name */}
-      <div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
+      >
         <label htmlFor="name" className="mb-2 block text-sm font-medium text-white">
           Character Name
         </label>
@@ -136,10 +151,14 @@ export function BasicInfoForm({ onNext }: BasicInfoFormProps) {
         {errors.name && (
           <span className="mt-1 block text-sm text-red-400">{errors.name.message}</span>
         )}
-      </div>
+      </motion.div>
 
       {/* Identity (Gender) */}
-      <div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.3, ease: 'easeOut' }}
+      >
         <label className="mb-3 block text-sm font-medium text-white">Identity</label>
         <div className="grid grid-cols-3 gap-3">
           <button
@@ -208,10 +227,14 @@ export function BasicInfoForm({ onNext }: BasicInfoFormProps) {
         {errors.gender && (
           <span className="mt-1 block text-sm text-red-400">{errors.gender.message}</span>
         )}
-      </div>
+      </motion.div>
 
       {/* Origin Story */}
-      <div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.4, ease: 'easeOut' }}
+      >
         <label htmlFor="originStory" className="mb-2 block text-sm font-medium text-white">
           Origin Story
         </label>
@@ -225,10 +248,13 @@ export function BasicInfoForm({ onNext }: BasicInfoFormProps) {
         {errors.originStory && (
           <span className="mt-1 block text-sm text-red-400">{errors.originStory.message}</span>
         )}
-      </div>
+      </motion.div>
 
       {/* Submit Button */}
-      <button
+      <motion.button
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.5, ease: 'easeOut' }}
         type="submit"
         disabled={isSubmitting}
         className="group bg-primary shadow-primary/30 sticky bottom-6 w-full overflow-hidden rounded-full py-4 font-semibold text-white shadow-lg transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
@@ -240,7 +266,7 @@ export function BasicInfoForm({ onNext }: BasicInfoFormProps) {
             className="transition-transform duration-200 group-active:translate-x-1"
           />
         </span>
-      </button>
+      </motion.button>
     </form>
   );
 }

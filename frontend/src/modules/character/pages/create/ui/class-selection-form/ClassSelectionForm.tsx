@@ -233,7 +233,12 @@ export function ClassSelectionForm(props: { gender: 'male' | 'female' | 'other' 
 
   return (
     <div className="flex max-w-full flex-1 flex-col">
-      <div className="px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+        className="px-4"
+      >
         <h2 className="font-display flex flex-col text-3xl font-bold">
           <span>Choose Your</span>
           <span className="bg-clip-text text-transparent" style={gradientStyle}>
@@ -244,9 +249,15 @@ export function ClassSelectionForm(props: { gender: 'male' | 'female' | 'other' 
         <p className="font-display mt-3 font-thin text-white/50">
           Select a class to define your combat style and abilities
         </p>
-      </div>
+      </motion.div>
 
-      <div className="mt-4 flex flex-1 flex-col overflow-hidden px-4" ref={emblaREF}>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, delay: 0.1, ease: 'easeOut' }}
+        className="mt-4 flex flex-1 flex-col overflow-hidden px-4"
+        ref={emblaREF}
+      >
         <div className="flex flex-1 touch-pan-y touch-pinch-zoom gap-3">
           {mappedClasses.map((item, index) => (
             <div
@@ -310,9 +321,14 @@ export function ClassSelectionForm(props: { gender: 'male' | 'female' | 'other' 
             </div>
           ))}
         </div>
-      </div>
+      </motion.div>
 
-      <div className="mt-6 px-4 pb-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
+        className="mt-6 px-4 pb-6"
+      >
         <UiButton className="w-full">
           Select{' '}
           <AnimatePresence mode="wait">
@@ -328,7 +344,7 @@ export function ClassSelectionForm(props: { gender: 'male' | 'female' | 'other' 
           </AnimatePresence>{' '}
           <ArrowRightIcon size={20} />
         </UiButton>
-      </div>
+      </motion.div>
     </div>
   );
 }

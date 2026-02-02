@@ -7,6 +7,7 @@ import { CharacterRoutes } from '~modules/character';
 import { MasterRoutes } from '~/modules/master';
 import { OnboardingRoutes } from '~/modules/onboarding/pages';
 import { PlayerRoutes } from '~/modules/player/pages';
+import { CharacterCreationRoutes } from '~/pages/character-creation';
 import { HomeRoutes } from '~/pages/home';
 import { AuthRoutes } from '~auth';
 
@@ -64,6 +65,9 @@ const router = createBrowserRouter([
           },
           {
             ...CharacterRoutes.CharacterDetailsPage,
+          },
+          {
+            ...CharacterCreationRoutes.CharacterCreationPage,
           },
         ],
       },

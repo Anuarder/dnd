@@ -88,7 +88,6 @@ export function SixthStepForm({ stats, onNext, maxSelection = 4 }: Props) {
         <div className="pointer-events-auto w-full max-w-[400px] px-4">
           <button
             type="button"
-            onClick={handleNext}
             disabled={selectedCount === 0}
             aria-disabled={selectedCount === 0}
             className={
@@ -97,6 +96,7 @@ export function SixthStepForm({ stats, onNext, maxSelection = 4 }: Props) {
                 ? 'cursor-not-allowed bg-purple-950 text-slate-400'
                 : 'bg-primary active:bg-primary/90 text-white')
             }
+            onClick={handleNext}
           >
             <span>Next</span>
           </button>

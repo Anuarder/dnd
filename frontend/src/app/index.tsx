@@ -1,5 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { Toaster } from 'sonner';
 
 import { RoutesProvider, TanstackQueryProvider } from './providers';
 
@@ -12,6 +13,7 @@ function startApp() {
 
   createRoot(rootElement).render(
     <StrictMode>
+      <Toaster position="top-center" richColors />
       <TanstackQueryProvider>
         <RoutesProvider />
       </TanstackQueryProvider>

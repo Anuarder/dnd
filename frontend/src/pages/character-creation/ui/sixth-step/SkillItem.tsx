@@ -35,15 +35,15 @@ export function SkillItem({ id, name, ability, bonus, checked, disabled, onToggl
           type="checkbox"
           checked={checked}
           disabled={disabled}
-          onChange={() => onToggle(id)}
           className="sr-only"
+          onChange={() => onToggle(id)}
         />
 
         <span
-          aria-hidden
           className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-sm border transition-colors ${
             checked ? 'bg-primary border-primary' : 'border-white/20 bg-transparent'
           }`}
+          aria-hidden
         >
           {checked ? <Check size={14} className="text-white" /> : null}
         </span>

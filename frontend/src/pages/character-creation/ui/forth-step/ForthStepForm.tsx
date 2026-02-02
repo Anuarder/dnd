@@ -90,10 +90,10 @@ export function ForthStepForm({
               description={s.description}
               value={val}
               bonus={computeBonus(val)}
-              onIncrement={() => increment(s.key)}
-              onDecrement={() => decrement(s.key)}
               disableIncrement={val >= MAX_VALUE || pointsRemaining <= 0}
               disableDecrement={val <= MIN_VALUE}
+              onIncrement={() => increment(s.key)}
+              onDecrement={() => decrement(s.key)}
             />
           );
         })}
@@ -103,8 +103,8 @@ export function ForthStepForm({
         <div className="pointer-events-auto w-full max-w-[400px] px-4">
           <button
             type="button"
-            onClick={() => onNext?.({ stats })}
             className={`bg-primary active:bg-primary/90 relative flex h-14 w-full items-center justify-center gap-3 rounded-xl px-6 font-medium text-white shadow-lg duration-300 active:scale-95`}
+            onClick={() => onNext?.({ stats })}
           >
             <span>Next</span>
             <ArrowRight size={18} />

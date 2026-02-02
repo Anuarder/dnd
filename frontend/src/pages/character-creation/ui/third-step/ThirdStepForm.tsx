@@ -76,8 +76,8 @@ export function ThirdStepForm({ onNext }: { onNext: (payload?: { class?: string 
           <Swiper
             spaceBetween={25}
             slidesPerView={1}
-            onSlideChange={(e) => setIndex(e.activeIndex)}
             centeredSlides
+            onSlideChange={(e) => setIndex(e.activeIndex)}
           >
             {classes.map((c, i) => (
               <SwiperSlide
@@ -104,8 +104,8 @@ export function ThirdStepForm({ onNext }: { onNext: (payload?: { class?: string 
         <div className="pointer-events-auto w-full max-w-[400px] px-4">
           <button
             type="button"
-            onClick={handleNextClick}
             className="bg-primary active:bg-primary/90 relative flex h-14 w-full items-center justify-center gap-3 rounded-xl px-6 font-medium text-white shadow-lg duration-300 active:scale-95"
+            onClick={handleNextClick}
           >
             <span>Next</span>
             <ArrowRight size={18} />

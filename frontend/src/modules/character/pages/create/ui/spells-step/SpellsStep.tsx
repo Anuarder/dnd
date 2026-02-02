@@ -114,22 +114,22 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3, delay: index * 0.03, ease: 'easeOut' }}
-        onClick={onToggle}
         disabled={isDisabled}
         className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 ${
           isSelected
             ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
             : 'border-white/10 bg-white/5 backdrop-blur-sm'
         }`}
+        onClick={onToggle}
       >
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <h3 className="font-bold text-white">{spell.name}</h3>
+        <span className="flex items-start justify-between">
+          <span className="flex flex-1 flex-col">
+            <span className="flex items-center gap-2">
+              <span className="font-bold text-white">{spell.name}</span>
               {isSelected && <Check size={18} className="text-primary" />}
-            </div>
-            <p className="mt-1 text-sm text-white/60">{spell.description}</p>
-            <div className="mt-2 flex flex-wrap gap-2">
+            </span>
+            <span className="mt-1 text-sm text-white/60">{spell.description}</span>
+            <span className="mt-2 flex flex-wrap gap-2">
               <span className="rounded-full bg-white/10 px-3 py-1 text-xs text-white">
                 {spell.school}
               </span>
@@ -139,15 +139,15 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
               <span className="rounded-full bg-white/10 px-3 py-1 text-xs text-white">
                 {spell.range}
               </span>
-            </div>
-          </div>
-        </div>
+            </span>
+          </span>
+        </span>
       </motion.button>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 px-4 pb-6">
+    <form className="space-y-6 px-4 pb-6" onSubmit={handleSubmit(onSubmit)}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -254,10 +254,10 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
 
       {/* Submit Button */}
       <motion.button
+        type="submit"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.3, ease: 'easeOut' }}
-        type="submit"
         disabled={
           selectedCantrips.length !== CANTRIP_COUNT ||
           selectedLevel1Spells.length !== LEVEL1_SPELL_COUNT

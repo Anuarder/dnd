@@ -61,7 +61,7 @@ export function FirstStepForm({
   const isNextDisabled = !name.trim();
 
   return (
-    <form onSubmit={handleSubmit} className="w-full">
+    <form className="w-full" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-4 pb-18">
         <div className="mx-auto">
           <div className="relative inline-block overflow-visible">
@@ -75,12 +75,12 @@ export function FirstStepForm({
 
             <button
               type="button"
+              aria-label="Choose avatar"
+              className="bg-primary absolute -right-2 -bottom-2 z-10 flex h-9 w-9 transform items-center justify-center rounded-full text-white shadow-md transition hover:scale-105"
               onClick={(e) => {
                 e.stopPropagation();
                 inputRef.current?.click();
               }}
-              aria-label="Choose avatar"
-              className="bg-primary absolute -right-2 -bottom-2 z-10 flex h-9 w-9 transform items-center justify-center rounded-full text-white shadow-md transition hover:scale-105"
             >
               <Camera size={16} />
             </button>
@@ -90,8 +90,8 @@ export function FirstStepForm({
             ref={inputRef}
             type="file"
             accept="image/*"
-            onChange={handleFile}
             className="sr-only"
+            onChange={handleFile}
           />
         </div>
 
@@ -112,17 +112,17 @@ export function FirstStepForm({
 
         <div>
           <label className="block text-left text-sm text-slate-300">Name</label>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="mt-2 w-full rounded-[16px] border border-white/10 px-3 py-2 text-white placeholder:text-slate-400 focus:outline-none"
-            style={{
-              background:
-                'linear-gradient(90deg, rgba(127,19,236,0.2) 0%, rgba(147,51,234,0.2) 100%)',
-            }}
-            placeholder="Your character's name"
-            required
-          />
+            <input
+              className="mt-2 w-full rounded-[16px] border border-white/10 px-3 py-2 text-white placeholder:text-slate-400 focus:outline-none"
+              style={{
+                background:
+                  'linear-gradient(90deg, rgba(127,19,236,0.2) 0%, rgba(147,51,234,0.2) 100%)',
+              }}
+              placeholder="Your character's name"
+              value={name}
+              required
+              onChange={(e) => setName(e.target.value)}
+            />
         </div>
 
         <div>
@@ -133,10 +133,10 @@ export function FirstStepForm({
               value="male"
               label="Male"
               selected={gender === 'male'}
-              onSelect={() => setGender('male')}
               icon={
                 <Mars className={gender === 'male' ? 'text-primary' : 'text-slate-400'} size={24} />
               }
+              onSelect={() => setGender('male')}
             />
 
             <RadioGender
@@ -144,13 +144,13 @@ export function FirstStepForm({
               value="female"
               label="Female"
               selected={gender === 'female'}
-              onSelect={() => setGender('female')}
               icon={
                 <Venus
                   className={gender === 'female' ? 'text-primary' : 'text-slate-400'}
                   size={24}
                 />
               }
+              onSelect={() => setGender('female')}
             />
 
             <RadioGender
@@ -158,13 +158,13 @@ export function FirstStepForm({
               value="other"
               label="Other"
               selected={gender === 'other'}
-              onSelect={() => setGender('other')}
               icon={
                 <Transgender
                   className={gender === 'other' ? 'text-primary' : 'text-slate-400'}
                   size={24}
                 />
               }
+              onSelect={() => setGender('other')}
             />
           </div>
         </div>
@@ -172,14 +172,14 @@ export function FirstStepForm({
         <div>
           <label className="block text-left text-sm text-slate-300">Backstory</label>
           <textarea
-            value={backstory}
-            onChange={(e) => setBackstory(e.target.value)}
             className="mt-2 h-28 w-full rounded-[16px] border border-white/10 px-3 py-2 text-white placeholder:text-slate-400 focus:outline-none"
             style={{
               background:
                 'linear-gradient(90deg, rgba(127,19,236,0.2) 0%, rgba(147,51,234,0.2) 100%)',
             }}
             placeholder="Tell a short pre-history of your character"
+            value={backstory}
+            onChange={(e) => setBackstory(e.target.value)}
           />
         </div>
       </div>
@@ -188,7 +188,6 @@ export function FirstStepForm({
         <div className="pointer-events-auto w-full max-w-[400px] px-4">
           <button
             type="button"
-            onClick={handleSubmit}
             disabled={isNextDisabled}
             aria-disabled={isNextDisabled}
             className={
@@ -197,6 +196,7 @@ export function FirstStepForm({
                 ? 'cursor-not-allowed bg-purple-950 text-slate-400'
                 : 'bg-primary active:bg-primary/90 text-white')
             }
+            onClick={handleSubmit}
           >
             <span>Next</span>
             <ArrowRight size={18} />

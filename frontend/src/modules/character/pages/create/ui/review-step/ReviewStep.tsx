@@ -235,13 +235,13 @@ export function ReviewStep({ characterData }: ReviewStepProps) {
 
       {/* Submit Button */}
       <motion.button
+        type="button"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.35, ease: 'easeOut' }}
-        type="button"
-        onClick={handleSubmit}
         disabled={isSubmitting}
         className="group bg-primary shadow-primary/30 sticky bottom-6 w-full overflow-hidden rounded-full py-4 font-semibold text-white shadow-lg transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+        onClick={handleSubmit}
       >
         <span className="relative z-10 flex items-center justify-center gap-2">
           {isSubmitting ? (

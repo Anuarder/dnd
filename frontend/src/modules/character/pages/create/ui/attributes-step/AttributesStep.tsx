@@ -1,6 +1,7 @@
 import { ArrowRight, Minus, Plus } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useCallback, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 import type { Attributes } from '~modules/character/model/types';
 
@@ -97,7 +98,9 @@ export function AttributesStep({ onNext }: AttributesStepProps) {
 
   function handleContinue(): void {
     if (pointsRemaining !== 0) {
-      alert(`You have ${pointsRemaining} points remaining. Please allocate all points.`);
+      toast.error('Please allocate all points', {
+        description: `You have ${pointsRemaining} points remaining.`,
+      });
       return;
     }
 
@@ -170,9 +173,9 @@ export function AttributesStep({ onNext }: AttributesStepProps) {
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
-                    onClick={() => decrementPointBuy(attr.key)}
                     disabled={value <= POINT_BUY_MIN}
                     className="flex min-h-11 min-w-11 items-center justify-center rounded-lg bg-white/10 text-white transition-all duration-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-30"
+                    onClick={() => decrementPointBuy(attr.key)}
                   >
                     <Minus size={18} />
                   </button>
@@ -185,9 +188,9 @@ export function AttributesStep({ onNext }: AttributesStepProps) {
                   </div>
                   <button
                     type="button"
-                    onClick={() => incrementPointBuy(attr.key)}
                     disabled={value >= POINT_BUY_MAX || pointsRemaining < costIncrease}
                     className="flex min-h-11 min-w-11 items-center justify-center rounded-lg bg-white/10 text-white transition-all duration-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-30"
+                    onClick={() => incrementPointBuy(attr.key)}
                   >
                     <Plus size={18} />
                   </button>
@@ -199,13 +202,13 @@ export function AttributesStep({ onNext }: AttributesStepProps) {
       </motion.div>
 
       <motion.button
+        type="button"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.3, ease: 'easeOut' }}
-        type="button"
-        onClick={handleContinue}
         disabled={pointsRemaining !== 0}
-        className="group bg-primary shadow-primary/30 mt-6 w-full overflow-hidden rounded-full py-4 font-semibold text-white shadow-lg transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+        className="sticky bottom-6 group bg-primary shadow-primary/30 mt-6 w-full overflow-hidden rounded-full py-4 font-semibold text-white shadow-lg transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+        onClick={handleContinue}
       >
         <span className="relative z-10 flex items-center justify-center gap-2">
           Continue

@@ -39,7 +39,7 @@ function CampaignBanner({
         <p className="mb-6 max-w-sm text-sm text-gray-400">
           Connect to a campaign to start your adventure with other players.
         </p>
-        <UiButton onClick={onConnectToCampaign} icon={<Link2 size={20} />}>
+        <UiButton icon={<Link2 size={20} />} onClick={onConnectToCampaign}>
           Connect to Campaign
         </UiButton>
       </motion.div>
@@ -78,13 +78,13 @@ function CampaignBanner({
           </div>
 
           <div className="flex flex-col gap-3 sm:shrink-0">
-            <UiButton onClick={onJoinCampaign} size="sm" icon={<ArrowRight size={16} />}>
+            <UiButton size="sm" icon={<ArrowRight size={16} />} onClick={onJoinCampaign}>
               Join Campaign
             </UiButton>
             <button
               type="button"
-              onClick={onConnectToCampaign}
               className="text-sm text-gray-400 transition-colors duration-200 ease-out active:text-gray-300"
+              onClick={onConnectToCampaign}
             >
               Connect to another
             </button>
@@ -235,8 +235,8 @@ export function PlayerMainPage() {
               >
                 <button
                   type="button"
-                  onClick={onViewArchive}
                   className="text-sm text-gray-500 transition-colors duration-200 ease-out active:text-gray-400"
+                  onClick={onViewArchive}
                 >
                   Archived Legends
                 </button>
@@ -256,8 +256,8 @@ export function PlayerMainPage() {
         >
           <UiButton
             className="pointer-events-auto"
-            fullWidth
             icon={<Plus size={20} />}
+            fullWidth
             onClick={onCreateCharacter}
           >
             Create New Legend

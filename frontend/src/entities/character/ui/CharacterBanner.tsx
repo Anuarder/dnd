@@ -19,7 +19,7 @@ export function CharacterBanner({ onCreateCharacter }: { onCreateCharacter: () =
         Create your first character and begin your adventure. Build your legend, forge your destiny,
         and embark on epic quests.
       </p>
-      <UiButton onClick={onCreateCharacter} icon={<Plus size={20} />}>
+      <UiButton icon={<Plus size={20} />} onClick={onCreateCharacter}>
         Create Your First Legend
       </UiButton>
     </motion.div>

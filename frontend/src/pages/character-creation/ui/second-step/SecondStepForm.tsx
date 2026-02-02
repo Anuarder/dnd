@@ -60,8 +60,8 @@ export function SecondStepForm({ onNext }: { onNext: (payload?: { race: string }
             description={r.description}
             bonuses={r.bonuses}
             selected={selected === r.id}
-            onSelect={() => setSelected(r.id)}
             icon={r.icon}
+            onSelect={() => setSelected(r.id)}
           />
         ))}
       </div>
@@ -70,7 +70,6 @@ export function SecondStepForm({ onNext }: { onNext: (payload?: { race: string }
         <div className="pointer-events-auto w-full max-w-[400px] px-4">
           <button
             type="button"
-            onClick={() => onNext({ race: selected })}
             disabled={isNextDisabled}
             aria-disabled={isNextDisabled}
             className={
@@ -79,6 +78,7 @@ export function SecondStepForm({ onNext }: { onNext: (payload?: { race: string }
                 ? 'bg-primary/40 cursor-not-allowed text-white opacity-60'
                 : 'bg-primary active:bg-primary/90 text-white')
             }
+            onClick={() => onNext({ race: selected })}
           >
             <span>Next</span>
           </button>

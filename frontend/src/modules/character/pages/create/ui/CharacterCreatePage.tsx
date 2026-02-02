@@ -54,20 +54,30 @@ export function CharacterCreatePage() {
     raceId,
   } = useCharacterCreationStore();
 
-  function getNextStep(current: CharacterCreationStep): CharacterCreationStep | null {
+  function getNextStep(
+    current: CharacterCreationStep,
+    currentRaceId?: string,
+    currentClassId?: string
+  ): CharacterCreationStep | null {
     const currentIndex = STEP_ORDER.indexOf(current);
 
     // Skip subrace step if race has no subraces
-    if (current === 'race-selection' && raceId) {
-      const race = getRaceById(raceId);
-      if (!race?.subraces || race.subraces.length === 0) {
-        return 'background';
+    if (current === 'race-selection') {
+      const effectiveRaceId = currentRaceId ?? raceId;
+      if (effectiveRaceId) {
+        const race = getRaceById(effectiveRaceId);
+        if (!race?.subraces || race.subraces.length === 0) {
+          return 'background';
+        }
       }
     }
 
     // Skip spells step if not a caster
-    if (current === 'equipment' && classId && !isClassCaster(classId)) {
-      return 'review';
+    if (current === 'equipment') {
+      const effectiveClassId = currentClassId ?? classId;
+      if (effectiveClassId && !isClassCaster(effectiveClassId)) {
+        return 'review';
+      }
     }
 
     if (currentIndex < STEP_ORDER.length - 1) {
@@ -116,6 +126,9 @@ export function CharacterCreatePage() {
       | { selectedCantrips: string[]; selectedLevel1Spells: string[] }
   ): void {
     // Save data based on step
+    let updatedRaceId = raceId;
+    let updatedClassId = classId;
+
     switch (step) {
       case 'basic-info':
         if (data && 'name' in data) {
@@ -125,11 +138,13 @@ export function CharacterCreatePage() {
       case 'class-selection':
         if (data && 'classId' in data) {
           setClass(data.classId);
+          updatedClassId = data.classId;
         }
         break;
       case 'race-selection':
         if (data && 'raceId' in data) {
           setRace(data.raceId, undefined);
+          updatedRaceId = data.raceId;
         }
         break;
       case 'subrace-selection':
@@ -164,8 +179,8 @@ export function CharacterCreatePage() {
         break;
     }
 
-    // Move to next step
-    const nextStep = getNextStep(step);
+    // Move to next step with updated values
+    const nextStep = getNextStep(step, updatedRaceId, updatedClassId);
     if (nextStep) {
       setCurrentStep(nextStep);
     }

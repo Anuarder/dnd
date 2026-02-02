@@ -26,10 +26,10 @@ export function RadioClass({
       type="button"
       role="radio"
       aria-checked={selected}
-      onClick={onSelect}
       className={`flex items-center gap-4 rounded-[12px] bg-transparent p-3 focus:outline-none ${
         selected ? 'border-primary text-primary border' : 'border border-white/10 text-slate-300'
       }`}
+      onClick={onSelect}
     >
       {/* radio/icon area */}
       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/3">

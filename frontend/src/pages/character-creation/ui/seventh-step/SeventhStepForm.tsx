@@ -80,13 +80,13 @@ export function SeventhStepForm({ onNext }: Props) {
       <div>
         <input
           placeholder="Search spells by name..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
           className="w-full rounded-[16px] border border-white/10 px-3 py-2 text-white placeholder:text-slate-400 focus:outline-none"
           style={{
             background:
               'linear-gradient(90deg, rgba(127,19,236,0.2) 0%, rgba(147,51,234,0.2) 100%)',
           }}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
         />
       </div>
 
@@ -146,7 +146,6 @@ export function SeventhStepForm({ onNext }: Props) {
         <div className="pointer-events-auto w-full max-w-[400px] px-4">
           <button
             type="button"
-            onClick={handleNext}
             disabled={Object.values(selected).filter(Boolean).length === 0}
             aria-disabled={Object.values(selected).filter(Boolean).length === 0}
             className={
@@ -155,6 +154,7 @@ export function SeventhStepForm({ onNext }: Props) {
                 ? 'cursor-not-allowed bg-purple-950 text-slate-400'
                 : 'bg-primary active:bg-primary/90 text-white')
             }
+            onClick={handleNext}
           >
             <span>Finish</span>
           </button>

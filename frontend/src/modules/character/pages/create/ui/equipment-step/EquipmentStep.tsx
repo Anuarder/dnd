@@ -53,7 +53,7 @@ export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 px-4 pb-6">
+    <form className="space-y-6 px-4 pb-6" onSubmit={handleSubmit(onSubmit)}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -78,50 +78,50 @@ export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1, ease: 'easeOut' }}
-            onClick={() => handlePresetSelect(preset)}
             className={`w-full rounded-xl border p-5 text-left transition-all duration-200 ease-out active:scale-[0.98] ${
               selectedPreset?.id === preset.id
                 ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
                 : 'border-white/10 bg-white/5 backdrop-blur-sm'
             }`}
+            onClick={() => handlePresetSelect(preset)}
           >
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10">
+            <span className="flex items-start justify-between">
+              <span className="flex flex-1 flex-col">
+                <span className="flex items-center gap-3">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10">
                     {index === 0 ? (
                       <Shield size={24} className="text-primary" />
                     ) : (
                       <Sword size={24} className="text-primary" />
                     )}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-bold text-white">{preset.name}</h3>
+                  </span>
+                  <span className="flex flex-1 flex-col">
+                    <span className="flex items-center gap-2">
+                      <span className="text-lg font-bold text-white">{preset.name}</span>
                       {selectedPreset?.id === preset.id && (
                         <Check size={20} className="text-primary" />
                       )}
-                    </div>
-                    <p className="mt-1 text-sm text-white/60">{preset.description}</p>
-                  </div>
-                </div>
+                    </span>
+                    <span className="mt-1 text-sm text-white/60">{preset.description}</span>
+                  </span>
+                </span>
 
-                <div className="mt-4">
-                  <p className="text-xs font-semibold text-white/50 uppercase">Includes</p>
-                  <ul className="mt-2 space-y-1">
+                <span className="mt-4 block">
+                  <span className="text-xs font-semibold text-white/50 uppercase">Includes</span>
+                  <span className="mt-2 flex flex-col gap-1">
                     {preset.items.map((item) => (
-                      <li
+                      <span
                         key={item}
                         className="flex items-center gap-2 text-sm text-white/80"
                       >
                         <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                         {item}
-                      </li>
+                      </span>
                     ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
+                  </span>
+                </span>
+              </span>
+            </span>
           </motion.button>
         ))}
       </motion.div>
@@ -132,10 +132,10 @@ export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
 
       {/* Submit Button */}
       <motion.button
+        type="submit"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.3, ease: 'easeOut' }}
-        type="submit"
         className="group bg-primary shadow-primary/30 sticky bottom-6 w-full overflow-hidden rounded-full py-4 font-semibold text-white shadow-lg transition-all duration-200 ease-out active:scale-[0.98]"
       >
         <span className="relative z-10 flex items-center justify-center gap-2">

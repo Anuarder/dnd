@@ -73,15 +73,16 @@ export function BackgroundStep({ onNext }: BackgroundStepProps) {
       </motion.div>
 
       <motion.div
+        ref={emblaREF}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: 0.1, ease: 'easeOut' }}
         className="mt-4 flex flex-1 flex-col overflow-hidden px-4"
-        ref={emblaREF}
       >
         <div className="flex flex-1 touch-pan-y touch-pinch-zoom gap-3">
           {BACKGROUNDS.map((background, index) => (
             <div
+              key={background.id}
               className={classNames(
                 'flex min-w-0 flex-[0_0_90%] flex-col justify-end overflow-hidden rounded-3xl border-2 bg-linear-to-b from-gray-800 to-gray-900 duration-200',
                 {
@@ -89,7 +90,6 @@ export function BackgroundStep({ onNext }: BackgroundStepProps) {
                   'border-primary': selectedBackgroundIndex === index,
                 }
               )}
-              key={background.id}
               onClick={() => onSlideClick(index)}
             >
               <div className="flex h-full w-full flex-col justify-end p-6">

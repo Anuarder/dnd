@@ -43,12 +43,12 @@ function UiButton({
   return (
     <button
       type={type}
+      disabled={disabled}
       className={classNames(
         `${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${widthClass}`,
         className
       )}
       onClick={onClick}
-      disabled={disabled}
     >
       {icon && icon}
       {children}

@@ -250,6 +250,142 @@ export * from './types';
 - Define props using TypeScript interfaces
 - Use proper typing for all props and state
 
+### HTML Semantic Structure
+
+**CRITICAL**: Never place block-level elements inside inline elements - this is invalid HTML and causes rendering issues.
+
+**Block-level elements** include: `<div>`, `<p>`, `<h1>`-`<h6>`, `<section>`, `<article>`, `<nav>`, `<ul>`, `<ol>`, `<li>`, etc.
+**Inline elements** include: `<span>`, `<a>`, `<button>`, `<label>`, etc.
+
+✅ Correct pattern - Use `<span>` with Tailwind display classes inside buttons:
+
+```tsx
+// ✅ Correct: Use motion.button with only <span> elements inside
+// Use Tailwind classes (flex, flex-col, block) for layout
+<motion.button
+  type="button"
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  className="w-full rounded-xl border p-4 text-left"
+>
+  <span className="flex items-start justify-between">
+    <span className="flex flex-1 flex-col">
+      <span className="flex items-center gap-2">
+        <span className="text-lg font-bold text-white">Title</span>
+        <CheckIcon />
+      </span>
+      <span className="mt-1 text-sm text-white/60">Description text</span>
+      <span className="mt-2 flex flex-wrap gap-2">
+        <span className="rounded-full bg-white/10 px-3 py-1 text-xs">Tag 1</span>
+        <span className="rounded-full bg-white/10 px-3 py-1 text-xs">Tag 2</span>
+      </span>
+    </span>
+  </span>
+</motion.button>
+
+// ✅ Correct: Use label for radio/checkbox with only <span> elements
+<label className="flex min-h-[100px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border">
+  <input type="radio" className="sr-only" />
+  <IconComponent />
+  <span className="text-sm font-semibold text-white">Option</span>
+</label>
+```
+
+❌ Wrong - NEVER do this:
+
+```tsx
+// ❌ Block elements (<div>, <p>, <h3>) inside <button>
+<motion.button type="button">
+  <div className="flex items-center">
+    <h3>Title</h3>
+    <p>Description</p>
+  </div>
+</motion.button>
+
+// ❌ Block elements inside <a> tag
+<a href="...">
+  <div className="card">...</div>
+</a>
+
+// ❌ Block elements inside <label>
+<label>
+  <input type="radio" />
+  <div className="option-content">...</div>
+</label>
+```
+
+**Why this matters:**
+- Invalid HTML according to W3C standards
+- Causes accessibility issues
+- Can lead to unpredictable browser rendering
+- Breaks semantic structure
+
+**Key rule:** Inside `<button>`, `<a>`, and `<label>` elements, use only `<span>` elements and apply Tailwind display classes (`flex`, `flex-col`, `block`, `inline-flex`) to achieve the desired layout.
+
+### JSX Attribute Order
+
+**IMPORTANT**: Event handlers must ALWAYS be placed at the bottom of JSX attributes.
+
+Follow this attribute order:
+
+1. **Element type/key**: `key`, `ref`
+2. **Boolean attributes**: `type`, `disabled`, `required`, `checked`, etc.
+3. **Styling**: `className`, `style`
+4. **Data attributes**: `data-*`, `aria-*`
+5. **Event handlers** (ALWAYS LAST): `onClick`, `onChange`, `onSubmit`, `onFocus`, etc.
+
+✅ Correct:
+
+```tsx
+<button
+  type="button"
+  disabled={isLoading}
+  className="px-4 py-2 bg-blue-600 text-white rounded"
+  aria-label="Submit form"
+  onClick={handleClick}
+  onChange={handleChange}
+>
+  Submit
+</button>
+
+<input
+  type="text"
+  name="email"
+  placeholder="Enter email"
+  className="w-full p-2 border rounded"
+  value={email}
+  onChange={handleEmailChange}
+  onBlur={handleBlur}
+  onFocus={handleFocus}
+/>
+```
+
+❌ Wrong:
+
+```tsx
+<button
+  type="button"
+  onClick={handleClick}
+  onChange={handleChange}
+  disabled={isLoading}
+  className="px-4 py-2 bg-blue-600 text-white rounded"
+>
+  Submit
+</button>
+
+<input
+  onChange={handleEmailChange}
+  type="text"
+  className="w-full p-2 border rounded"
+  value={email}
+/>
+```
+
+**Why this matters:**
+- Consistent attribute ordering improves code readability
+- Event handlers at the bottom make it easy to see what the element does
+- Follows a logical flow: what it is → how it looks → what it does
+
 ### Component Naming Convention
 
 **IMPORTANT**: All component names MUST have at least 2 words

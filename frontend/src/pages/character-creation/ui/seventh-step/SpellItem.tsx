@@ -70,10 +70,10 @@ export function SpellItem({
   return (
     <div>
       <div
-        onClick={onLabelClick}
         className={`flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-white/10 px-3 py-2 transition ${
           checked ? 'bg-primary/20' : 'bg-white/5'
         } ${disabled && !checked ? 'cursor-not-allowed opacity-60' : ''}`}
+        onClick={onLabelClick}
       >
         <div className="flex items-center gap-3">
           <span
@@ -93,12 +93,12 @@ export function SpellItem({
         <div className="flex items-center gap-3">
           <button
             type="button"
+            aria-expanded={open}
+            className={`rounded p-1 transition-transform duration-200 hover:bg-white/5 ${open ? 'rotate-180' : 'rotate-0'}`}
             onClick={(e) => {
               e.stopPropagation();
               setOpen((o) => !o);
             }}
-            aria-expanded={open}
-            className={`rounded p-1 transition-transform duration-200 hover:bg-white/5 ${open ? 'rotate-180' : 'rotate-0'}`}
           >
             <ChevronDown size={18} className="text-white" />
           </button>

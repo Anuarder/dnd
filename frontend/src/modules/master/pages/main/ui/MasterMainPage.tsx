@@ -68,7 +68,7 @@ function InitialEmptyState({ onCreateCampaign }: { onCreateCampaign: () => void 
         Start your journey by creating your first campaign. Build worlds, craft stories, and guide
         your players through epic adventures.
       </p>
-      <UiButton onClick={onCreateCampaign} icon={<Plus size={20} />}>
+      <UiButton icon={<Plus size={20} />} onClick={onCreateCampaign}>
         Create Your First Campaign
       </UiButton>
     </motion.div>
@@ -149,7 +149,7 @@ export function MasterMainPage() {
             transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
             className="mb-6"
           >
-            <UiButton onClick={onCreateCampaign} fullWidth icon={<Plus size={20} />}>
+            <UiButton icon={<Plus size={20} />} fullWidth onClick={onCreateCampaign}>
               Create New Campaign
             </UiButton>
           </motion.div>

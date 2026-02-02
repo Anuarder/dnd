@@ -19,6 +19,7 @@ export function StepHeader({ steps, current, totalSteps, onBack }: StepHeaderPro
       <div className="mb-1 flex h-10 items-center justify-between">
         <ArrowLeft
           size={18}
+          className="w-10"
           onClick={() => {
             if (current > 0 && typeof onBack === 'function') {
               onBack();
@@ -27,7 +28,6 @@ export function StepHeader({ steps, current, totalSteps, onBack }: StepHeaderPro
 
             navigate('/');
           }}
-          className="w-10"
         />
 
         <div className="flex-1 text-center">

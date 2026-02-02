@@ -34,9 +34,9 @@ export function CharacteristicItem({
       <div className="flex items-center gap-3">
         <button
           type="button"
-          onClick={onDecrement}
           disabled={disableDecrement}
           className="flex h-9 w-9 items-center justify-center rounded-md bg-white/6 text-white disabled:opacity-40"
+          onClick={onDecrement}
         >
           -
         </button>
@@ -48,9 +48,9 @@ export function CharacteristicItem({
 
         <button
           type="button"
-          onClick={onIncrement}
           disabled={disableIncrement}
           className="bg-primary flex h-9 w-9 items-center justify-center rounded-md text-white disabled:opacity-40"
+          onClick={onIncrement}
         >
           +
         </button>

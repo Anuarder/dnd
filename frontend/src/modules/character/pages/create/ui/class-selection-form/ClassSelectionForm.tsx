@@ -257,15 +257,16 @@ export function ClassSelectionForm({ gender, onNext }: ClassSelectionFormProps) 
       </motion.div>
 
       <motion.div
+        ref={emblaREF}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: 0.1, ease: 'easeOut' }}
         className="mt-4 flex flex-1 flex-col overflow-hidden px-4"
-        ref={emblaREF}
       >
         <div className="flex flex-1 touch-pan-y touch-pinch-zoom gap-3">
           {mappedClasses.map((item, index) => (
             <div
+              key={item.id}
               className={classNames(
                 'flex min-w-0 flex-[0_0_90%] flex-col justify-end overflow-hidden rounded-3xl border-2 bg-cover bg-top bg-no-repeat duration-200',
                 {
@@ -276,7 +277,6 @@ export function ClassSelectionForm({ gender, onNext }: ClassSelectionFormProps) 
               style={{
                 backgroundImage: `url(${item.image})`,
               }}
-              key={item.id}
               onClick={() => onSlideClick(index)}
             >
               <div className="flex h-full w-full flex-col justify-end p-6 backdrop-brightness-30">

@@ -64,8 +64,8 @@ export function FifthStepForm({
           <Swiper
             spaceBetween={25}
             slidesPerView={1}
-            onSlideChange={(e) => setIndex(e.activeIndex)}
             centeredSlides
+            onSlideChange={(e) => setIndex(e.activeIndex)}
           >
             {backgrounds.map((b, i) => (
               <SwiperSlide
@@ -85,11 +85,11 @@ export function FifthStepForm({
         <div className="pointer-events-auto w-full max-w-[400px] px-4">
           <button
             type="button"
-            onClick={handleNextClick}
             className={
               `relative flex h-14 w-full items-center justify-center gap-3 rounded-xl px-6 font-medium shadow-lg duration-300 active:scale-95 ` +
               'bg-primary active:bg-primary/90 text-white'
             }
+            onClick={handleNextClick}
           >
             <span>Choose background</span>
             <ArrowRight size={18} />

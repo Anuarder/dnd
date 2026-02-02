@@ -21,8 +21,8 @@ function UiPageHeader({
       <div className="flex items-center gap-3">
         <button
           type="button"
-          className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-white transition-all duration-200 ease-out active:scale-95 active:bg-white/10"
           aria-label="Go back to home"
+          className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-white transition-all duration-200 ease-out active:scale-95 active:bg-white/10"
           onClick={onBackClick}
         >
           <ArrowLeft size={20} />

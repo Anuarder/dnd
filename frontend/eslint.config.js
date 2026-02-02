@@ -1,6 +1,7 @@
 import js from '@eslint/js';
 import pluginVitest from '@vitest/eslint-plugin';
 import checkFile from 'eslint-plugin-check-file';
+import perfectionist from 'eslint-plugin-perfectionist';
 import pluginReact from 'eslint-plugin-react';
 import pluginReactHooks from 'eslint-plugin-react-hooks';
 import pluginReactRefresh from 'eslint-plugin-react-refresh';
@@ -26,6 +27,7 @@ export default defineConfig(
       react: pluginReact,
       'react-hooks': pluginReactHooks,
       'react-refresh': pluginReactRefresh,
+      perfectionist,
     },
     settings: {
       react: {
@@ -53,6 +55,29 @@ export default defineConfig(
       // General rules
       curly: ['error', 'all'],
       'nonblock-statement-body-position': ['error', 'below'],
+
+      // JSX props ordering - event handlers must be last
+      'perfectionist/sort-jsx-props': [
+        'error',
+        {
+          type: 'unsorted',
+          groups: ['key', 'ref', 'unknown', 'shorthand-prop', 'callback'],
+          customGroups: [
+            {
+              groupName: 'key',
+              elementNamePattern: '^key$',
+            },
+            {
+              groupName: 'ref',
+              elementNamePattern: '^ref$',
+            },
+            {
+              groupName: 'callback',
+              elementNamePattern: '^on[A-Z].*',
+            },
+          ],
+        },
+      ],
     },
   },
 

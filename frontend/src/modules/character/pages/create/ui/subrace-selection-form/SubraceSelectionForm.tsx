@@ -1,6 +1,7 @@
 import { ArrowRight, Check } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 import { getRaceById } from '~modules/character/model/mock-data';
 import type { Subrace } from '~modules/character/model/types';
@@ -26,6 +27,9 @@ export function SubraceSelectionForm({ raceId, onNext }: SubraceSelectionFormPro
 
   function handleContinue(): void {
     if (!selectedSubrace) {
+      toast.error('Please select a subrace', {
+        description: 'Choose your subrace to continue.',
+      });
       return;
     }
 
@@ -75,28 +79,28 @@ export function SubraceSelectionForm({ raceId, onNext }: SubraceSelectionFormPro
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: index * 0.05, ease: 'easeOut' }}
-            onClick={() => handleSubraceSelect(subrace)}
             className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ease-out active:scale-[0.98] ${
               selectedSubrace?.id === subrace.id
                 ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
                 : 'border-white/10 bg-white/5 backdrop-blur-sm'
             }`}
+            onClick={() => handleSubraceSelect(subrace)}
           >
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-bold text-white">{subrace.name}</h3>
+            <span className="flex items-start justify-between">
+              <span className="flex flex-1 flex-col">
+                <span className="flex items-center gap-2">
+                  <span className="text-lg font-bold text-white">{subrace.name}</span>
                   {selectedSubrace?.id === subrace.id && (
                     <Check size={20} className="text-primary" />
                   )}
-                </div>
-                <p className="mt-1 text-sm text-white/60">{subrace.description}</p>
+                </span>
+                <span className="mt-1 text-sm text-white/60">{subrace.description}</span>
 
-                <div className="mt-2">
-                  <p className="text-xs font-semibold text-white/50 uppercase">
+                <span className="mt-2 block">
+                  <span className="text-xs font-semibold text-white/50 uppercase">
                     Additional Traits
-                  </p>
-                  <div className="mt-1 flex flex-wrap gap-1">
+                  </span>
+                  <span className="mt-1 flex flex-wrap gap-1">
                     {subrace.traits.map((trait) => (
                       <span
                         key={trait}
@@ -105,23 +109,22 @@ export function SubraceSelectionForm({ raceId, onNext }: SubraceSelectionFormPro
                         {trait}
                       </span>
                     ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+                  </span>
+                </span>
+              </span>
+            </span>
           </motion.button>
         ))}
       </motion.div>
 
       {/* Submit Button */}
       <motion.button
+        type="button"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.3, ease: 'easeOut' }}
-        type="button"
-        onClick={handleContinue}
-        disabled={!selectedSubrace}
         className="group bg-primary shadow-primary/30 sticky bottom-6 w-full overflow-hidden rounded-full py-4 font-semibold text-white shadow-lg transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+        onClick={handleContinue}
       >
         <span className="relative z-10 flex items-center justify-center gap-2">
           Continue

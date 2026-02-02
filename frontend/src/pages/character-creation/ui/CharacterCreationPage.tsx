@@ -1,6 +1,8 @@
 import { motion } from 'motion/react';
 import { useState } from 'react';
 
+import type { Attributes } from '~modules/character/model/types';
+
 import { StepHeader } from './StepHeader';
 import { FifthStepForm } from './fifth-step/FifthStepForm';
 import { FirstStepForm } from './first-step/FirstStepForm';
@@ -10,18 +12,35 @@ import { SeventhStepForm } from './seventh-step/SeventhStepForm';
 import { SixthStepForm } from './sixth-step/SixthStepForm';
 import { ThirdStepForm } from './third-step/ThirdStepForm';
 
+interface CharacterData {
+  stats?: Attributes;
+  background?: unknown;
+  skills?: unknown;
+  [key: string]: unknown;
+}
+
+type StepPayload =
+  | { stats: Attributes }
+  | { background: unknown }
+  | { skills: unknown }
+  | Record<string, unknown>
+  | undefined;
+
 export function CharacterCreationPage() {
   const steps = ['Basics', 'Race', 'Class', 'Stats', 'Background', 'Skills', 'Spells'];
   const [current, setCurrent] = useState<number>(0);
 
-  const [character, setCharacter] = useState<Record<string, any>>({});
+  const [character, setCharacter] = useState<CharacterData>({});
 
-  function goNext(payload?: any) {
+  function goNext(payload?: StepPayload) {
     // Accept structured payloads from steps (e.g. { stats }, { background }, { skills })
     // Use functional updater so we merge with the latest state and can log the merged object immediately.
     setCharacter((prev) => {
-      const merged = payload ? ({ ...prev, ...(payload as object) } as Record<string, any>) : prev;
-      return merged;
+      if (!payload) {
+        return prev;
+      }
+
+      return { ...prev, ...payload };
     });
 
     setCurrent((c) => Math.min(c + 1, steps.length - 1));
@@ -70,10 +89,13 @@ export function CharacterCreationPage() {
           {current === 4 && <FifthStepForm onNext={goNext} />}
 
           {current === 5 && (
-            <SixthStepForm stats={character.stats ?? {}} onNext={(p: any) => goNext(p)} />
+            <SixthStepForm
+              stats={(character.stats ?? {}) as Record<string, number>}
+              onNext={(p) => goNext(p)}
+            />
           )}
 
-          {current === 6 && <SeventhStepForm onNext={(p: any) => goNext(p)} />}
+          {current === 6 && <SeventhStepForm onNext={(p) => goNext(p)} />}
         </motion.div>
       </div>
     </div>

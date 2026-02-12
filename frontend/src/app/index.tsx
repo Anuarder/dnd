@@ -13,7 +13,7 @@ function startApp() {
 
   createRoot(rootElement).render(
     <StrictMode>
-      <Toaster position="top-center" richColors />
+      <Toaster position="top-center" expand={false} richColors />
       <TanstackQueryProvider>
         <RoutesProvider />
       </TanstackQueryProvider>

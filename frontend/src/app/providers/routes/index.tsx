@@ -2,29 +2,23 @@ import { RouterProvider, createBrowserRouter } from 'react-router';
 
 import { useAuthStateListener } from '~entities/auth';
 
+import { CharacterRoutes } from '~modules/character';
+
+import { MasterRoutes } from '~/modules/master';
+import { OnboardingRoutes } from '~/modules/onboarding/pages';
+import { PlayerRoutes } from '~/modules/player/pages';
 import { HomeRoutes } from '~/pages/home';
 import { AuthRoutes } from '~auth';
-import { OnboardingRoutes } from '~/modules/onboarding/pages';
-import { CharacterCreationRoutes } from '~/pages/character-creation';
-import { MasterRoutes } from '~/modules/master/pages';
-import { AuthRoute, ProtectedRoute, OnboardingRoute, RootGuard } from './guards';
+
+import { AuthRoute, OnboardingRoute, ProtectedRoute, RootGuard } from './guards';
 
 const router = createBrowserRouter([
-  // Root guard - checks onboarding for all routes
   {
     Component: RootGuard,
     children: [
-      // Protected routes (require authentication)
       {
-        Component: ProtectedRoute,
-        children: [
-          {
-            ...HomeRoutes.HomePage,
-          },
-          // Add more protected routes here
-        ],
+        ...AuthRoutes.AuthCallbackPage,
       },
-      // Auth routes (redirect to home if already authenticated)
       {
         Component: AuthRoute,
         children: [
@@ -33,11 +27,6 @@ const router = createBrowserRouter([
           },
         ],
       },
-      // Public routes (no authentication required)
-      {
-        ...AuthRoutes.AuthCallbackPage,
-      },
-      // Onboarding routes (shown to first-time visitors only)
       {
         Component: OnboardingRoute,
         children: [
@@ -59,35 +48,27 @@ const router = createBrowserRouter([
         Component: ProtectedRoute,
         children: [
           {
-            ...CharacterCreationRoutes.CharacterCreationPage,
+            ...HomeRoutes.HomePage,
           },
           {
-            ...MasterRoutes.LobbyCreatePage,
+            ...MasterRoutes.MainPage,
           },
           {
-            ...MasterRoutes.MasterLobbyPage,
+            ...PlayerRoutes.MainPage,
+          },
+          {
+            ...PlayerRoutes.ArchivePage,
+          },
+          {
+            ...CharacterRoutes.CharacterCreatePage,
+          },
+          {
+            ...CharacterRoutes.CharacterDetailsPage,
           },
         ],
       },
     ],
   },
-  // Example with loader:
-  // loader: async () => {
-  //   const data = await fetchData();
-  //   return data;
-  // },
-  // Add more routes here, for example:
-  // {
-  //   path: '/about',
-  //   element: <AboutPage />,
-  //   loader: aboutLoader,
-  // },
-  // {
-  //   path: '/users/:id',
-  //   element: <UserPage />,
-  //   loader: userLoader,
-  //   action: userAction,
-  // },
 ]);
 
 function RoutesProvider() {

@@ -69,6 +69,74 @@
 
 **ALWAYS use Tailwind CSS for styling** - do not write custom CSS unless absolutely necessary.
 
+### Mobile-First Design Philosophy
+
+**CRITICAL**: This project is **mobile-only** - all UX must be optimized for mobile devices first and foremost.
+
+#### Mobile-First UX Principles
+
+- ✅ **Design for touch interactions**
+  - Minimum touch target size: 44x44px (use `min-h-11 min-w-11` or larger)
+  - Add adequate spacing between interactive elements (minimum 8px gap)
+  - Use `active:` states instead of `hover:` for primary feedback
+  - Avoid hover-only interactions - they don't work on mobile
+
+- ✅ **Optimize for thumb reach**
+  - Place primary actions at the bottom of the screen
+  - Keep important navigation within easy thumb reach
+  - Use bottom navigation bars instead of top-only navigation
+
+- ✅ **Use mobile-friendly patterns**
+  - Bottom sheets and slide-up panels instead of modals
+  - Swipe gestures for common actions
+  - Pull-to-refresh for content updates
+  - Full-screen experiences instead of cramped layouts
+
+- ✅ **Responsive sizing**
+  - Use `dvh` (dynamic viewport height) instead of `vh` to account for mobile browser chrome
+  - Use relative units (`rem`, `em`) for scalability
+  - Test on various mobile screen sizes (320px to 428px width)
+
+- ✅ **Performance on mobile**
+  - Minimize animations - mobile devices have less power
+  - Use `will-change` sparingly
+  - Optimize images for mobile bandwidth
+  - Lazy load content below the fold
+
+- ✅ **Typography for mobile**
+  - Minimum body text size: 16px (prevents zoom on iOS)
+  - Adequate line height for readability (1.5-1.6)
+  - Shorter line lengths (45-75 characters)
+
+- ❌ **Avoid desktop patterns**
+  - No hover-dependent interactions
+  - No small click targets (< 44px)
+  - No complex multi-column layouts
+  - No desktop-only navigation patterns
+
+#### Tailwind Mobile-First Classes
+
+```tsx
+// ✅ Correct: Mobile-first with touch-friendly sizing
+<button className="min-h-11 w-full rounded-lg bg-primary px-4 py-3 text-base font-semibold text-white active:scale-95 active:bg-primary/90">
+  Tap Me
+</button>
+
+// ✅ Correct: Use dvh for full-height mobile layouts
+<div className="min-h-dvh">Content</div>
+
+// ✅ Correct: Bottom-aligned primary actions
+<div className="fixed bottom-0 left-0 right-0 p-4">
+  <button className="w-full">Primary Action</button>
+</div>
+
+// ❌ Wrong: Hover-only feedback (doesn't work on mobile)
+<button className="hover:bg-blue-700">Click</button>
+
+// ❌ Wrong: Small touch targets
+<button className="h-6 w-6">×</button>
+```
+
 ### Tailwind CSS Usage
 
 - ✅ **Use Tailwind CSS** for all styling in:
@@ -103,8 +171,10 @@ function Card() {
 ### Key Points
 
 - Tailwind provides utility classes for almost everything: layout, spacing, colors, typography, shadows, borders, transitions
-- Use Tailwind's responsive utilities (`sm:`, `md:`, `lg:`, `xl:`, `2xl:`) for responsive design
-- Use Tailwind's state variants (`hover:`, `focus:`, `active:`, `disabled:`) for interactive states
+- **Mobile-first**: Design for mobile screens first, then enhance for larger screens if needed
+- Use Tailwind's state variants (`active:`, `focus:`, `disabled:`) for interactive states - prioritize `active:` over `hover:` for mobile
+- Use `dvh` (dynamic viewport height) for full-height mobile layouts
+- Ensure touch targets are minimum 44x44px (`min-h-11 min-w-11`)
 - Leverage Tailwind's color palette and spacing scale for consistency
 - Use `@apply` directive in CSS only when absolutely necessary (prefer inline utilities)
 
@@ -129,6 +199,33 @@ import { validateEmail } from './validators';
 import type { User } from '../types';
 ```
 
+## Module Exports (Barrel Files)
+
+**NEVER use `export *` syntax in barrel files (index.ts)**. Always use explicit named exports.
+
+✅ Correct:
+
+```typescript
+// index.ts
+export { useCampaignsQuery, useCreateCampaignMutation } from './model';
+export type { Campaign, CreateCampaignInput } from './types';
+```
+
+❌ Wrong:
+
+```typescript
+// index.ts
+export * from './model';
+export * from './types';
+```
+
+**Reasons:**
+- Explicit exports make it clear what's being exported from a module
+- Prevents accidental exports of internal implementation details
+- Improves IDE autocomplete and refactoring
+- Makes it easier to track where exports are used
+- Avoids naming conflicts between modules
+
 ## Function Declarations
 
 - **Prefer function declarations** over arrow function expressions for named functions
@@ -152,6 +249,142 @@ import type { User } from '../types';
 - Custom hooks for shared logic (prefix with `use`, e.g., `useAuth`, `useValidation`)
 - Define props using TypeScript interfaces
 - Use proper typing for all props and state
+
+### HTML Semantic Structure
+
+**CRITICAL**: Never place block-level elements inside inline elements - this is invalid HTML and causes rendering issues.
+
+**Block-level elements** include: `<div>`, `<p>`, `<h1>`-`<h6>`, `<section>`, `<article>`, `<nav>`, `<ul>`, `<ol>`, `<li>`, etc.
+**Inline elements** include: `<span>`, `<a>`, `<button>`, `<label>`, etc.
+
+✅ Correct pattern - Use `<span>` with Tailwind display classes inside buttons:
+
+```tsx
+// ✅ Correct: Use motion.button with only <span> elements inside
+// Use Tailwind classes (flex, flex-col, block) for layout
+<motion.button
+  type="button"
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  className="w-full rounded-xl border p-4 text-left"
+>
+  <span className="flex items-start justify-between">
+    <span className="flex flex-1 flex-col">
+      <span className="flex items-center gap-2">
+        <span className="text-lg font-bold text-white">Title</span>
+        <CheckIcon />
+      </span>
+      <span className="mt-1 text-sm text-white/60">Description text</span>
+      <span className="mt-2 flex flex-wrap gap-2">
+        <span className="rounded-full bg-white/10 px-3 py-1 text-xs">Tag 1</span>
+        <span className="rounded-full bg-white/10 px-3 py-1 text-xs">Tag 2</span>
+      </span>
+    </span>
+  </span>
+</motion.button>
+
+// ✅ Correct: Use label for radio/checkbox with only <span> elements
+<label className="flex min-h-[100px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border">
+  <input type="radio" className="sr-only" />
+  <IconComponent />
+  <span className="text-sm font-semibold text-white">Option</span>
+</label>
+```
+
+❌ Wrong - NEVER do this:
+
+```tsx
+// ❌ Block elements (<div>, <p>, <h3>) inside <button>
+<motion.button type="button">
+  <div className="flex items-center">
+    <h3>Title</h3>
+    <p>Description</p>
+  </div>
+</motion.button>
+
+// ❌ Block elements inside <a> tag
+<a href="...">
+  <div className="card">...</div>
+</a>
+
+// ❌ Block elements inside <label>
+<label>
+  <input type="radio" />
+  <div className="option-content">...</div>
+</label>
+```
+
+**Why this matters:**
+- Invalid HTML according to W3C standards
+- Causes accessibility issues
+- Can lead to unpredictable browser rendering
+- Breaks semantic structure
+
+**Key rule:** Inside `<button>`, `<a>`, and `<label>` elements, use only `<span>` elements and apply Tailwind display classes (`flex`, `flex-col`, `block`, `inline-flex`) to achieve the desired layout.
+
+### JSX Attribute Order
+
+**IMPORTANT**: Event handlers must ALWAYS be placed at the bottom of JSX attributes.
+
+Follow this attribute order:
+
+1. **Element type/key**: `key`, `ref`
+2. **Boolean attributes**: `type`, `disabled`, `required`, `checked`, etc.
+3. **Styling**: `className`, `style`
+4. **Data attributes**: `data-*`, `aria-*`
+5. **Event handlers** (ALWAYS LAST): `onClick`, `onChange`, `onSubmit`, `onFocus`, etc.
+
+✅ Correct:
+
+```tsx
+<button
+  type="button"
+  disabled={isLoading}
+  className="px-4 py-2 bg-blue-600 text-white rounded"
+  aria-label="Submit form"
+  onClick={handleClick}
+  onChange={handleChange}
+>
+  Submit
+</button>
+
+<input
+  type="text"
+  name="email"
+  placeholder="Enter email"
+  className="w-full p-2 border rounded"
+  value={email}
+  onChange={handleEmailChange}
+  onBlur={handleBlur}
+  onFocus={handleFocus}
+/>
+```
+
+❌ Wrong:
+
+```tsx
+<button
+  type="button"
+  onClick={handleClick}
+  onChange={handleChange}
+  disabled={isLoading}
+  className="px-4 py-2 bg-blue-600 text-white rounded"
+>
+  Submit
+</button>
+
+<input
+  onChange={handleEmailChange}
+  type="text"
+  className="w-full p-2 border rounded"
+  value={email}
+/>
+```
+
+**Why this matters:**
+- Consistent attribute ordering improves code readability
+- Event handlers at the bottom make it easy to see what the element does
+- Follows a logical flow: what it is → how it looks → what it does
 
 ### Component Naming Convention
 
@@ -432,12 +665,64 @@ const { mutate, isPending } = useUpdateUser();
 - **Build Tool**: Vite
 - **Styling**: Tailwind CSS
 - **Node Version**: >= 20.10.0
-- **Package Manager**: npm >= 10.2.3
+- **Package Manager**: pnpm >= 10.28.1
 
 ### Path Aliases
 
 - `@` - App root directory
 - `@shared` - Shared modules
+
+## Package Manager: pnpm
+
+**CRITICAL**: This project uses **pnpm** as the package manager, NOT npm or yarn.
+
+### Why pnpm?
+
+- **Disk space efficiency**: Uses a content-addressable store for packages
+- **Faster installations**: Packages are linked from a single global store
+- **Strict dependency resolution**: Prevents phantom dependencies
+
+### pnpm Commands
+
+Always use pnpm commands instead of npm:
+
+```bash
+# ✅ Correct: Use pnpm
+pnpm install              # Install dependencies
+pnpm add <package>        # Add a package
+pnpm add -D <package>     # Add a dev dependency
+pnpm remove <package>     # Remove a package
+pnpm run <script>         # Run a script
+pnpm update               # Update dependencies
+pnpm why <package>        # Show why a package is installed
+
+# ❌ Wrong: Do NOT use npm
+npm install
+npm i <package>
+npm uninstall <package>
+```
+
+### Important pnpm Rules
+
+- ✅ **Always use `pnpm install`** when setting up the project
+- ✅ **Use `pnpm add`** to install new packages
+- ✅ **Commit `pnpm-lock.yaml`** to version control (NOT `package-lock.json`)
+- ❌ **NEVER use npm or yarn commands** - they will create conflicting lock files
+- ❌ **NEVER commit `package-lock.json` or `yarn.lock`** - only `pnpm-lock.yaml`
+- ❌ **NEVER mix package managers** in the same project
+
+### pnpm Configuration
+
+The project may have a `.npmrc` or `pnpm-workspace.yaml` file for pnpm configuration. Always respect these settings.
+
+### Installing pnpm
+
+If pnpm is not installed on your system:
+
+```bash
+# Using npm (one-time installation)
+npm install -g pnpm
+```
 
 ## When Creating New Files (Frontend)
 
@@ -745,6 +1030,10 @@ export const config = envSchema.parse(process.env);
 - Do not manually manage server state with useState (use TanStack Query)
 - Do not write custom CSS - use Tailwind CSS utility classes instead
 - Do not create components with single-word names (use `UiButton` not `Button`)
+- **Do not design for desktop first** - this is a mobile-only application
+- Do not use hover-only interactions - they don't work on mobile devices
+- Do not create touch targets smaller than 44x44px
+- Do not use `vh` - use `dvh` for mobile viewport height
 
 ## Do NOT (Node.js/Backend)
 
@@ -764,6 +1053,8 @@ export const config = envSchema.parse(process.env);
 - Do not skip tests or linting checks
 - Do not commit directly to `main` or `master` branches
 - Do not commit `.env` files or secrets
+- **Do not use npm or yarn** - always use pnpm for package management
+- Do not commit `package-lock.json` or `yarn.lock` - only commit `pnpm-lock.yaml`
 
 ---
 
@@ -775,7 +1066,13 @@ This project uses:
 - **Backend**: Node.js + TypeScript + Fastify + Drizzle ORM + PostgreSQL
 - **Testing**: Vitest (frontend & backend)
 - **Architecture**: Feature-Sliced Design (frontend)
+- **Platform**: **Mobile-only** application
 
-**Key Styling Rule**: Always use Tailwind CSS utility classes for styling. Never write custom CSS unless absolutely necessary.
+**Key Rules**:
+- **Mobile-First**: Always design for mobile devices first - this is a mobile-only application
+- **Touch-Friendly**: Minimum 44x44px touch targets, use `active:` states, no hover-only interactions
+- **Tailwind CSS**: Always use Tailwind utility classes for styling. Never write custom CSS unless absolutely necessary
+- **Viewport**: Use `dvh` (dynamic viewport height) instead of `vh` for mobile layouts
+- **Package Manager**: Always use pnpm, never npm or yarn
 
-Always prioritize code quality, type safety, accessibility, and maintainability!
+Always prioritize code quality, type safety, accessibility, mobile UX, and maintainability!

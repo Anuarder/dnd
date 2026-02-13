@@ -1,11 +1,12 @@
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router';
 
-import { DestinyCard } from '~entities/destiny-card';
 import LogoSVG from '~shared/assets/logo.svg';
 
+import { DestinyCard } from '~entities/destiny-card';
+
 export function HomePage() {
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   function handleMasterClick() {
     navigate('/master');
@@ -16,7 +17,7 @@ const navigate = useNavigate();
   }
 
   return (
-    <div className="mesh-gradient flex min-h-dvh flex-col justify-center items-center px-4 py-6 text-white">
+    <div className="mx-auto flex min-h-dvh max-w-4xl flex-col items-center justify-center px-4 py-6 text-white">
       <motion.img
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}

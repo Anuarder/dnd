@@ -1,8 +1,8 @@
 import { motion } from 'motion/react';
 
-import AuthImage from './assets/auth-image.jpg';
-
 import { useAuthSignInWithOAuthMutation } from '~entities/auth';
+
+import AuthImage from './assets/auth-image.jpg';
 
 function GoogleIcon() {
   return (
@@ -41,13 +41,13 @@ export function SignInPage() {
   }
 
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-dark-primary p-4 text-center text-pretty text-white">
+    <div className="bg-dark-primary flex min-h-dvh items-center justify-center p-4 text-center text-pretty text-white">
       <div className="flex flex-col items-center gap-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="glow-effect relative max-w-[400px] overflow-hidden rounded-2xl border border-white/5 bg-linear-to-b from-dark-secondary to-dark-primary shadow-2xl"
+          className="glow-effect from-dark-secondary to-dark-primary relative max-w-[400px] overflow-hidden rounded-2xl border border-white/5 bg-linear-to-b shadow-2xl"
         >
           <img
             width="400"
@@ -81,9 +81,9 @@ export function SignInPage() {
         >
           <button
             type="button"
-            onClick={handleGoogleSignIn}
             disabled={isPending}
-            className="group relative flex w-full cursor-pointer items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 px-6 py-3.5 font-medium text-white shadow-lg backdrop-blur-sm transition-all duration-300 active:scale-95 active:bg-white/15 disabled:cursor-not-allowed disabled:opacity-50 lg:hover:border-white/20 lg:hover:bg-white/10 lg:hover:shadow-purple-500/10"
+            className="group relative flex min-h-11 w-full cursor-pointer items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 px-6 py-3.5 font-medium text-white shadow-lg backdrop-blur-sm transition-all duration-300 active:scale-95 active:bg-white/15 disabled:cursor-not-allowed disabled:opacity-50"
+            onClick={handleGoogleSignIn}
           >
             {isPending ? (
               <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />

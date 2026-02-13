@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
 import { Navigate, Outlet } from 'react-router';
+
 import { onboardingManager } from '~shared/lib/onboarding';
 
 /**
@@ -16,4 +17,3 @@ export function OnboardingRoute(): ReactElement {
 
   return <Outlet />;
 }
-

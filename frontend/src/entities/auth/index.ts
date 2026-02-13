@@ -14,4 +14,3 @@ export type {
   SignOutResponse,
   GetSessionResponse,
 } from './model';
-

@@ -1,0 +1,1 @@
+export { MasterRoutes } from './pages';

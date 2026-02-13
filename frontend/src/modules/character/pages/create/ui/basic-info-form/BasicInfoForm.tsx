@@ -1,8 +1,8 @@
+import { type ReactElement, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Mars, Venus, VenusAndMars } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const characterSchema = z.object({
@@ -31,7 +31,7 @@ interface BasicInfoFormProps {
   onNext: (data: BasicInfoFormSubmitData) => void;
 }
 
-export function BasicInfoForm({ onNext }: BasicInfoFormProps) {
+export function BasicInfoForm({ onNext }: BasicInfoFormProps): ReactElement {
   const [selectedGender, setSelectedGender] = useState<'male' | 'female' | 'other'>('male');
 
   const {
@@ -86,13 +86,13 @@ export function BasicInfoForm({ onNext }: BasicInfoFormProps) {
           <input
             id="name"
             type="text"
-            {...register('name')}
             placeholder="e.g. Valerius the Bold"
             className="focus:border-primary focus:ring-primary/50 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 pr-12 text-white placeholder-white/40 backdrop-blur-sm transition-all duration-200 ease-out focus:bg-white/10 focus:ring-2 focus:outline-none"
+            {...register('name')}
           />
-          {errors.name && (
+          {errors.name ? (
             <span className="mt-1 block text-sm text-red-400">{errors.name.message}</span>
-          )}
+          ) : null}
         </motion.div>
 
         {/* Identity (Gender) */}
@@ -105,66 +105,69 @@ export function BasicInfoForm({ onNext }: BasicInfoFormProps) {
 
           <div className="grid grid-cols-3 gap-3">
             <label
-              className={`flex min-h-[100px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border transition-all duration-200 ease-out active:scale-95 ${
-                selectedGender === 'male'
+              className={`flex min-h-[100px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border transition-all duration-200 ease-out active:scale-95 ${selectedGender === 'male'
                   ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
                   : 'border-white/10 bg-white/5 backdrop-blur-sm'
-              }`}
+                }`}
             >
               <input
                 type="radio"
                 value="male"
-                {...register('gender', {
-                  onChange: () => handleGenderSelect('male'),
-                })}
                 className="sr-only"
+                {...register('gender', {
+                  onChange: () => {
+                    handleGenderSelect('male');
+                  },
+                })}
               />
               <Mars size={28} className="text-white" />
               <span className="text-sm font-semibold text-white">Male</span>
             </label>
 
             <label
-              className={`flex min-h-[100px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border transition-all duration-200 ease-out active:scale-95 ${
-                selectedGender === 'female'
+              className={`flex min-h-[100px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border transition-all duration-200 ease-out active:scale-95 ${selectedGender === 'female'
                   ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
                   : 'border-white/10 bg-white/5 backdrop-blur-sm'
-              }`}
+                }`}
             >
               <input
                 type="radio"
                 value="female"
-                {...register('gender', {
-                  onChange: () => handleGenderSelect('female'),
-                })}
                 className="sr-only"
+                {...register('gender', {
+                  onChange: () => {
+                    handleGenderSelect('female');
+                  },
+                })}
               />
               <Venus size={28} className="text-white" />
               <span className="text-sm font-semibold text-white">Female</span>
             </label>
 
             <label
-              className={`flex min-h-[100px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border transition-all duration-200 ease-out active:scale-95 ${
-                selectedGender === 'other'
+              className={`flex min-h-[100px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border transition-all duration-200 ease-out active:scale-95 ${selectedGender === 'other'
                   ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
                   : 'border-white/10 bg-white/5 backdrop-blur-sm'
-              }`}
+                }`}
             >
               <input
                 type="radio"
                 value="other"
-                {...register('gender', {
-                  onChange: () => handleGenderSelect('other'),
-                })}
                 className="sr-only"
+                {...register('gender', {
+                  onChange: () => {
+                    handleGenderSelect('other');
+                  },
+                })}
               />
               <VenusAndMars size={28} className="text-white" />
               <span className="text-sm font-semibold text-white">Other</span>
             </label>
           </div>
 
-          {errors.gender && (
+          {errors.gender ? (
             <span className="mt-1 block text-sm text-red-400">{errors.gender.message}</span>
-          )}
+          ) : null}
         </motion.div>
 
         {/* Origin Story */}
@@ -180,15 +183,15 @@ export function BasicInfoForm({ onNext }: BasicInfoFormProps) {
 
           <textarea
             id="originStory"
-            {...register('originStory')}
             placeholder="Briefly describe where they come from..."
             rows={5}
             className="focus:border-primary focus:ring-primary/50 w-full flex-1 resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 pr-12 text-white placeholder-white/40 backdrop-blur-sm transition-all duration-200 ease-out focus:bg-white/10 focus:ring-2 focus:outline-none"
+            {...register('originStory')}
           />
 
-          {errors.originStory && (
+          {errors.originStory ? (
             <span className="mt-1 block text-sm text-red-400">{errors.originStory.message}</span>
-          )}
+          ) : null}
         </motion.div>
       </div>
 
@@ -202,7 +205,7 @@ export function BasicInfoForm({ onNext }: BasicInfoFormProps) {
         className="group bg-primary shadow-primary/30 sticky bottom-6 w-full overflow-hidden rounded-full py-4 font-semibold text-white shadow-lg transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
       >
         <span className="relative z-10 flex items-center justify-center gap-2">
-          {isSubmitting ? 'Creating...' : 'Continue'}
+          {isSubmitting ? <span>Creating...</span> : <span>Continue</span>}
           <ArrowRight
             size={20}
             className="transition-transform duration-200 group-active:translate-x-1"

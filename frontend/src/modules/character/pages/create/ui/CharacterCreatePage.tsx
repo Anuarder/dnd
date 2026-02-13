@@ -1,15 +1,14 @@
+import { type ReactElement } from 'react';
 import { useNavigate } from 'react-router';
 
-import { isClassCaster } from '~modules/character/model/mock-data';
 import { useCharacterCreationStore } from '~modules/character/model/character-creation-store';
+import { getRaceById, isClassCaster } from '~modules/character/model/mock-data';
 import type {
   Attributes,
   CharacterBasicInfo,
   CharacterCreationStep,
 } from '~modules/character/model/types';
 import { UiPageHeader } from '~shared/ui';
-
-import { getRaceById } from '~modules/character/model/mock-data';
 
 import { AttributesStep } from './attributes-step';
 import { BackgroundStep } from './background-step';
@@ -35,7 +34,7 @@ const STEP_ORDER: CharacterCreationStep[] = [
   'review',
 ];
 
-export function CharacterCreatePage() {
+export function CharacterCreatePage(): ReactElement {
   const navigate = useNavigate();
   const {
     currentStep,
@@ -180,7 +179,7 @@ export function CharacterCreatePage() {
     }
 
     // Move to next step with updated values
-    const nextStep = getNextStep(step, updatedRaceId, updatedClassId);
+    const nextStep = getNextStep(step, updatedRaceId ?? undefined, updatedClassId ?? undefined);
     if (nextStep) {
       setCurrentStep(nextStep);
     }
@@ -195,7 +194,7 @@ export function CharacterCreatePage() {
     }
   }
 
-  function renderStep(): React.ReactElement {
+  function renderStep(): ReactElement {
     switch (currentStep) {
       case 'basic-info':
         return (
@@ -203,7 +202,6 @@ export function CharacterCreatePage() {
             onNext={(data) => {
               const basicInfo: CharacterBasicInfo = {
                 name: data.name,
-                avatar: data.avatar ?? null,
                 gender: data.gender,
                 originStory: data.originStory,
               };
@@ -216,46 +214,83 @@ export function CharacterCreatePage() {
         return (
           <ClassSelectionForm
             gender={basicInfo?.gender || 'male'}
-            onNext={(classId) => handleNext('class-selection', { classId })}
+            onNext={(classId) => {
+              handleNext('class-selection', { classId });
+            }}
           />
         );
 
       case 'race-selection':
-        return <RaceSelectionForm onNext={(data) => handleNext('race-selection', data)} />;
+        return (
+          <RaceSelectionForm
+            onNext={(data) => {
+              handleNext('race-selection', data);
+            }}
+          />
+        );
 
       case 'subrace-selection':
         return raceId ? (
           <SubraceSelectionForm
             raceId={raceId}
-            onNext={(data) => handleNext('subrace-selection', data)}
+            onNext={(data) => {
+              handleNext('subrace-selection', data);
+            }}
           />
         ) : (
           <div className="px-4 text-white">Please select a race first</div>
         );
 
       case 'background':
-        return <BackgroundStep onNext={(data) => handleNext('background', data)} />;
+        return (
+          <BackgroundStep
+            onNext={(data) => {
+              handleNext('background', data);
+            }}
+          />
+        );
 
       case 'attributes':
-        return <AttributesStep onNext={(data) => handleNext('attributes', data)} />;
+        return (
+          <AttributesStep
+            onNext={(data) => {
+              handleNext('attributes', data);
+            }}
+          />
+        );
 
       case 'skills':
         return classId ? (
-          <SkillsStep classId={classId} onNext={(data) => handleNext('skills', data)} />
+          <SkillsStep
+            classId={classId}
+            onNext={(data) => {
+              handleNext('skills', data);
+            }}
+          />
         ) : (
           <div className="px-4 text-white">Please select a class first</div>
         );
 
       case 'equipment':
         return classId ? (
-          <EquipmentStep classId={classId} onNext={(data) => handleNext('equipment', data)} />
+          <EquipmentStep
+            classId={classId}
+            onNext={(data) => {
+              handleNext('equipment', data);
+            }}
+          />
         ) : (
           <div className="px-4 text-white">Please select a class first</div>
         );
 
       case 'spells':
         return classId ? (
-          <SpellsStep classId={classId} onNext={(data) => handleNext('spells', data)} />
+          <SpellsStep
+            classId={classId}
+            onNext={(data) => {
+              handleNext('spells', data);
+            }}
+          />
         ) : (
           <div className="px-4 text-white">Please select a class first</div>
         );

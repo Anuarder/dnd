@@ -28,7 +28,7 @@ function createSkillsSchema(maxSkills: number) {
             : `Please unselect ${skills.length - maxSkills} skill${skills.length - maxSkills > 1 ? 's' : ''}`;
 
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: 'custom',
           message,
         });
       }

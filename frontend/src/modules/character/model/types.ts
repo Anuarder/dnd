@@ -1,6 +1,7 @@
 export interface CharacterBasicInfo {
   name: string;
-  avatar: File | null;
+  /** Avatar is optional when creating; may be present when fetched from API */
+  avatar?: File | null;
   gender: 'male' | 'female' | 'other';
   originStory: string;
 }

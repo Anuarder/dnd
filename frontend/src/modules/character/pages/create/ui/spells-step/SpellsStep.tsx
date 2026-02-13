@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Check, Sparkles, Wand2 } from 'lucide-react';
 import { motion } from 'motion/react';
+import type { ReactElement } from 'react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -106,7 +107,7 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
     isDisabled: boolean,
     onToggle: () => void,
     index: number
-  ): JSX.Element {
+  ): ReactElement {
     return (
       <motion.button
         key={spell.id}

@@ -1,7 +1,7 @@
+import { type ReactElement, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { Check, Loader2, User, Wand2 } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import {
   getBackgroundById,
@@ -20,7 +20,29 @@ function calculateModifier(value: number): string {
   return mod >= 0 ? `+${mod}` : `${mod}`;
 }
 
-export function ReviewStep({ characterData }: ReviewStepProps) {
+/** Build create payload without avatar (avatar comes from API when fetching) */
+function buildCreatePayload(data: CharacterCreationData): {
+  name: string;
+  level: number;
+  class: string;
+  race: string;
+} | null {
+  const { basicInfo, classId, raceId } = data;
+  if (!basicInfo || !classId || !raceId) {
+    return null;
+  }
+  const characterClass = getClassById(classId);
+  const race = getRaceById(raceId);
+  return {
+    name: basicInfo.name,
+    level: 1,
+    class: characterClass?.name ?? classId,
+    race: race?.name ?? raceId,
+    // avatar not sent on create
+  };
+}
+
+export function ReviewStep({ characterData }: ReviewStepProps): ReactElement {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -55,9 +77,12 @@ export function ReviewStep({ characterData }: ReviewStepProps) {
 
     // Mock API call
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const payload = buildCreatePayload(characterData);
+      await new Promise((resolve) => {
+        setTimeout(resolve, 2000);
+      });
 
-      console.log('Character created:', characterData);
+      console.log('Character created:', payload);
 
       setIsSuccess(true);
 
@@ -91,7 +116,7 @@ export function ReviewStep({ characterData }: ReviewStepProps) {
   }
 
   return (
-    <div className="space-y-6 px-4 pb-6">
+    <div className="space-y-6 px-4 pb-10">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -103,7 +128,7 @@ export function ReviewStep({ characterData }: ReviewStepProps) {
       </motion.div>
 
       {/* Basic Info */}
-      {characterData.basicInfo && (
+      {characterData.basicInfo ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -129,7 +154,7 @@ export function ReviewStep({ characterData }: ReviewStepProps) {
             </div>
           </div>
         </motion.div>
-      )}
+      ) : null}
 
       {/* Class & Race */}
       <motion.div
@@ -156,7 +181,7 @@ export function ReviewStep({ characterData }: ReviewStepProps) {
       </motion.div>
 
       {/* Attributes */}
-      {characterData.attributes && (
+      {characterData.attributes ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -174,10 +199,10 @@ export function ReviewStep({ characterData }: ReviewStepProps) {
             ))}
           </div>
         </motion.div>
-      )}
+      ) : null}
 
       {/* Skills */}
-      {characterData.selectedSkills.length > 0 && (
+      {characterData.selectedSkills.length > 0 ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -196,67 +221,69 @@ export function ReviewStep({ characterData }: ReviewStepProps) {
             ))}
           </div>
         </motion.div>
-      )}
+      ) : null}
 
       {/* Spells (if caster) */}
       {characterClass?.isCaster &&
         (characterData.selectedCantrips.length > 0 ||
-          characterData.selectedLevel1Spells.length > 0) && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.3, ease: 'easeOut' }}
-            className="rounded-xl border border-white/10 bg-white/5 p-5"
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20">
-                <Wand2 size={20} className="text-primary" />
+          characterData.selectedLevel1Spells.length > 0) ? (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.3, ease: 'easeOut' }}
+          className="rounded-xl border border-white/10 bg-white/5 p-5"
+        >
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20">
+              <Wand2 size={20} className="text-primary" />
+            </div>
+            <h3 className="text-lg font-bold text-white">Spells</h3>
+          </div>
+          <div className="mt-4 space-y-3">
+            {characterData.selectedCantrips.length > 0 ? (
+              <div>
+                <p className="text-sm font-semibold text-white/60">Cantrips</p>
+                <p className="mt-1 text-white">{characterData.selectedCantrips.length} selected</p>
               </div>
-              <h3 className="text-lg font-bold text-white">Spells</h3>
-            </div>
-            <div className="mt-4 space-y-3">
-              {characterData.selectedCantrips.length > 0 && (
-                <div>
-                  <p className="text-sm font-semibold text-white/60">Cantrips</p>
-                  <p className="mt-1 text-white">{characterData.selectedCantrips.length} selected</p>
-                </div>
-              )}
-              {characterData.selectedLevel1Spells.length > 0 && (
-                <div>
-                  <p className="text-sm font-semibold text-white/60">Level 1 Spells</p>
-                  <p className="mt-1 text-white">
-                    {characterData.selectedLevel1Spells.length} selected
-                  </p>
-                </div>
-              )}
-            </div>
-          </motion.div>
-        )}
+            ) : null}
+            {characterData.selectedLevel1Spells.length > 0 ? (
+              <div>
+                <p className="text-sm font-semibold text-white/60">Level 1 Spells</p>
+                <p className="mt-1 text-white">
+                  {characterData.selectedLevel1Spells.length} selected
+                </p>
+              </div>
+            ) : null}
+          </div>
+        </motion.div>
+      ) : null}
 
       {/* Submit Button */}
-      <motion.button
-        type="button"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.35, ease: 'easeOut' }}
-        disabled={isSubmitting}
-        className="group bg-primary shadow-primary/30 sticky bottom-6 w-full overflow-hidden rounded-full py-4 font-semibold text-white shadow-lg transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
-        onClick={handleSubmit}
-      >
-        <span className="relative z-10 flex items-center justify-center gap-2">
-          {isSubmitting ? (
-            <>
-              <Loader2 size={20} className="animate-spin" />
-              Creating Character...
-            </>
-          ) : (
-            <>
-              Create Character
-              <Check size={20} />
-            </>
-          )}
-        </span>
-      </motion.button>
+      <div className="sticky bottom-6 mt-auto pt-4">
+        <motion.button
+          type="button"
+          disabled={isSubmitting}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.35, ease: 'easeOut' }}
+          className="bg-primary/95 shadow-primary/30 block w-full overflow-hidden rounded-full py-4 font-semibold text-white shadow-lg backdrop-blur-md transition-all duration-200 ease-out active:scale-[0.98] active:bg-primary disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={handleSubmit}
+        >
+          <span className="relative z-10 flex items-center justify-center gap-2">
+            {isSubmitting ? (
+              <>
+                <Loader2 size={20} className="animate-spin" />
+                <span>Creating Character...</span>
+              </>
+            ) : (
+              <>
+                <span>Create Character</span>
+                <Check size={20} />
+              </>
+            )}
+          </span>
+        </motion.button>
+      </div>
     </div>
   );
 }

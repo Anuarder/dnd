@@ -1,6 +1,6 @@
+import { type ReactElement, useCallback, useMemo, useState } from 'react';
 import { ArrowRight, Minus, Plus } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useCallback, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
 import type { Attributes } from '~modules/character/model/types';
@@ -39,7 +39,7 @@ const gradientStyle = {
   backgroundImage: 'linear-gradient(152deg,rgba(127, 19, 236, 1) 18%, rgba(216, 180, 254, 1) 49%)',
 };
 
-export function AttributesStep({ onNext }: AttributesStepProps) {
+export function AttributesStep({ onNext }: AttributesStepProps): ReactElement {
   const [pointBuyValues, setPointBuyValues] = useState<Attributes>({
     str: POINT_BUY_INITIAL,
     dex: POINT_BUY_INITIAL,
@@ -51,7 +51,9 @@ export function AttributesStep({ onNext }: AttributesStepProps) {
 
   // Memoize expensive calculation (rerender-derived-state)
   const pointsSpent = useMemo(() => {
-    return Object.values(pointBuyValues).reduce((sum, val) => sum + calculatePointCost(val), 0);
+    return Object.values(pointBuyValues).reduce((sum, val) => {
+      return sum + calculatePointCost(val);
+    }, 0);
   }, [pointBuyValues]);
 
   const pointsRemaining = POINT_BUY_TOTAL - pointsSpent;
@@ -65,10 +67,9 @@ export function AttributesStep({ onNext }: AttributesStepProps) {
       }
 
       const costIncrease = current >= 13 ? 2 : 1;
-      const currentPointsSpent = Object.values(prev).reduce(
-        (sum, val) => sum + calculatePointCost(val),
-        0
-      );
+      const currentPointsSpent = Object.values(prev).reduce((sum, val) => {
+        return sum + calculatePointCost(val);
+      }, 0);
       const currentPointsRemaining = POINT_BUY_TOTAL - currentPointsSpent;
 
       if (currentPointsRemaining < costIncrease) {
@@ -175,7 +176,9 @@ export function AttributesStep({ onNext }: AttributesStepProps) {
                     type="button"
                     disabled={value <= POINT_BUY_MIN}
                     className="flex min-h-11 min-w-11 items-center justify-center rounded-lg bg-white/10 text-white transition-all duration-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-30"
-                    onClick={() => decrementPointBuy(attr.key)}
+                    onClick={() => {
+                      decrementPointBuy(attr.key);
+                    }}
                   >
                     <Minus size={18} />
                   </button>
@@ -190,7 +193,9 @@ export function AttributesStep({ onNext }: AttributesStepProps) {
                     type="button"
                     disabled={value >= POINT_BUY_MAX || pointsRemaining < costIncrease}
                     className="flex min-h-11 min-w-11 items-center justify-center rounded-lg bg-white/10 text-white transition-all duration-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-30"
-                    onClick={() => incrementPointBuy(attr.key)}
+                    onClick={() => {
+                      incrementPointBuy(attr.key);
+                    }}
                   >
                     <Plus size={18} />
                   </button>
@@ -203,15 +208,15 @@ export function AttributesStep({ onNext }: AttributesStepProps) {
 
       <motion.button
         type="button"
+        disabled={pointsRemaining !== 0}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.3, ease: 'easeOut' }}
-        disabled={pointsRemaining !== 0}
         className="sticky bottom-6 group bg-primary shadow-primary/30 mt-6 w-full overflow-hidden rounded-full py-4 font-semibold text-white shadow-lg transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
         onClick={handleContinue}
       >
         <span className="relative z-10 flex items-center justify-center gap-2">
-          Continue
+          <span>Continue</span>
           <ArrowRight
             size={20}
             className="transition-transform duration-200 group-active:translate-x-1"

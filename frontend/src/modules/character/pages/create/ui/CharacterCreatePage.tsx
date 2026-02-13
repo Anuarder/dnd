@@ -1,4 +1,4 @@
-import { type ReactElement } from 'react';
+import { useEffect, type ReactElement } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useCharacterCreationStore } from '~modules/character/model/character-creation-store';
@@ -48,10 +48,15 @@ export function CharacterCreatePage(): ReactElement {
     setEquipment,
     setSpells,
     getCharacterData,
+    resetCharacter,
     basicInfo,
     classId,
     raceId,
   } = useCharacterCreationStore();
+
+  useEffect(() => {
+    resetCharacter();
+  }, [resetCharacter]);
 
   function getNextStep(
     current: CharacterCreationStep,
@@ -190,8 +195,14 @@ export function CharacterCreatePage(): ReactElement {
     if (previousStep) {
       setCurrentStep(previousStep);
     } else {
+      resetCharacter();
       navigate('/player');
     }
+  }
+
+  function handleCreateComplete(): void {
+    navigate('/player');
+    resetCharacter();
   }
 
   function renderStep(): ReactElement {
@@ -296,7 +307,7 @@ export function CharacterCreatePage(): ReactElement {
         );
 
       case 'review':
-        return <ReviewStep characterData={getCharacterData()} />;
+        return <ReviewStep characterData={getCharacterData()} onComplete={handleCreateComplete} />;
 
       default:
         return <div className="px-4 text-white">Unknown step</div>;

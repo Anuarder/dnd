@@ -1,5 +1,4 @@
 import { type ReactElement, useState } from 'react';
-import { useNavigate } from 'react-router';
 import { Check, Loader2, User, Wand2 } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -13,6 +12,7 @@ import type { CharacterCreationData } from '~modules/character/model/types';
 
 interface ReviewStepProps {
   characterData: CharacterCreationData;
+  onComplete: () => void;
 }
 
 function calculateModifier(value: number): string {
@@ -42,8 +42,7 @@ function buildCreatePayload(data: CharacterCreationData): {
   };
 }
 
-export function ReviewStep({ characterData }: ReviewStepProps): ReactElement {
-  const navigate = useNavigate();
+export function ReviewStep({ characterData, onComplete }: ReviewStepProps): ReactElement {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -86,9 +85,9 @@ export function ReviewStep({ characterData }: ReviewStepProps): ReactElement {
 
       setIsSuccess(true);
 
-      // Redirect after success
+      // Signal success to parent
       setTimeout(() => {
-        navigate('/player');
+        onComplete();
       }, 2000);
     } catch (error) {
       console.error('Failed to create character:', error);

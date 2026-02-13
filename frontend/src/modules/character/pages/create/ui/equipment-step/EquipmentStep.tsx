@@ -19,6 +19,10 @@ interface EquipmentStepProps {
   onNext: (data: { equipmentPresetId: string }) => void;
 }
 
+const gradientStyle = {
+  backgroundImage: 'linear-gradient(152deg,rgba(127, 19, 236, 1) 18%, rgba(216, 180, 254, 1) 49%)',
+};
+
 export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
 
   const {
@@ -67,10 +71,17 @@ export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="text-center"
       >
-        <h2 className="text-3xl font-bold text-white">Choose Equipment</h2>
-        <p className="mt-2 text-white/60">Select your starting gear</p>
+        <h2 className="font-display gap-2 text-3xl font-bold">
+          <span>Choose</span>{' '}
+          <span className="bg-clip-text text-transparent" style={gradientStyle}>
+            Equipment
+          </span>
+        </h2>
+
+        <p className="mt-2 text-white/60">
+          Select your starting gear
+        </p>
       </motion.div>
 
       {/* Equipment Presets */}

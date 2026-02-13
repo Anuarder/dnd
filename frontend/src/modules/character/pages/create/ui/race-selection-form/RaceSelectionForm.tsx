@@ -41,7 +41,6 @@ export function RaceSelectionForm({ onNext }: RaceSelectionFormProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="text-center"
       >
         <h2 className="font-display flex flex-col text-3xl font-bold">
           <span>Choose Your</span>
@@ -67,8 +66,8 @@ export function RaceSelectionForm({ onNext }: RaceSelectionFormProps) {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: index * 0.05, ease: 'easeOut' }}
             className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ease-out active:scale-[0.98] ${selectedRace?.id === race.id
-                ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
-                : 'border-white/10 bg-white/5 backdrop-blur-sm'
+              ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
+              : 'border-white/10 bg-white/5 backdrop-blur-sm'
               }`}
             onClick={() => handleRaceSelect(race)}
           >

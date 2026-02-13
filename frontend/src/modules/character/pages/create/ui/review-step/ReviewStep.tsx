@@ -42,6 +42,10 @@ function buildCreatePayload(data: CharacterCreationData): {
   };
 }
 
+const gradientStyle = {
+  backgroundImage: 'linear-gradient(152deg,rgba(127, 19, 236, 1) 18%, rgba(216, 180, 254, 1) 49%)',
+};
+
 export function ReviewStep({ characterData, onComplete }: ReviewStepProps): ReactElement {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -120,10 +124,15 @@ export function ReviewStep({ characterData, onComplete }: ReviewStepProps): Reac
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="text-center"
+        className="font-display text-center"
       >
-        <h2 className="text-3xl font-bold text-white">Review Character</h2>
-        <p className="mt-2 text-white/60">Check everything before creating your character</p>
+        <h2 className="text-3xl font-bold text-white">
+          Review {' '}
+          <span className="bg-clip-text text-transparent" style={gradientStyle}>
+            Character
+          </span>
+        </h2>
+        <p className="mt-2 text-white/60 text-pretty">Check everything before creating your character</p>
       </motion.div>
 
       {/* Basic Info */}

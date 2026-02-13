@@ -42,6 +42,12 @@ interface SkillsStepProps {
   onNext: (data: { selectedSkills: string[] }) => void;
 }
 
+
+const gradientStyle = {
+  backgroundImage: 'linear-gradient(152deg,rgba(127, 19, 236, 1) 18%, rgba(216, 180, 254, 1) 49%)',
+};
+
+
 export function SkillsStep({ classId, onNext }: SkillsStepProps) {
   const characterClass = getClassById(classId);
   const maxSkills = characterClass?.skillCount ?? 0;
@@ -120,9 +126,14 @@ export function SkillsStep({ classId, onNext }: SkillsStepProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="text-center"
       >
-        <h2 className="text-3xl font-bold text-white">Choose Skills</h2>
+        <h2 className="font-display text-3xl font-bold">
+          <span>Choose</span>{' '}
+          <span className="bg-clip-text text-transparent" style={gradientStyle}>
+            Skills
+          </span>
+        </h2>
+
         <p className="mt-2 text-white/60">
           Select {maxSkills} skill{maxSkills > 1 ? 's' : ''} from your class options
         </p>

@@ -1,4 +1,4 @@
-import { type ReactElement, useState } from 'react';
+import { type ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Mars, Venus, VenusAndMars } from 'lucide-react';
@@ -32,11 +32,11 @@ interface BasicInfoFormProps {
 }
 
 export function BasicInfoForm({ onNext }: BasicInfoFormProps): ReactElement {
-  const [selectedGender, setSelectedGender] = useState<'male' | 'female' | 'other'>('male');
 
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<CharacterFormData>({
     resolver: zodResolver(characterSchema),
@@ -48,9 +48,7 @@ export function BasicInfoForm({ onNext }: BasicInfoFormProps): ReactElement {
     mode: 'onBlur',
   });
 
-  function handleGenderSelect(gender: 'male' | 'female' | 'other'): void {
-    setSelectedGender(gender);
-  }
+  const selectedGender = watch('gender');
 
   function onSubmit(data: CharacterFormData): void {
     onNext({
@@ -106,19 +104,15 @@ export function BasicInfoForm({ onNext }: BasicInfoFormProps): ReactElement {
           <div className="grid grid-cols-3 gap-3">
             <label
               className={`flex min-h-[100px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border transition-all duration-200 ease-out active:scale-95 ${selectedGender === 'male'
-                  ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
-                  : 'border-white/10 bg-white/5 backdrop-blur-sm'
+                ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
+                : 'border-white/10 bg-white/5 backdrop-blur-sm'
                 }`}
             >
               <input
                 type="radio"
                 value="male"
                 className="sr-only"
-                {...register('gender', {
-                  onChange: () => {
-                    handleGenderSelect('male');
-                  },
-                })}
+                {...register('gender')}
               />
               <Mars size={28} className="text-white" />
               <span className="text-sm font-semibold text-white">Male</span>
@@ -126,19 +120,15 @@ export function BasicInfoForm({ onNext }: BasicInfoFormProps): ReactElement {
 
             <label
               className={`flex min-h-[100px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border transition-all duration-200 ease-out active:scale-95 ${selectedGender === 'female'
-                  ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
-                  : 'border-white/10 bg-white/5 backdrop-blur-sm'
+                ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
+                : 'border-white/10 bg-white/5 backdrop-blur-sm'
                 }`}
             >
               <input
                 type="radio"
                 value="female"
                 className="sr-only"
-                {...register('gender', {
-                  onChange: () => {
-                    handleGenderSelect('female');
-                  },
-                })}
+                {...register('gender')}
               />
               <Venus size={28} className="text-white" />
               <span className="text-sm font-semibold text-white">Female</span>
@@ -146,19 +136,15 @@ export function BasicInfoForm({ onNext }: BasicInfoFormProps): ReactElement {
 
             <label
               className={`flex min-h-[100px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border transition-all duration-200 ease-out active:scale-95 ${selectedGender === 'other'
-                  ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
-                  : 'border-white/10 bg-white/5 backdrop-blur-sm'
+                ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
+                : 'border-white/10 bg-white/5 backdrop-blur-sm'
                 }`}
             >
               <input
                 type="radio"
                 value="other"
                 className="sr-only"
-                {...register('gender', {
-                  onChange: () => {
-                    handleGenderSelect('other');
-                  },
-                })}
+                {...register('gender')}
               />
               <VenusAndMars size={28} className="text-white" />
               <span className="text-sm font-semibold text-white">Other</span>

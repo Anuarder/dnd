@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Check, Shield, Sword } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -20,11 +19,11 @@ interface EquipmentStepProps {
 }
 
 export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
-  const [selectedPreset, setSelectedPreset] = useState<EquipmentPreset | null>(null);
 
   const {
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<EquipmentFormData>({
     resolver: zodResolver(equipmentSchema),
@@ -33,10 +32,11 @@ export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
     },
   });
 
+  const equipmentPresetId = watch('equipmentPresetId');
   const presets = EQUIPMENT_PRESETS[classId] || [];
+  const selectedPreset = presets.find((p) => p.id === equipmentPresetId) || null;
 
   function handlePresetSelect(preset: EquipmentPreset): void {
-    setSelectedPreset(preset);
     setValue('equipmentPresetId', preset.id);
   }
 
@@ -78,11 +78,10 @@ export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1, ease: 'easeOut' }}
-            className={`w-full rounded-xl border p-5 text-left transition-all duration-200 ease-out active:scale-[0.98] ${
-              selectedPreset?.id === preset.id
-                ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
-                : 'border-white/10 bg-white/5 backdrop-blur-sm'
-            }`}
+            className={`w-full rounded-xl border p-5 text-left transition-all duration-200 ease-out active:scale-[0.98] ${selectedPreset?.id === preset.id
+              ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
+              : 'border-white/10 bg-white/5 backdrop-blur-sm'
+              }`}
             onClick={() => handlePresetSelect(preset)}
           >
             <span className="flex items-start justify-between">

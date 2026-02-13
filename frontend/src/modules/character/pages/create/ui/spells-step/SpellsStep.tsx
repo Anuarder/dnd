@@ -1,8 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Check, Sparkles, Wand2 } from 'lucide-react';
 import { motion } from 'motion/react';
-import type { ReactElement } from 'react';
-import { useState } from 'react';
+import { type ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -25,12 +24,11 @@ const CANTRIP_COUNT = 2;
 const LEVEL1_SPELL_COUNT = 2;
 
 export function SpellsStep({ classId, onNext }: SpellsStepProps) {
-  const [selectedCantrips, setSelectedCantrips] = useState<string[]>([]);
-  const [selectedLevel1Spells, setSelectedLevel1Spells] = useState<string[]>([]);
 
   const {
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<SpellsFormData>({
     resolver: zodResolver(spellsSchema),
@@ -39,6 +37,9 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
       level1Spells: [],
     },
   });
+
+  const selectedCantrips = watch('cantrips');
+  const selectedLevel1Spells = watch('level1Spells');
 
   const classSpells = SPELLS[classId];
 
@@ -51,39 +52,33 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
   }
 
   function toggleCantrip(spellId: string): void {
-    setSelectedCantrips((prev) => {
-      if (prev.includes(spellId)) {
-        const newCantrips = prev.filter((id) => id !== spellId);
-        setValue('cantrips', newCantrips);
-        return newCantrips;
-      }
-
-      if (prev.length >= CANTRIP_COUNT) {
-        return prev;
-      }
-
-      const newCantrips = [...prev, spellId];
+    if (selectedCantrips.includes(spellId)) {
+      const newCantrips = selectedCantrips.filter((id) => id !== spellId);
       setValue('cantrips', newCantrips);
-      return newCantrips;
-    });
+      return;
+    }
+
+    if (selectedCantrips.length >= CANTRIP_COUNT) {
+      return;
+    }
+
+    const newCantrips = [...selectedCantrips, spellId];
+    setValue('cantrips', newCantrips);
   }
 
   function toggleLevel1Spell(spellId: string): void {
-    setSelectedLevel1Spells((prev) => {
-      if (prev.includes(spellId)) {
-        const newSpells = prev.filter((id) => id !== spellId);
-        setValue('level1Spells', newSpells);
-        return newSpells;
-      }
-
-      if (prev.length >= LEVEL1_SPELL_COUNT) {
-        return prev;
-      }
-
-      const newSpells = [...prev, spellId];
+    if (selectedLevel1Spells.includes(spellId)) {
+      const newSpells = selectedLevel1Spells.filter((id) => id !== spellId);
       setValue('level1Spells', newSpells);
-      return newSpells;
-    });
+      return;
+    }
+
+    if (selectedLevel1Spells.length >= LEVEL1_SPELL_COUNT) {
+      return;
+    }
+
+    const newSpells = [...selectedLevel1Spells, spellId];
+    setValue('level1Spells', newSpells);
   }
 
   function onSubmit(data: SpellsFormData): void {
@@ -116,11 +111,10 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3, delay: index * 0.03, ease: 'easeOut' }}
         disabled={isDisabled}
-        className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 ${
-          isSelected
-            ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
-            : 'border-white/10 bg-white/5 backdrop-blur-sm'
-        }`}
+        className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 ${isSelected
+          ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
+          : 'border-white/10 bg-white/5 backdrop-blur-sm'
+          }`}
         onClick={onToggle}
       >
         <span className="flex items-start justify-between">
@@ -182,9 +176,8 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
             {Array.from({ length: CANTRIP_COUNT }).map((_, index) => (
               <div
                 key={index}
-                className={`h-3 w-3 rounded-full transition-all duration-200 ${
-                  index < selectedCantrips.length ? 'bg-primary' : 'bg-white/20'
-                }`}
+                className={`h-3 w-3 rounded-full transition-all duration-200 ${index < selectedCantrips.length ? 'bg-primary' : 'bg-white/20'
+                  }`}
               />
             ))}
           </div>
@@ -226,9 +219,8 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
             {Array.from({ length: LEVEL1_SPELL_COUNT }).map((_, index) => (
               <div
                 key={index}
-                className={`h-3 w-3 rounded-full transition-all duration-200 ${
-                  index < selectedLevel1Spells.length ? 'bg-primary' : 'bg-white/20'
-                }`}
+                className={`h-3 w-3 rounded-full transition-all duration-200 ${index < selectedLevel1Spells.length ? 'bg-primary' : 'bg-white/20'
+                  }`}
               />
             ))}
           </div>

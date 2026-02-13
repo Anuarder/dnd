@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Check, Info } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -49,14 +48,18 @@ export function SkillsStep({ classId, onNext }: SkillsStepProps) {
 
   const skillsSchema = createSkillsSchema(maxSkills);
 
-  const { handleSubmit, setValue } = useForm<SkillsFormData>({
+  const {
+    handleSubmit,
+    setValue,
+    watch,
+  } = useForm<SkillsFormData>({
     resolver: zodResolver(skillsSchema),
     defaultValues: {
       skills: [],
     },
   });
 
-  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const selectedSkills = watch('skills');
 
   if (!characterClass) {
     return <div className="px-4 text-white">Class not found</div>;
@@ -65,21 +68,18 @@ export function SkillsStep({ classId, onNext }: SkillsStepProps) {
   const availableSkills = SKILLS.filter((skill) => characterClass.skillOptions.includes(skill.id));
 
   function toggleSkill(skillId: string): void {
-    setSelectedSkills((prev) => {
-      if (prev.includes(skillId)) {
-        const newSkills = prev.filter((id) => id !== skillId);
-        setValue('skills', newSkills);
-        return newSkills;
-      }
-
-      if (prev.length >= maxSkills) {
-        return prev;
-      }
-
-      const newSkills = [...prev, skillId];
+    if (selectedSkills.includes(skillId)) {
+      const newSkills = selectedSkills.filter((id) => id !== skillId);
       setValue('skills', newSkills);
-      return newSkills;
-    });
+      return;
+    }
+
+    if (selectedSkills.length >= maxSkills) {
+      return;
+    }
+
+    const newSkills = [...selectedSkills, skillId];
+    setValue('skills', newSkills);
   }
 
   function onSubmitValid(data: SkillsFormData): void {
@@ -144,9 +144,8 @@ export function SkillsStep({ classId, onNext }: SkillsStepProps) {
             {Array.from({ length: maxSkills }).map((_, index) => (
               <div
                 key={index}
-                className={`h-3 w-3 rounded-full transition-all duration-200 ${
-                  index < selectedSkills.length ? 'bg-primary' : 'bg-white/20'
-                }`}
+                className={`h-3 w-3 rounded-full transition-all duration-200 ${index < selectedSkills.length ? 'bg-primary' : 'bg-white/20'
+                  }`}
               />
             ))}
           </div>
@@ -172,11 +171,10 @@ export function SkillsStep({ classId, onNext }: SkillsStepProps) {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3, delay: index * 0.03, ease: 'easeOut' }}
-              className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 ${
-                isSelected
-                  ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
-                  : 'border-white/10 bg-white/5 backdrop-blur-sm'
-              } ${isDisabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+              className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 ${isSelected
+                ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
+                : 'border-white/10 bg-white/5 backdrop-blur-sm'
+                } ${isDisabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
               onClick={() => !isDisabled && toggleSkill(skill.id)}
             >
               <span className="flex items-start justify-between">

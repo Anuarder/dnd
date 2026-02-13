@@ -3,6 +3,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { ArrowRightIcon } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 import { BACKGROUNDS } from '~modules/character/model/mock-data';
 import { UiButton } from '~shared/ui';
@@ -47,8 +48,13 @@ export function BackgroundStep({ onNext }: BackgroundStepProps) {
   }
 
   function handleContinue(): void {
+    toast.dismiss();
     if (selectedBackground) {
       onNext({ backgroundId: selectedBackground.id });
+    } else {
+      toast.error('Selection Required', {
+        description: 'Please select a background to define your past.',
+      });
     }
   }
 

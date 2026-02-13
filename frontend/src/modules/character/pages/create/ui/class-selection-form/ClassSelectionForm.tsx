@@ -3,6 +3,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { ArrowRightIcon } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 import { UiButton } from '~shared/ui';
 
@@ -337,8 +338,13 @@ export function ClassSelectionForm({ gender, onNext }: ClassSelectionFormProps) 
         <UiButton
           className="w-full"
           onClick={() => {
+            toast.dismiss();
             if (selectedClass) {
               onNext(selectedClass.id);
+            } else {
+              toast.error('Selection Required', {
+                description: 'Please select a class to define your path.',
+              });
             }
           }}
         >

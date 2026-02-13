@@ -29,6 +29,7 @@ export function SubraceSelectionForm({
   }
 
   function handleContinue(): void {
+    toast.dismiss();
     if (!selectedSubrace) {
       toast.error('Please select a subrace', {
         description: 'Choose your subrace to continue.',
@@ -81,8 +82,8 @@ export function SubraceSelectionForm({
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: index * 0.05, ease: 'easeOut' }}
             className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ease-out active:scale-[0.98] ${selectedSubrace?.id === subrace.id
-                ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
-                : 'border-white/10 bg-white/5 backdrop-blur-sm'
+              ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
+              : 'border-white/10 bg-white/5 backdrop-blur-sm'
               }`}
             onClick={() => {
               handleSubraceSelect(subrace);

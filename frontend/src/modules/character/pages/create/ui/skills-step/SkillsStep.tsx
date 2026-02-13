@@ -83,10 +83,12 @@ export function SkillsStep({ classId, onNext }: SkillsStepProps) {
   }
 
   function onSubmitValid(data: SkillsFormData): void {
+    toast.dismiss();
     onNext({ selectedSkills: data.skills });
   }
 
   function onSubmitInvalid(): void {
+    toast.dismiss();
     const remaining = maxSkills - selectedSkills.length;
     const message =
       remaining > 0

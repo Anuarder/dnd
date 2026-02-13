@@ -58,49 +58,57 @@ export function AttributesStep({ onNext }: AttributesStepProps): ReactElement {
 
   const pointsRemaining = POINT_BUY_TOTAL - pointsSpent;
 
-  // Use functional setState for stable callbacks (rerender-functional-setstate)
-  const incrementPointBuy = useCallback((attrKey: keyof Attributes) => {
-    setPointBuyValues((prev) => {
-      const current = prev[attrKey];
+  const incrementPointBuy = useCallback(
+    (attrKey: keyof Attributes) => {
+      const current = pointBuyValues[attrKey];
+
       if (current >= POINT_BUY_MAX) {
-        return prev;
+        toast.error('Maximum Reached', {
+          description: 'The maximum value for an attribute is 15.',
+        });
+        return;
       }
 
       const costIncrease = current >= 13 ? 2 : 1;
-      const currentPointsSpent = Object.values(prev).reduce((sum, val) => {
-        return sum + calculatePointCost(val);
-      }, 0);
-      const currentPointsRemaining = POINT_BUY_TOTAL - currentPointsSpent;
-
-      if (currentPointsRemaining < costIncrease) {
-        return prev;
+      if (pointsRemaining < costIncrease) {
+        toast.error('Insufficient Points', {
+          description: "You don't have enough points left for this increase.",
+        });
+        return;
       }
 
-      return {
+      setPointBuyValues((prev) => ({
         ...prev,
         [attrKey]: current + 1,
-      };
-    });
-  }, []);
+      }));
+    },
+    [pointBuyValues, pointsRemaining]
+  );
 
-  const decrementPointBuy = useCallback((attrKey: keyof Attributes) => {
-    setPointBuyValues((prev) => {
-      const current = prev[attrKey];
+  const decrementPointBuy = useCallback(
+    (attrKey: keyof Attributes) => {
+      const current = pointBuyValues[attrKey];
+
       if (current <= POINT_BUY_MIN) {
-        return prev;
+        toast.error('Minimum Reached', {
+          description: 'The minimum value for an attribute is 8.',
+        });
+        return;
       }
 
-      return {
+      setPointBuyValues((prev) => ({
         ...prev,
         [attrKey]: current - 1,
-      };
-    });
-  }, []);
+      }));
+    },
+    [pointBuyValues]
+  );
 
   function handleContinue(): void {
-    if (pointsRemaining !== 0) {
-      toast.error('Please allocate all points', {
-        description: `You have ${pointsRemaining} points remaining.`,
+    toast.dismiss();
+    if (pointsRemaining > 0) {
+      toast.error('Incomplete Allocation', {
+        description: `You have ${pointsRemaining} ${pointsRemaining === 1 ? 'point' : 'points'} remaining to distribute.`,
       });
       return;
     }
@@ -154,8 +162,6 @@ export function AttributesStep({ onNext }: AttributesStepProps): ReactElement {
         {ATTRIBUTE_NAMES.map((attr, index) => {
           const value = pointBuyValues[attr.key];
           const cost = calculatePointCost(value);
-          const nextCost = value < POINT_BUY_MAX ? calculatePointCost(value + 1) : 0;
-          const costIncrease = nextCost - cost;
 
           return (
             <motion.div
@@ -174,8 +180,7 @@ export function AttributesStep({ onNext }: AttributesStepProps): ReactElement {
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
-                    disabled={value <= POINT_BUY_MIN}
-                    className="flex min-h-11 min-w-11 items-center justify-center rounded-lg bg-white/10 text-white transition-all duration-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-30"
+                    className="flex min-h-11 min-w-11 items-center justify-center rounded-lg bg-white/10 text-white transition-all duration-200 active:scale-95"
                     onClick={() => {
                       decrementPointBuy(attr.key);
                     }}
@@ -191,8 +196,7 @@ export function AttributesStep({ onNext }: AttributesStepProps): ReactElement {
                   </div>
                   <button
                     type="button"
-                    disabled={value >= POINT_BUY_MAX || pointsRemaining < costIncrease}
-                    className="flex min-h-11 min-w-11 items-center justify-center rounded-lg bg-white/10 text-white transition-all duration-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-30"
+                    className="flex min-h-11 min-w-11 items-center justify-center rounded-lg bg-white/10 text-white transition-all duration-200 active:scale-95"
                     onClick={() => {
                       incrementPointBuy(attr.key);
                     }}
@@ -208,7 +212,6 @@ export function AttributesStep({ onNext }: AttributesStepProps): ReactElement {
 
       <motion.button
         type="button"
-        disabled={pointsRemaining !== 0}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.3, ease: 'easeOut' }}

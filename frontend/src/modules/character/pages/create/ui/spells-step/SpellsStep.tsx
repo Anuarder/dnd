@@ -3,6 +3,7 @@ import { ArrowRight, Check, Sparkles, Wand2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { type ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { SPELLS } from '~modules/character/model/mock-data';
@@ -82,17 +83,29 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
   }
 
   function onSubmit(data: SpellsFormData): void {
+    toast.dismiss();
     if (data.cantrips.length !== CANTRIP_COUNT) {
-      alert(`Please select exactly ${CANTRIP_COUNT} cantrips`);
+      toast.error('Cantrips Required', {
+        description: `Please select exactly ${CANTRIP_COUNT} cantrips to proceed.`,
+      });
       return;
     }
     if (data.level1Spells.length !== LEVEL1_SPELL_COUNT) {
-      alert(`Please select exactly ${LEVEL1_SPELL_COUNT} level 1 spells`);
+      toast.error('Spells Required', {
+        description: `Please select exactly ${LEVEL1_SPELL_COUNT} level 1 spells to proceed.`,
+      });
       return;
     }
     onNext({
       selectedCantrips: data.cantrips,
       selectedLevel1Spells: data.level1Spells,
+    });
+  }
+
+  function onInvalid(): void {
+    toast.dismiss();
+    toast.error('Selection Incomplete', {
+      description: 'Please select both your cantrips and level 1 spells.',
     });
   }
 
@@ -142,7 +155,7 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
   }
 
   return (
-    <form className="space-y-6 px-4 pb-6" onSubmit={handleSubmit(onSubmit)}>
+    <form className="space-y-6 px-4 pb-6" onSubmit={handleSubmit(onSubmit, onInvalid)}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -251,10 +264,6 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.3, ease: 'easeOut' }}
-        disabled={
-          selectedCantrips.length !== CANTRIP_COUNT ||
-          selectedLevel1Spells.length !== LEVEL1_SPELL_COUNT
-        }
         className="group bg-primary shadow-primary/30 sticky bottom-6 w-full overflow-hidden rounded-full py-4 font-semibold text-white shadow-lg transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
       >
         <span className="relative z-10 flex items-center justify-center gap-2">

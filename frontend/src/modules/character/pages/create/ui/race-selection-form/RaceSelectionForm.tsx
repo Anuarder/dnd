@@ -22,6 +22,7 @@ export function RaceSelectionForm({ onNext }: RaceSelectionFormProps) {
   }
 
   function handleContinue(): void {
+    toast.dismiss();
     if (!selectedRace) {
       toast.error('Please select a race', {
         description: 'Choose your heritage to continue.',
@@ -65,11 +66,10 @@ export function RaceSelectionForm({ onNext }: RaceSelectionFormProps) {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: index * 0.05, ease: 'easeOut' }}
-            className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ease-out active:scale-[0.98] ${
-              selectedRace?.id === race.id
+            className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ease-out active:scale-[0.98] ${selectedRace?.id === race.id
                 ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
                 : 'border-white/10 bg-white/5 backdrop-blur-sm'
-            }`}
+              }`}
             onClick={() => handleRaceSelect(race)}
           >
             <span className="flex items-start justify-between">

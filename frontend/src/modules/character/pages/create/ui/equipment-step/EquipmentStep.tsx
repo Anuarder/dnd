@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Check, Shield, Sword } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { EQUIPMENT_PRESETS } from '~modules/character/model/mock-data';
@@ -24,7 +25,7 @@ export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
     handleSubmit,
     setValue,
     watch,
-    formState: { errors },
+    formState: { },
   } = useForm<EquipmentFormData>({
     resolver: zodResolver(equipmentSchema),
     defaultValues: {
@@ -41,7 +42,15 @@ export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
   }
 
   function onSubmit(data: EquipmentFormData): void {
+    toast.dismiss();
     onNext(data);
+  }
+
+  function onInvalid(): void {
+    toast.dismiss();
+    toast.error('Selection Required', {
+      description: 'Please select an equipment preset to continue.',
+    });
   }
 
   if (presets.length === 0) {
@@ -53,7 +62,7 @@ export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
   }
 
   return (
-    <form className="space-y-6 px-4 pb-6" onSubmit={handleSubmit(onSubmit)}>
+    <form className="space-y-6 px-4 pb-6" onSubmit={handleSubmit(onSubmit, onInvalid)}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -125,9 +134,6 @@ export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
         ))}
       </motion.div>
 
-      {errors.equipmentPresetId && (
-        <span className="block text-sm text-red-400">{errors.equipmentPresetId.message}</span>
-      )}
 
       {/* Submit Button */}
       <motion.button

@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Mars, Venus, VenusAndMars } from 'lucide-react';
 import { motion } from 'motion/react';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 const characterSchema = z.object({
@@ -51,6 +52,7 @@ export function BasicInfoForm({ onNext }: BasicInfoFormProps): ReactElement {
   const selectedGender = watch('gender');
 
   function onSubmit(data: CharacterFormData): void {
+    toast.dismiss();
     onNext({
       name: data.name,
       gender: data.gender,
@@ -58,8 +60,15 @@ export function BasicInfoForm({ onNext }: BasicInfoFormProps): ReactElement {
     });
   }
 
+  function onInvalid(): void {
+    toast.dismiss();
+    toast.error('Form Incomplete', {
+      description: 'Please check the required fields and ensure everything is filled correctly.',
+    });
+  }
+
   return (
-    <form className="flex flex-1 flex-col gap-8 px-4 pb-6" onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex flex-1 flex-col gap-8 px-4 pb-6" onSubmit={handleSubmit(onSubmit, onInvalid)}>
       {/* Section Title */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

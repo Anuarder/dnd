@@ -86,12 +86,12 @@ export function RaceSelectionForm({ onNext }: RaceSelectionFormProps) {
                     {race.size}
                   </span>
                   <span className="rounded-full bg-white/10 px-3 py-1 text-xs text-white">
-                    {race.speed} ft. speed
+                    Скорость {race.speed} ft.
                   </span>
                 </span>
 
                 <span className="mt-2 block">
-                  <span className="text-xs font-semibold text-white/50 uppercase">Traits</span>
+                  <span className="text-xs font-semibold text-white/50 uppercase">Особенности</span>
                   <span className="mt-1 flex flex-wrap gap-1">
                     {race.traits.map((trait) => (
                       <span

@@ -30,7 +30,7 @@ export interface Race {
   image: string;
   abilityBonuses: Record<string, number>;
   speed: number;
-  size: 'Small' | 'Medium';
+  size: 'Небольшой' | 'Средний';
   traits: string[];
   subraces?: Subrace[];
 }

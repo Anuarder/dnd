@@ -100,7 +100,7 @@ export function SubraceSelectionForm({
 
                 <span className="mt-2 block">
                   <span className="text-xs font-semibold text-white/50 uppercase">
-                    Additional Traits
+                    Дополнительные особенности
                   </span>
                   <span className="mt-1 flex flex-wrap gap-1">
                     {subrace.traits.map((trait) => (

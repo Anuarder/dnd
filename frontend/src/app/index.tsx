@@ -2,6 +2,8 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Toaster } from 'sonner';
 
+import './i18n';
+
 import { RoutesProvider, TanstackQueryProvider } from './providers';
 
 function startApp() {

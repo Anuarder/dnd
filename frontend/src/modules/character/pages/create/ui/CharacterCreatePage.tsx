@@ -1,4 +1,5 @@
 import { useEffect, type ReactElement } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 
 import { useCharacterCreationStore } from '~modules/character/model/character-creation-store';
@@ -36,6 +37,7 @@ const STEP_ORDER: CharacterCreationStep[] = [
 
 export function CharacterCreatePage(): ReactElement {
   const navigate = useNavigate();
+  const { t } = useTranslation('characterCreate');
   const {
     currentStep,
     setCurrentStep,
@@ -249,7 +251,7 @@ export function CharacterCreatePage(): ReactElement {
             }}
           />
         ) : (
-          <div className="px-4 text-white">Please select a race first</div>
+          <div className="px-4 text-white">{t('errors.selectRace')}</div>
         );
 
       case 'background':
@@ -279,7 +281,7 @@ export function CharacterCreatePage(): ReactElement {
             }}
           />
         ) : (
-          <div className="px-4 text-white">Please select a class first</div>
+          <div className="px-4 text-white">{t('errors.selectClass')}</div>
         );
 
       case 'equipment':
@@ -291,7 +293,7 @@ export function CharacterCreatePage(): ReactElement {
             }}
           />
         ) : (
-          <div className="px-4 text-white">Please select a class first</div>
+          <div className="px-4 text-white">{t('errors.selectClass')}</div>
         );
 
       case 'spells':
@@ -303,14 +305,14 @@ export function CharacterCreatePage(): ReactElement {
             }}
           />
         ) : (
-          <div className="px-4 text-white">Please select a class first</div>
+          <div className="px-4 text-white">{t('errors.selectClass')}</div>
         );
 
       case 'review':
         return <ReviewStep characterData={getCharacterData()} onComplete={handleCreateComplete} />;
 
       default:
-        return <div className="px-4 text-white">Unknown step</div>;
+        return <div className="px-4 text-white">{t('errors.unknownStep')}</div>;
     }
   }
 
@@ -319,8 +321,8 @@ export function CharacterCreatePage(): ReactElement {
       <div className="flex flex-1 flex-col">
         <div className="px-4 pt-6">
           <UiPageHeader
-            title="Create Character"
-            description="Design and customize a new character"
+            title={t('pageTitle')}
+            description={t('pageDescription')}
             onBackClick={handleBack}
           />
         </div>

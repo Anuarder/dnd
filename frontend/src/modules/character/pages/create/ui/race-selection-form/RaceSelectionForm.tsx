@@ -1,6 +1,7 @@
-import { ArrowRight, Check } from 'lucide-react';
+﻿import { ArrowRight, Check } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import { RACES } from '~modules/character/model/mock-data';
@@ -15,6 +16,7 @@ const gradientStyle = {
 };
 
 export function RaceSelectionForm({ onNext }: RaceSelectionFormProps) {
+  const { t } = useTranslation('characterCreateRaceSelection');
   const [selectedRace, setSelectedRace] = useState<Race | null>(null);
 
   function handleRaceSelect(race: Race): void {
@@ -24,8 +26,8 @@ export function RaceSelectionForm({ onNext }: RaceSelectionFormProps) {
   function handleContinue(): void {
     toast.dismiss();
     if (!selectedRace) {
-      toast.error('Please select a race', {
-        description: 'Choose your heritage to continue.',
+      toast.error(t('toast.selectionTitle'), {
+        description: t('toast.selectionDescription'),
       });
       return;
     }
@@ -43,15 +45,14 @@ export function RaceSelectionForm({ onNext }: RaceSelectionFormProps) {
         transition={{ duration: 0.4, ease: 'easeOut' }}
       >
         <h2 className="font-display flex flex-col text-3xl font-bold">
-          <span>Choose Your</span>
+          <span>{t('titleLine1')}</span>
           <span className="bg-clip-text text-transparent" style={gradientStyle}>
-            Heritage
+            {t('titleLine2')}
           </span>
         </h2>
-        <p className="mt-2 text-white/60">Your heritage shapes your abilities and traits</p>
+        <p className="mt-2 text-white/60">{t('description')}</p>
       </motion.div>
 
-      {/* Race Selection */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -65,19 +66,18 @@ export function RaceSelectionForm({ onNext }: RaceSelectionFormProps) {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: index * 0.05, ease: 'easeOut' }}
-            className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ease-out active:scale-[0.98] ${selectedRace?.id === race.id
-              ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
-              : 'border-white/10 bg-white/5 backdrop-blur-sm'
-              }`}
+            className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ease-out active:scale-[0.98] ${
+              selectedRace?.id === race.id
+                ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
+                : 'border-white/10 bg-white/5 backdrop-blur-sm'
+            }`}
             onClick={() => handleRaceSelect(race)}
           >
             <span className="flex items-start justify-between">
               <span className="flex flex-1 flex-col">
                 <span className="flex items-center gap-2">
                   <span className="text-lg font-bold text-white">{race.name}</span>
-                  {selectedRace?.id === race.id && (
-                    <Check size={20} className="text-primary" />
-                  )}
+                  {selectedRace?.id === race.id && <Check size={20} className="text-primary" />}
                 </span>
                 <span className="mt-1 text-sm text-white/60">{race.description}</span>
 
@@ -86,12 +86,14 @@ export function RaceSelectionForm({ onNext }: RaceSelectionFormProps) {
                     {race.size}
                   </span>
                   <span className="rounded-full bg-white/10 px-3 py-1 text-xs text-white">
-                    Скорость {race.speed} ft.
+                    {t('labels.speed', { value: race.speed })}
                   </span>
                 </span>
 
                 <span className="mt-2 block">
-                  <span className="text-xs font-semibold text-white/50 uppercase">Особенности</span>
+                  <span className="text-xs font-semibold text-white/50 uppercase">
+                    {t('labels.traits')}
+                  </span>
                   <span className="mt-1 flex flex-wrap gap-1">
                     {race.traits.map((trait) => (
                       <span
@@ -109,7 +111,6 @@ export function RaceSelectionForm({ onNext }: RaceSelectionFormProps) {
         ))}
       </motion.div>
 
-      {/* Submit Button */}
       <motion.button
         type="button"
         initial={{ opacity: 0, y: 20 }}
@@ -119,7 +120,7 @@ export function RaceSelectionForm({ onNext }: RaceSelectionFormProps) {
         onClick={handleContinue}
       >
         <span className="relative z-10 flex items-center justify-center gap-2">
-          Continue
+          {t('continue')}
           <ArrowRight
             size={20}
             className="transition-transform duration-200 group-active:translate-x-1"

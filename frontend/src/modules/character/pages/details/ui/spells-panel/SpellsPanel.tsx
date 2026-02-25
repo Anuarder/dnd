@@ -13,7 +13,7 @@ export function SpellsPanel({
   );
 
   return (
-    <div className="bg-surface-dark rounded-xl border border-white/5 p-5 shadow-lg">
+    <div className="border-white/10 bg-white/5 rounded-xl border p-5 shadow-lg">
       <h2 className="text-sm font-semibold tracking-wide text-gray-400 uppercase">
         Ячейки заклинаний
       </h2>

@@ -17,7 +17,7 @@ export function CharacterHeader({
   alignment: string;
 }): ReactElement {
   return (
-    <div className="bg-surface-dark rounded-xl border border-white/5 p-5 shadow-lg">
+    <div className="border-white/10 bg-white/5 rounded-xl border p-5 shadow-lg">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-white">{name}</h1>

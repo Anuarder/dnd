@@ -15,7 +15,7 @@ export function CombatStats({
 
   return (
     <div className="grid gap-4 grid-cols-3">
-      <div className="bg-surface-dark rounded-xl border border-white/5 p-4 shadow-lg">
+      <div className="border-white/10 bg-white/5 rounded-xl border p-4 shadow-lg">
         <div className="flex flex-col items-center gap-2 text-sm text-gray-400">
           <Heart className="h-5 w-5 text-red-400 md:h-7 md:w-7" />
           ХП
@@ -29,7 +29,7 @@ export function CombatStats({
         </div>
       </div>
 
-      <div className="bg-surface-dark rounded-xl border border-white/5 p-4 shadow-lg">
+      <div className="border-white/10 bg-white/5 rounded-xl border p-4 shadow-lg">
         <div className="flex flex-col items-center gap-2 text-sm text-gray-400">
           <Shield className="h-5 w-5 text-blue-400 md:h-7 md:w-7" />
           КБ
@@ -37,7 +37,7 @@ export function CombatStats({
         <div className="mt-2 text-2xl font-semibold text-white text-center">{ac}</div>
       </div>
 
-      <div className="bg-surface-dark rounded-xl border border-white/5 p-4 shadow-lg">
+      <div className="border-white/10 bg-white/5 rounded-xl border p-4 shadow-lg">
         <div className="flex flex-col items-center gap-2 text-sm text-gray-400">
           <Zap className="h-5 w-5 text-yellow-400 md:h-7 md:w-7" />
           Инициатива

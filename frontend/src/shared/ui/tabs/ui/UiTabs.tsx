@@ -24,7 +24,7 @@ function UiTabs({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.3, ease: 'easeOut' }}
-      className={`bg-surface-dark mb-6 flex gap-2 rounded-lg border border-white/5 p-1 ${className ?? ''}`}
+      className={`border-white/10 bg-white/5 mb-6 flex gap-2 rounded-lg border p-1 ${className ?? ''}`}
     >
       {tabs.map((tab) => (
         <button

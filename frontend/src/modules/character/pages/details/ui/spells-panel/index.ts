@@ -1,0 +1,1 @@
+export { SpellsPanel } from './SpellsPanel';

@@ -1,6 +1,7 @@
-import { type ReactElement, useState } from 'react';
-import { ArrowRight, Check } from 'lucide-react';
+﻿import { ArrowRight, Check } from 'lucide-react';
 import { motion } from 'motion/react';
+import { type ReactElement, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import { getRaceById } from '~modules/character/model/mock-data';
@@ -19,6 +20,7 @@ export function SubraceSelectionForm({
   raceId,
   onNext,
 }: SubraceSelectionFormProps): ReactElement {
+  const { t } = useTranslation('characterCreateSubraceSelection');
   const [selectedSubrace, setSelectedSubrace] = useState<Subrace | null>(null);
 
   const race = getRaceById(raceId);
@@ -31,8 +33,8 @@ export function SubraceSelectionForm({
   function handleContinue(): void {
     toast.dismiss();
     if (!selectedSubrace) {
-      toast.error('Please select a subrace', {
-        description: 'Choose your subrace to continue.',
+      toast.error(t('toast.selectionTitle'), {
+        description: t('toast.selectionDescription'),
       });
       return;
     }
@@ -45,7 +47,7 @@ export function SubraceSelectionForm({
   if (subraces.length === 0) {
     return (
       <div className="px-4 text-center text-white">
-        <p>No subraces available for this race.</p>
+        <p>{t('noSubraces')}</p>
       </div>
     );
   }
@@ -58,15 +60,16 @@ export function SubraceSelectionForm({
         transition={{ duration: 0.4, ease: 'easeOut' }}
       >
         <h2 className="font-display flex flex-col text-3xl font-bold">
-          <span>Choose Your</span>
+          <span>{t('titleLine1')}</span>
           <span className="bg-clip-text text-transparent" style={gradientStyle}>
-            Subrace
+            {t('titleLine2')}
           </span>
         </h2>
-        <p className="mt-2 text-white/60">Choose a subrace for your {race?.name ?? 'character'}</p>
+        <p className="mt-2 text-white/60">
+          {t('description', { race: race?.name ?? t('fallbacks.character') })}
+        </p>
       </motion.div>
 
-      {/* Subrace Selection */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -80,10 +83,11 @@ export function SubraceSelectionForm({
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: index * 0.05, ease: 'easeOut' }}
-            className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ease-out active:scale-[0.98] ${selectedSubrace?.id === subrace.id
-              ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
-              : 'border-white/10 bg-white/5 backdrop-blur-sm'
-              }`}
+            className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ease-out active:scale-[0.98] ${
+              selectedSubrace?.id === subrace.id
+                ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
+                : 'border-white/10 bg-white/5 backdrop-blur-sm'
+            }`}
             onClick={() => {
               handleSubraceSelect(subrace);
             }}
@@ -100,7 +104,7 @@ export function SubraceSelectionForm({
 
                 <span className="mt-2 block">
                   <span className="text-xs font-semibold text-white/50 uppercase">
-                    Additional Traits
+                    {t('labels.traits')}
                   </span>
                   <span className="mt-1 flex flex-wrap gap-1">
                     {subrace.traits.map((trait) => (
@@ -119,7 +123,6 @@ export function SubraceSelectionForm({
         ))}
       </motion.div>
 
-      {/* Submit Button */}
       <motion.button
         type="button"
         initial={{ opacity: 0, y: 20 }}
@@ -129,7 +132,7 @@ export function SubraceSelectionForm({
         onClick={handleContinue}
       >
         <span className="relative z-10 flex items-center justify-center gap-2">
-          <span>Continue</span>
+          <span>{t('continue')}</span>
           <ArrowRight
             size={20}
             className="transition-transform duration-200 group-active:translate-x-1"

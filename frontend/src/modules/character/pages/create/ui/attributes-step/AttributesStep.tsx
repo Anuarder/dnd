@@ -1,6 +1,7 @@
-import { type ReactElement, useCallback, useMemo, useState } from 'react';
-import { ArrowRight, Minus, Plus } from 'lucide-react';
+﻿import { ArrowRight, Minus, Plus } from 'lucide-react';
 import { motion } from 'motion/react';
+import { type ReactElement, useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import type { Attributes } from '~modules/character/model/types';
@@ -14,16 +15,6 @@ const POINT_BUY_MIN = 8;
 const POINT_BUY_MAX = 15;
 const POINT_BUY_TOTAL = 27;
 
-const ATTRIBUTE_NAMES: { key: keyof Attributes; name: string; description: string }[] = [
-  { key: 'str', name: 'Strength', description: 'Physical power' },
-  { key: 'dex', name: 'Dexterity', description: 'Agility and reflexes' },
-  { key: 'con', name: 'Constitution', description: 'Health and stamina' },
-  { key: 'int', name: 'Intelligence', description: 'Reason and memory' },
-  { key: 'wis', name: 'Wisdom', description: 'Perception and will' },
-  { key: 'cha', name: 'Charisma', description: 'Force of personality' },
-];
-
-// Hoist pure calculation functions outside component (js-cache-function-results)
 function calculateModifier(value: number): number {
   return Math.floor((value - 10) / 2);
 }
@@ -39,7 +30,10 @@ const gradientStyle = {
   backgroundImage: 'linear-gradient(152deg,rgba(127, 19, 236, 1) 18%, rgba(216, 180, 254, 1) 49%)',
 };
 
+const ATTRIBUTE_ORDER: Array<keyof Attributes> = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+
 export function AttributesStep({ onNext }: AttributesStepProps): ReactElement {
+  const { t } = useTranslation('characterCreateAttributes');
   const [pointBuyValues, setPointBuyValues] = useState<Attributes>({
     str: POINT_BUY_INITIAL,
     dex: POINT_BUY_INITIAL,
@@ -49,7 +43,15 @@ export function AttributesStep({ onNext }: AttributesStepProps): ReactElement {
     cha: POINT_BUY_INITIAL,
   });
 
-  // Memoize expensive calculation (rerender-derived-state)
+  const attributes = useMemo(() => {
+    const data = t('attributes', { returnObjects: true }) as Record<keyof Attributes, { name: string; description: string }>;
+    return ATTRIBUTE_ORDER.map((key) => ({
+      key,
+      name: data[key]?.name ?? key,
+      description: data[key]?.description ?? '',
+    }));
+  }, [t]);
+
   const pointsSpent = useMemo(() => {
     return Object.values(pointBuyValues).reduce((sum, val) => {
       return sum + calculatePointCost(val);
@@ -63,16 +65,16 @@ export function AttributesStep({ onNext }: AttributesStepProps): ReactElement {
       const current = pointBuyValues[attrKey];
 
       if (current >= POINT_BUY_MAX) {
-        toast.error('Maximum Reached', {
-          description: 'The maximum value for an attribute is 15.',
+        toast.error(t('toast.maxTitle'), {
+          description: t('toast.maxDescription', { max: POINT_BUY_MAX }),
         });
         return;
       }
 
       const costIncrease = current >= 13 ? 2 : 1;
       if (pointsRemaining < costIncrease) {
-        toast.error('Insufficient Points', {
-          description: "You don't have enough points left for this increase.",
+        toast.error(t('toast.insufficientTitle'), {
+          description: t('toast.insufficientDescription'),
         });
         return;
       }
@@ -82,7 +84,7 @@ export function AttributesStep({ onNext }: AttributesStepProps): ReactElement {
         [attrKey]: current + 1,
       }));
     },
-    [pointBuyValues, pointsRemaining]
+    [pointBuyValues, pointsRemaining, t]
   );
 
   const decrementPointBuy = useCallback(
@@ -90,8 +92,8 @@ export function AttributesStep({ onNext }: AttributesStepProps): ReactElement {
       const current = pointBuyValues[attrKey];
 
       if (current <= POINT_BUY_MIN) {
-        toast.error('Minimum Reached', {
-          description: 'The minimum value for an attribute is 8.',
+        toast.error(t('toast.minTitle'), {
+          description: t('toast.minDescription', { min: POINT_BUY_MIN }),
         });
         return;
       }
@@ -101,14 +103,14 @@ export function AttributesStep({ onNext }: AttributesStepProps): ReactElement {
         [attrKey]: current - 1,
       }));
     },
-    [pointBuyValues]
+    [pointBuyValues, t]
   );
 
   function handleContinue(): void {
     toast.dismiss();
     if (pointsRemaining > 0) {
-      toast.error('Incomplete Allocation', {
-        description: `You have ${pointsRemaining} ${pointsRemaining === 1 ? 'point' : 'points'} remaining to distribute.`,
+      toast.error(t('toast.incompleteTitle'), {
+        description: t('toast.incompleteDescription', { count: pointsRemaining }),
       });
       return;
     }
@@ -124,14 +126,14 @@ export function AttributesStep({ onNext }: AttributesStepProps): ReactElement {
         transition={{ duration: 0.4, ease: 'easeOut' }}
       >
         <h2 className="font-display flex flex-col text-3xl font-bold">
-          <span>Assign Your</span>
+          <span>{t('titleLine1')}</span>
           <span className="bg-clip-text text-transparent" style={gradientStyle}>
-            Attributes
+            {t('titleLine2')}
           </span>
         </h2>
 
         <p className="font-display mt-3 font-thin text-white/50">
-          Distribute 27 points across your abilities
+          {t('description', { total: POINT_BUY_TOTAL })}
         </p>
       </motion.div>
 
@@ -143,12 +145,12 @@ export function AttributesStep({ onNext }: AttributesStepProps): ReactElement {
       >
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-white/60">Points Remaining</p>
+            <p className="text-sm text-white/60">{t('pointsRemainingLabel')}</p>
             <p className="text-2xl font-bold text-white">{pointsRemaining}</p>
           </div>
           <div className="text-right">
-            <p className="text-sm text-white/60">Total Budget</p>
-            <p className="text-sm text-white/80">{POINT_BUY_TOTAL} points</p>
+            <p className="text-sm text-white/60">{t('totalBudgetLabel')}</p>
+            <p className="text-sm text-white/80">{t('totalBudgetValue', { total: POINT_BUY_TOTAL })}</p>
           </div>
         </div>
       </motion.div>
@@ -159,7 +161,7 @@ export function AttributesStep({ onNext }: AttributesStepProps): ReactElement {
         transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
         className="mt-6 space-y-3"
       >
-        {ATTRIBUTE_NAMES.map((attr, index) => {
+        {attributes.map((attr, index) => {
           const value = pointBuyValues[attr.key];
           const cost = calculatePointCost(value);
 
@@ -175,7 +177,9 @@ export function AttributesStep({ onNext }: AttributesStepProps): ReactElement {
                 <div className="flex-1">
                   <h3 className="font-display font-bold text-white">{attr.name}</h3>
                   <p className="font-display text-xs text-white/50">{attr.description}</p>
-                  <p className="font-display mt-1 text-xs text-white/40">Cost: {cost} points</p>
+                  <p className="font-display mt-1 text-xs text-white/40">
+                    {t('costLabel', { cost })}
+                  </p>
                 </div>
                 <div className="flex items-center gap-3">
                   <button
@@ -219,7 +223,7 @@ export function AttributesStep({ onNext }: AttributesStepProps): ReactElement {
         onClick={handleContinue}
       >
         <span className="relative z-10 flex items-center justify-center gap-2">
-          <span>Continue</span>
+          <span>{t('continue')}</span>
           <ArrowRight
             size={20}
             className="transition-transform duration-200 group-active:translate-x-1"

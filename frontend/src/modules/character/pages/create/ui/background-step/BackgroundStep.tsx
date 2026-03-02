@@ -1,8 +1,9 @@
-import classNames from 'classnames';
+﻿import classNames from 'classnames';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ArrowRightIcon } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import { BACKGROUNDS } from '~modules/character/model/mock-data';
@@ -17,6 +18,7 @@ const gradientStyle = {
 };
 
 export function BackgroundStep({ onNext }: BackgroundStepProps) {
+  const { t } = useTranslation('characterCreateBackground');
   const [selectedBackgroundIndex, setSelectedBackgroundIndex] = useState(0);
   const [emblaREF, emblaAPI] = useEmblaCarousel({ loop: false });
 
@@ -52,8 +54,8 @@ export function BackgroundStep({ onNext }: BackgroundStepProps) {
     if (selectedBackground) {
       onNext({ backgroundId: selectedBackground.id });
     } else {
-      toast.error('Selection Required', {
-        description: 'Please select a background to define your past.',
+      toast.error(t('toast.selectionTitle'), {
+        description: t('toast.selectionDescription'),
       });
     }
   }
@@ -67,15 +69,13 @@ export function BackgroundStep({ onNext }: BackgroundStepProps) {
         className="px-4"
       >
         <h2 className="font-display flex flex-col text-3xl font-bold">
-          <span>Choose Your</span>
+          <span>{t('titleLine1')}</span>
           <span className="bg-clip-text text-transparent" style={gradientStyle}>
-            Background
+            {t('titleLine2')}
           </span>
         </h2>
 
-        <p className="font-display mt-3 font-thin text-white/50">
-          Your past defines your skills and connections
-        </p>
+        <p className="font-display mt-3 font-thin text-white/50">{t('description')}</p>
       </motion.div>
 
       <motion.div
@@ -110,7 +110,7 @@ export function BackgroundStep({ onNext }: BackgroundStepProps) {
 
                   <div className="mt-4">
                     <label className="font-display text-xs font-semibold text-white/70 uppercase">
-                      Skill Proficiencies
+                      {t('labels.skillProficiencies')}
                     </label>
 
                     <ul className="mt-2 flex flex-wrap gap-2">
@@ -128,7 +128,7 @@ export function BackgroundStep({ onNext }: BackgroundStepProps) {
                   {background.toolProficiencies.length > 0 && (
                     <div className="mt-4">
                       <label className="font-display text-xs font-semibold text-white/70 uppercase">
-                        Tool Proficiencies
+                        {t('labels.toolProficiencies')}
                       </label>
 
                       <ul className="mt-2 flex flex-wrap gap-2">
@@ -147,7 +147,7 @@ export function BackgroundStep({ onNext }: BackgroundStepProps) {
                   <div className="mt-5 border-t border-white/30 pt-5">
                     <div className="font-display flex flex-col">
                       <label className="text-xs font-semibold text-white/50 uppercase">
-                        Feature
+                        {t('labels.feature')}
                       </label>
 
                       <span className="mt-1 text-sm font-medium text-white/80">
@@ -169,7 +169,7 @@ export function BackgroundStep({ onNext }: BackgroundStepProps) {
         className="mt-6 px-4 pb-6"
       >
         <UiButton className="w-full" onClick={handleContinue}>
-          Select{' '}
+          {t('selectPrefix')}{' '}
           <AnimatePresence mode="wait">
             <motion.span
               key={selectedBackground?.id}

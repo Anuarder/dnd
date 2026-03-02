@@ -1,18 +1,14 @@
-import { zodResolver } from '@hookform/resolvers/zod';
+﻿import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Check, Shield, Sword } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { EQUIPMENT_PRESETS } from '~modules/character/model/mock-data';
 import type { EquipmentPreset } from '~modules/character/model/types';
-
-const equipmentSchema = z.object({
-  equipmentPresetId: z.string().min(1, 'Please select an equipment preset'),
-});
-
-type EquipmentFormData = z.infer<typeof equipmentSchema>;
 
 interface EquipmentStepProps {
   classId: string;
@@ -23,14 +19,17 @@ const gradientStyle = {
   backgroundImage: 'linear-gradient(152deg,rgba(127, 19, 236, 1) 18%, rgba(216, 180, 254, 1) 49%)',
 };
 
-export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
+type EquipmentFormData = { equipmentPresetId: string };
 
-  const {
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { },
-  } = useForm<EquipmentFormData>({
+export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
+  const { t } = useTranslation('characterCreateEquipment');
+
+  const equipmentSchema = useMemo(
+    () => z.object({ equipmentPresetId: z.string().min(1, t('validation.required')) }),
+    [t]
+  );
+
+  const { handleSubmit, setValue, watch } = useForm<EquipmentFormData>({
     resolver: zodResolver(equipmentSchema),
     defaultValues: {
       equipmentPresetId: '',
@@ -52,15 +51,15 @@ export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
 
   function onInvalid(): void {
     toast.dismiss();
-    toast.error('Selection Required', {
-      description: 'Please select an equipment preset to continue.',
+    toast.error(t('toast.selectionTitle'), {
+      description: t('toast.selectionDescription'),
     });
   }
 
   if (presets.length === 0) {
     return (
       <div className="px-4 text-center text-white">
-        <p>No equipment presets available for this class.</p>
+        <p>{t('noPresets')}</p>
       </div>
     );
   }
@@ -73,18 +72,15 @@ export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
         transition={{ duration: 0.4, ease: 'easeOut' }}
       >
         <h2 className="font-display gap-2 text-3xl font-bold">
-          <span>Choose</span>{' '}
+          <span>{t('titleLine1')}</span>{' '}
           <span className="bg-clip-text text-transparent" style={gradientStyle}>
-            Equipment
+            {t('titleLine2')}
           </span>
         </h2>
 
-        <p className="mt-2 text-white/60">
-          Select your starting gear
-        </p>
+        <p className="mt-2 text-white/60">{t('description')}</p>
       </motion.div>
 
-      {/* Equipment Presets */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -98,10 +94,11 @@ export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1, ease: 'easeOut' }}
-            className={`w-full rounded-xl border p-5 text-left transition-all duration-200 ease-out active:scale-[0.98] ${selectedPreset?.id === preset.id
-              ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
-              : 'border-white/10 bg-white/5 backdrop-blur-sm'
-              }`}
+            className={`w-full rounded-xl border p-5 text-left transition-all duration-200 ease-out active:scale-[0.98] ${
+              selectedPreset?.id === preset.id
+                ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
+                : 'border-white/10 bg-white/5 backdrop-blur-sm'
+            }`}
             onClick={() => handlePresetSelect(preset)}
           >
             <span className="flex items-start justify-between">
@@ -117,22 +114,19 @@ export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
                   <span className="flex flex-1 flex-col">
                     <span className="flex items-center gap-2">
                       <span className="text-lg font-bold text-white">{preset.name}</span>
-                      {selectedPreset?.id === preset.id && (
-                        <Check size={20} className="text-primary" />
-                      )}
+                      {selectedPreset?.id === preset.id && <Check size={20} className="text-primary" />}
                     </span>
                     <span className="mt-1 text-sm text-white/60">{preset.description}</span>
                   </span>
                 </span>
 
                 <span className="mt-4 block">
-                  <span className="text-xs font-semibold text-white/50 uppercase">Includes</span>
+                  <span className="text-xs font-semibold text-white/50 uppercase">
+                    {t('includesLabel')}
+                  </span>
                   <span className="mt-2 flex flex-col gap-1">
                     {preset.items.map((item) => (
-                      <span
-                        key={item}
-                        className="flex items-center gap-2 text-sm text-white/80"
-                      >
+                      <span key={item} className="flex items-center gap-2 text-sm text-white/80">
                         <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                         {item}
                       </span>
@@ -145,8 +139,6 @@ export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
         ))}
       </motion.div>
 
-
-      {/* Submit Button */}
       <motion.button
         type="submit"
         initial={{ opacity: 0, y: 20 }}
@@ -155,7 +147,7 @@ export function EquipmentStep({ classId, onNext }: EquipmentStepProps) {
         className="group bg-primary shadow-primary/30 sticky bottom-6 w-full overflow-hidden rounded-full py-4 font-semibold text-white shadow-lg transition-all duration-200 ease-out active:scale-[0.98]"
       >
         <span className="relative z-10 flex items-center justify-center gap-2">
-          Continue
+          {t('continue')}
           <ArrowRight
             size={20}
             className="transition-transform duration-200 group-active:translate-x-1"

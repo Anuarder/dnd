@@ -1,39 +1,13 @@
-import { zodResolver } from '@hookform/resolvers/zod';
+﻿import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Check, Info } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { SKILLS, getClassById } from '~modules/character/model/mock-data';
-
-const ABILITY_NAMES: Record<string, string> = {
-  str: 'Strength',
-  dex: 'Dexterity',
-  con: 'Constitution',
-  int: 'Intelligence',
-  wis: 'Wisdom',
-  cha: 'Charisma',
-};
-
-function createSkillsSchema(maxSkills: number) {
-  return z.object({
-    skills: z.array(z.string()).superRefine((skills: string[], ctx) => {
-      if (skills.length !== maxSkills) {
-        const remaining = maxSkills - skills.length;
-        const message =
-          remaining > 0
-            ? `Please select ${remaining} more skill${remaining > 1 ? 's' : ''}`
-            : `Please unselect ${skills.length - maxSkills} skill${skills.length - maxSkills > 1 ? 's' : ''}`;
-
-        ctx.addIssue({
-          code: 'custom',
-          message,
-        });
-      }
-    }),
-  });
-}
 
 type SkillsFormData = { skills: string[] };
 
@@ -42,23 +16,44 @@ interface SkillsStepProps {
   onNext: (data: { selectedSkills: string[] }) => void;
 }
 
-
 const gradientStyle = {
   backgroundImage: 'linear-gradient(152deg,rgba(127, 19, 236, 1) 18%, rgba(216, 180, 254, 1) 49%)',
 };
 
-
 export function SkillsStep({ classId, onNext }: SkillsStepProps) {
+  const { t } = useTranslation('characterCreateSkills');
+  console.log(classId);
+  
   const characterClass = getClassById(classId);
   const maxSkills = characterClass?.skillCount ?? 0;
 
-  const skillsSchema = createSkillsSchema(maxSkills);
+  const abilityNames = useMemo(
+    () => t('abilities', { returnObjects: true }) as Record<string, string>,
+    [t]
+  );
 
-  const {
-    handleSubmit,
-    setValue,
-    watch,
-  } = useForm<SkillsFormData>({
+  const skillsSchema = useMemo(
+    () =>
+      z.object({
+        skills: z.array(z.string()).superRefine((skills: string[], ctx) => {
+          if (skills.length !== maxSkills) {
+            const remaining = maxSkills - skills.length;
+            const message =
+              remaining > 0
+                ? t('validation.selectMore', { count: remaining })
+                : t('validation.unselect', { count: Math.abs(remaining) });
+
+            ctx.addIssue({
+              code: 'custom',
+              message,
+            });
+          }
+        }),
+      }),
+    [maxSkills, t]
+  );
+
+  const { handleSubmit, setValue, watch } = useForm<SkillsFormData>({
     resolver: zodResolver(skillsSchema),
     defaultValues: {
       skills: [],
@@ -68,7 +63,7 @@ export function SkillsStep({ classId, onNext }: SkillsStepProps) {
   const selectedSkills = watch('skills');
 
   if (!characterClass) {
-    return <div className="px-4 text-white">Class not found</div>;
+    return <div className="px-4 text-white">{t('classNotFound')}</div>;
   }
 
   const availableSkills = SKILLS.filter((skill) => characterClass.skillOptions.includes(skill.id));
@@ -98,11 +93,11 @@ export function SkillsStep({ classId, onNext }: SkillsStepProps) {
     const remaining = maxSkills - selectedSkills.length;
     const message =
       remaining > 0
-        ? `Please select ${remaining} more skill${remaining > 1 ? 's' : ''}`
-        : `Please unselect ${selectedSkills.length - maxSkills} skill${selectedSkills.length - maxSkills > 1 ? 's' : ''}`;
+        ? t('validation.selectMore', { count: remaining })
+        : t('validation.unselect', { count: Math.abs(remaining) });
 
     toast.error(message, {
-      description: `You need exactly ${maxSkills} skills selected`,
+      description: t('toast.invalidDescription', { count: maxSkills }),
     });
   }
 
@@ -110,13 +105,16 @@ export function SkillsStep({ classId, onNext }: SkillsStepProps) {
     skill: { id: string; name: string; ability: string; description: string },
     e: React.MouseEvent
   ): void {
-    console.log('info', skill);
     e.stopPropagation();
 
-    const abilityName = ABILITY_NAMES[skill.ability] ?? skill.ability;
+    const abilityName = abilityNames[skill.ability] ?? skill.ability;
 
     toast.message(skill.name, {
-      description: `${skill.description}. This skill uses your ${abilityName} (${skill.ability.toUpperCase()}) ability score.`,
+      description: t('skillInfo', {
+        description: skill.description,
+        abilityName,
+        abilityCode: skill.ability.toUpperCase(),
+      }),
     });
   }
 
@@ -128,18 +126,15 @@ export function SkillsStep({ classId, onNext }: SkillsStepProps) {
         transition={{ duration: 0.4, ease: 'easeOut' }}
       >
         <h2 className="font-display text-3xl font-bold">
-          <span>Choose</span>{' '}
+          <span>{t('titleLine1')}</span>{' '}
           <span className="bg-clip-text text-transparent" style={gradientStyle}>
-            Skills
+            {t('titleLine2')}
           </span>
         </h2>
 
-        <p className="mt-2 text-white/60">
-          Select {maxSkills} skill{maxSkills > 1 ? 's' : ''} from your class options
-        </p>
+        <p className="mt-2 text-white/60">{t('description', { count: maxSkills })}</p>
       </motion.div>
 
-      {/* Progress Indicator */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -148,7 +143,7 @@ export function SkillsStep({ classId, onNext }: SkillsStepProps) {
       >
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-white/60">Skills Selected</p>
+            <p className="text-sm text-white/60">{t('progressLabel')}</p>
             <p className="text-2xl font-bold text-white">
               {selectedSkills.length} / {maxSkills}
             </p>
@@ -157,15 +152,15 @@ export function SkillsStep({ classId, onNext }: SkillsStepProps) {
             {Array.from({ length: maxSkills }).map((_, index) => (
               <div
                 key={index}
-                className={`h-3 w-3 rounded-full transition-all duration-200 ${index < selectedSkills.length ? 'bg-primary' : 'bg-white/20'
-                  }`}
+                className={`h-3 w-3 rounded-full transition-all duration-200 ${
+                  index < selectedSkills.length ? 'bg-primary' : 'bg-white/20'
+                }`}
               />
             ))}
           </div>
         </div>
       </motion.div>
 
-      {/* Skills List */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -184,10 +179,11 @@ export function SkillsStep({ classId, onNext }: SkillsStepProps) {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3, delay: index * 0.03, ease: 'easeOut' }}
-              className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 ${isSelected
-                ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
-                : 'border-white/10 bg-white/5 backdrop-blur-sm'
-                } ${isDisabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+              className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 ${
+                isSelected
+                  ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
+                  : 'border-white/10 bg-white/5 backdrop-blur-sm'
+              } ${isDisabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
               onClick={() => !isDisabled && toggleSkill(skill.id)}
             >
               <span className="flex items-start justify-between">
@@ -197,7 +193,7 @@ export function SkillsStep({ classId, onNext }: SkillsStepProps) {
                     <button
                       type="button"
                       className="active:text-primary text-white/40 transition-colors hover:text-white"
-                      aria-label={`Learn more about ${skill.name}`}
+                      aria-label={t('aria.learnMore', { skill: skill.name })}
                       onClick={(e) => showSkillInfo(skill, e)}
                     >
                       <Info size={16} />
@@ -217,7 +213,6 @@ export function SkillsStep({ classId, onNext }: SkillsStepProps) {
         })}
       </motion.div>
 
-      {/* Submit Button */}
       <motion.button
         type="submit"
         initial={{ opacity: 0, y: 20 }}
@@ -226,7 +221,7 @@ export function SkillsStep({ classId, onNext }: SkillsStepProps) {
         className="group bg-primary shadow-primary/30 sticky bottom-6 w-full overflow-hidden rounded-full py-4 font-semibold text-white shadow-lg transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
       >
         <span className="relative z-10 flex items-center justify-center gap-2">
-          Continue
+          {t('continue')}
           <ArrowRight
             size={20}
             className="transition-transform duration-200 group-active:translate-x-1"

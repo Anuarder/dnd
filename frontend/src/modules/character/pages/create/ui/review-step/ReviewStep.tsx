@@ -1,6 +1,7 @@
-import { type ReactElement, useState } from 'react';
-import { Check, Loader2, User, Wand2 } from 'lucide-react';
+﻿import { Check, Loader2, User, Wand2 } from 'lucide-react';
 import { motion } from 'motion/react';
+import { type ReactElement, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
   getBackgroundById,
@@ -20,7 +21,6 @@ function calculateModifier(value: number): string {
   return mod >= 0 ? `+${mod}` : `${mod}`;
 }
 
-/** Build create payload without avatar (avatar comes from API when fetching) */
 function buildCreatePayload(data: CharacterCreationData): {
   name: string;
   level: number;
@@ -38,7 +38,6 @@ function buildCreatePayload(data: CharacterCreationData): {
     level: 1,
     class: characterClass?.name ?? classId,
     race: race?.name ?? raceId,
-    // avatar not sent on create
   };
 }
 
@@ -47,6 +46,7 @@ const gradientStyle = {
 };
 
 export function ReviewStep({ characterData, onComplete }: ReviewStepProps): ReactElement {
+  const { t } = useTranslation('characterCreateReview');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -63,7 +63,6 @@ export function ReviewStep({ characterData, onComplete }: ReviewStepProps): Reac
   async function handleSubmit(): Promise<void> {
     setIsSubmitting(true);
 
-    // Validate all required fields
     if (
       !characterData.basicInfo ||
       !characterData.classId ||
@@ -73,12 +72,11 @@ export function ReviewStep({ characterData, onComplete }: ReviewStepProps): Reac
       characterData.selectedSkills.length === 0 ||
       !characterData.equipmentPresetId
     ) {
-      alert('Please complete all required steps');
+      alert(t('alerts.incomplete'));
       setIsSubmitting(false);
       return;
     }
 
-    // Mock API call
     try {
       const payload = buildCreatePayload(characterData);
       await new Promise((resolve) => {
@@ -89,13 +87,12 @@ export function ReviewStep({ characterData, onComplete }: ReviewStepProps): Reac
 
       setIsSuccess(true);
 
-      // Signal success to parent
       setTimeout(() => {
         onComplete();
       }, 2000);
     } catch (error) {
       console.error('Failed to create character:', error);
-      alert('Failed to create character. Please try again.');
+      alert(t('alerts.failed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -112,8 +109,8 @@ export function ReviewStep({ characterData, onComplete }: ReviewStepProps): Reac
         <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-green-500/20">
           <Check size={48} className="text-green-500" />
         </div>
-        <h2 className="text-3xl font-bold text-white">Character Created!</h2>
-        <p className="mt-2 text-white/60">Redirecting to your characters...</p>
+        <h2 className="text-3xl font-bold text-white">{t('successTitle')}</h2>
+        <p className="mt-2 text-white/60">{t('successDescription')}</p>
       </motion.div>
     );
   }
@@ -127,15 +124,14 @@ export function ReviewStep({ characterData, onComplete }: ReviewStepProps): Reac
         className="font-display text-center"
       >
         <h2 className="text-3xl font-bold text-white">
-          Review {' '}
+          {t('titleLine1')}{' '}
           <span className="bg-clip-text text-transparent" style={gradientStyle}>
-            Character
+            {t('titleLine2')}
           </span>
         </h2>
-        <p className="mt-2 text-white/60 text-pretty">Check everything before creating your character</p>
+        <p className="mt-2 text-white/60 text-pretty">{t('description')}</p>
       </motion.div>
 
-      {/* Basic Info */}
       {characterData.basicInfo ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -147,48 +143,46 @@ export function ReviewStep({ characterData, onComplete }: ReviewStepProps): Reac
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20">
               <User size={20} className="text-primary" />
             </div>
-            <h3 className="text-lg font-bold text-white">Basic Information</h3>
+            <h3 className="text-lg font-bold text-white">{t('sections.basicInfo')}</h3>
           </div>
           <div className="mt-4 space-y-2">
             <div className="flex justify-between">
-              <span className="text-white/60">Name:</span>
+              <span className="text-white/60">{t('labels.name')}:</span>
               <span className="font-semibold text-white">{characterData.basicInfo.name}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-white/60">Gender:</span>
+              <span className="text-white/60">{t('labels.gender')}:</span>
               <span className="font-semibold capitalize text-white">
-                {characterData.basicInfo.gender}
+                {t(`gender.${characterData.basicInfo.gender}`)}
               </span>
             </div>
           </div>
         </motion.div>
       ) : null}
 
-      {/* Class & Race */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.15, ease: 'easeOut' }}
         className="rounded-xl border border-white/10 bg-white/5 p-5"
       >
-        <h3 className="text-lg font-bold text-white">Class & Race</h3>
+        <h3 className="text-lg font-bold text-white">{t('sections.classRace')}</h3>
         <div className="mt-4 space-y-2">
           <div className="flex justify-between">
-            <span className="text-white/60">Class:</span>
+            <span className="text-white/60">{t('labels.class')}:</span>
             <span className="font-semibold text-white">{characterClass?.name}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-white/60">Race:</span>
+            <span className="text-white/60">{t('labels.race')}:</span>
             <span className="font-semibold text-white">{race?.name}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-white/60">Background:</span>
+            <span className="text-white/60">{t('labels.background')}:</span>
             <span className="font-semibold text-white">{background?.name}</span>
           </div>
         </div>
       </motion.div>
 
-      {/* Attributes */}
       {characterData.attributes ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -196,7 +190,7 @@ export function ReviewStep({ characterData, onComplete }: ReviewStepProps): Reac
           transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
           className="rounded-xl border border-white/10 bg-white/5 p-5"
         >
-          <h3 className="text-lg font-bold text-white">Attributes</h3>
+          <h3 className="text-lg font-bold text-white">{t('sections.attributes')}</h3>
           <div className="mt-4 grid grid-cols-3 gap-3">
             {Object.entries(characterData.attributes).map(([key, value]) => (
               <div key={key} className="rounded-lg bg-white/5 p-3 text-center">
@@ -209,7 +203,6 @@ export function ReviewStep({ characterData, onComplete }: ReviewStepProps): Reac
         </motion.div>
       ) : null}
 
-      {/* Skills */}
       {characterData.selectedSkills.length > 0 ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -217,7 +210,7 @@ export function ReviewStep({ characterData, onComplete }: ReviewStepProps): Reac
           transition={{ duration: 0.4, delay: 0.25, ease: 'easeOut' }}
           className="rounded-xl border border-white/10 bg-white/5 p-5"
         >
-          <h3 className="text-lg font-bold text-white">Skills</h3>
+          <h3 className="text-lg font-bold text-white">{t('sections.skills')}</h3>
           <div className="mt-3 flex flex-wrap gap-2">
             {selectedSkillNames.map((skill) => (
               <span
@@ -231,10 +224,9 @@ export function ReviewStep({ characterData, onComplete }: ReviewStepProps): Reac
         </motion.div>
       ) : null}
 
-      {/* Spells (if caster) */}
       {characterClass?.isCaster &&
-        (characterData.selectedCantrips.length > 0 ||
-          characterData.selectedLevel1Spells.length > 0) ? (
+      (characterData.selectedCantrips.length > 0 ||
+        characterData.selectedLevel1Spells.length > 0) ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -245,20 +237,22 @@ export function ReviewStep({ characterData, onComplete }: ReviewStepProps): Reac
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20">
               <Wand2 size={20} className="text-primary" />
             </div>
-            <h3 className="text-lg font-bold text-white">Spells</h3>
+            <h3 className="text-lg font-bold text-white">{t('sections.spells')}</h3>
           </div>
           <div className="mt-4 space-y-3">
             {characterData.selectedCantrips.length > 0 ? (
               <div>
-                <p className="text-sm font-semibold text-white/60">Cantrips</p>
-                <p className="mt-1 text-white">{characterData.selectedCantrips.length} selected</p>
+                <p className="text-sm font-semibold text-white/60">{t('spells.cantrips')}</p>
+                <p className="mt-1 text-white">
+                  {t('spells.selected', { count: characterData.selectedCantrips.length })}
+                </p>
               </div>
             ) : null}
             {characterData.selectedLevel1Spells.length > 0 ? (
               <div>
-                <p className="text-sm font-semibold text-white/60">Level 1 Spells</p>
+                <p className="text-sm font-semibold text-white/60">{t('spells.level1')}</p>
                 <p className="mt-1 text-white">
-                  {characterData.selectedLevel1Spells.length} selected
+                  {t('spells.selected', { count: characterData.selectedLevel1Spells.length })}
                 </p>
               </div>
             ) : null}
@@ -266,7 +260,6 @@ export function ReviewStep({ characterData, onComplete }: ReviewStepProps): Reac
         </motion.div>
       ) : null}
 
-      {/* Submit Button */}
       <div className="sticky bottom-6 mt-auto pt-4">
         <motion.button
           type="button"
@@ -281,11 +274,11 @@ export function ReviewStep({ characterData, onComplete }: ReviewStepProps): Reac
             {isSubmitting ? (
               <>
                 <Loader2 size={20} className="animate-spin" />
-                <span>Creating Character...</span>
+                <span>{t('submit.creating')}</span>
               </>
             ) : (
               <>
-                <span>Create Character</span>
+                <span>{t('submit.create')}</span>
                 <Check size={20} />
               </>
             )}

@@ -1,20 +1,14 @@
-import { zodResolver } from '@hookform/resolvers/zod';
+﻿import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Check, Sparkles, Wand2 } from 'lucide-react';
 import { motion } from 'motion/react';
-import { type ReactElement } from 'react';
+import { type ReactElement, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { SPELLS } from '~modules/character/model/mock-data';
 import type { Spell } from '~modules/character/model/types';
-
-const spellsSchema = z.object({
-  cantrips: z.array(z.string()).min(1, 'Please select at least one cantrip'),
-  level1Spells: z.array(z.string()).min(1, 'Please select at least one level 1 spell'),
-});
-
-type SpellsFormData = z.infer<typeof spellsSchema>;
 
 interface SpellsStepProps {
   classId: string;
@@ -24,7 +18,22 @@ interface SpellsStepProps {
 const CANTRIP_COUNT = 2;
 const LEVEL1_SPELL_COUNT = 2;
 
+type SpellsFormData = {
+  cantrips: string[];
+  level1Spells: string[];
+};
+
 export function SpellsStep({ classId, onNext }: SpellsStepProps) {
+  const { t } = useTranslation('characterCreateSpells');
+
+  const spellsSchema = useMemo(
+    () =>
+      z.object({
+        cantrips: z.array(z.string()).min(1, t('validation.cantripMin')),
+        level1Spells: z.array(z.string()).min(1, t('validation.level1Min')),
+      }),
+    [t]
+  );
 
   const {
     handleSubmit,
@@ -47,7 +56,7 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
   if (!classSpells) {
     return (
       <div className="px-4 text-center text-white">
-        <p>No spells available for this class.</p>
+        <p>{t('errors.noSpells')}</p>
       </div>
     );
   }
@@ -85,14 +94,14 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
   function onSubmit(data: SpellsFormData): void {
     toast.dismiss();
     if (data.cantrips.length !== CANTRIP_COUNT) {
-      toast.error('Cantrips Required', {
-        description: `Please select exactly ${CANTRIP_COUNT} cantrips to proceed.`,
+      toast.error(t('toast.cantripsRequiredTitle'), {
+        description: t('toast.cantripsRequiredDescription', { count: CANTRIP_COUNT }),
       });
       return;
     }
     if (data.level1Spells.length !== LEVEL1_SPELL_COUNT) {
-      toast.error('Spells Required', {
-        description: `Please select exactly ${LEVEL1_SPELL_COUNT} level 1 spells to proceed.`,
+      toast.error(t('toast.spellsRequiredTitle'), {
+        description: t('toast.spellsRequiredDescription', { count: LEVEL1_SPELL_COUNT }),
       });
       return;
     }
@@ -104,8 +113,8 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
 
   function onInvalid(): void {
     toast.dismiss();
-    toast.error('Selection Incomplete', {
-      description: 'Please select both your cantrips and level 1 spells.',
+    toast.error(t('toast.selectionIncompleteTitle'), {
+      description: t('toast.selectionIncompleteDescription'),
     });
   }
 
@@ -124,10 +133,9 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3, delay: index * 0.03, ease: 'easeOut' }}
         disabled={isDisabled}
-        className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 ${isSelected
-          ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg'
-          : 'border-white/10 bg-white/5 backdrop-blur-sm'
-          }`}
+        className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 ${
+          isSelected ? 'border-primary/50 bg-primary/20 shadow-primary/20 shadow-lg' : 'border-white/10 bg-white/5 backdrop-blur-sm'
+        }`}
         onClick={onToggle}
       >
         <span className="flex items-start justify-between">
@@ -162,11 +170,10 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
         transition={{ duration: 0.4, ease: 'easeOut' }}
         className="text-center"
       >
-        <h2 className="text-3xl font-bold text-white">Choose Spells</h2>
-        <p className="mt-2 text-white/60">Select your starting magical abilities</p>
+        <h2 className="text-3xl font-bold text-white">{t('title')}</h2>
+        <p className="mt-2 text-white/60">{t('description')}</p>
       </motion.div>
 
-      {/* Cantrips Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -179,9 +186,9 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
               <Sparkles size={20} className="text-primary" />
             </div>
             <div>
-              <h3 className="font-bold text-white">Cantrips</h3>
+              <h3 className="font-bold text-white">{t('cantripsTitle')}</h3>
               <p className="text-xs text-white/60">
-                Select {CANTRIP_COUNT} ({selectedCantrips.length}/{CANTRIP_COUNT})
+                {t('selectCount', { count: CANTRIP_COUNT, selected: selectedCantrips.length })}
               </p>
             </div>
           </div>
@@ -189,8 +196,9 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
             {Array.from({ length: CANTRIP_COUNT }).map((_, index) => (
               <div
                 key={index}
-                className={`h-3 w-3 rounded-full transition-all duration-200 ${index < selectedCantrips.length ? 'bg-primary' : 'bg-white/20'
-                  }`}
+                className={`h-3 w-3 rounded-full transition-all duration-200 ${
+                  index < selectedCantrips.length ? 'bg-primary' : 'bg-white/20'
+                }`}
               />
             ))}
           </div>
@@ -209,7 +217,6 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
         <span className="block text-sm text-red-400">{errors.cantrips.message}</span>
       )}
 
-      {/* Level 1 Spells Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -222,9 +229,9 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
               <Wand2 size={20} className="text-primary" />
             </div>
             <div>
-              <h3 className="font-bold text-white">Level 1 Spells</h3>
+              <h3 className="font-bold text-white">{t('level1Title')}</h3>
               <p className="text-xs text-white/60">
-                Select {LEVEL1_SPELL_COUNT} ({selectedLevel1Spells.length}/{LEVEL1_SPELL_COUNT})
+                {t('selectCount', { count: LEVEL1_SPELL_COUNT, selected: selectedLevel1Spells.length })}
               </p>
             </div>
           </div>
@@ -232,8 +239,9 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
             {Array.from({ length: LEVEL1_SPELL_COUNT }).map((_, index) => (
               <div
                 key={index}
-                className={`h-3 w-3 rounded-full transition-all duration-200 ${index < selectedLevel1Spells.length ? 'bg-primary' : 'bg-white/20'
-                  }`}
+                className={`h-3 w-3 rounded-full transition-all duration-200 ${
+                  index < selectedLevel1Spells.length ? 'bg-primary' : 'bg-white/20'
+                }`}
               />
             ))}
           </div>
@@ -258,7 +266,6 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
         <span className="block text-sm text-red-400">{errors.level1Spells.message}</span>
       )}
 
-      {/* Submit Button */}
       <motion.button
         type="submit"
         initial={{ opacity: 0, y: 20 }}
@@ -267,7 +274,7 @@ export function SpellsStep({ classId, onNext }: SpellsStepProps) {
         className="group bg-primary shadow-primary/30 sticky bottom-6 w-full overflow-hidden rounded-full py-4 font-semibold text-white shadow-lg transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
       >
         <span className="relative z-10 flex items-center justify-center gap-2">
-          Continue
+          {t('continue')}
           <ArrowRight
             size={20}
             className="transition-transform duration-200 group-active:translate-x-1"

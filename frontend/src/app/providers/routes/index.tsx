@@ -54,10 +54,34 @@ const router = createBrowserRouter([
             ...MasterRoutes.MainPage,
           },
           {
+            ...MasterRoutes.CampaignCreatePage,
+          },
+          {
+            ...MasterRoutes.CampaignDetailPage,
+          },
+          {
+            ...MasterRoutes.SessionLobbyPage,
+          },
+          {
+            ...MasterRoutes.SessionActivePage,
+          },
+          {
             ...PlayerRoutes.MainPage,
           },
           {
             ...PlayerRoutes.ArchivePage,
+          },
+          {
+            ...PlayerRoutes.JoinCampaignPage,
+          },
+          {
+            ...PlayerRoutes.CampaignDetailPage,
+          },
+          {
+            ...PlayerRoutes.SessionLobbyPage,
+          },
+          {
+            ...PlayerRoutes.SessionActivePage,
           },
           {
             ...CharacterRoutes.CharacterCreatePage,

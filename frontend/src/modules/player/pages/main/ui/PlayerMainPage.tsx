@@ -166,11 +166,13 @@ export function PlayerMainPage() {
   }
 
   function onJoinCampaign() {
-    console.log('Join campaign');
+    if (lastActiveCampaign) {
+      navigate(`/player/campaign/${lastActiveCampaign.id}`);
+    }
   }
 
   function onConnectToCampaign() {
-    console.log('Connect to campaign');
+    navigate('/player/join');
   }
 
   function onViewArchive() {

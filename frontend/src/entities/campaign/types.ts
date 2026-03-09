@@ -28,3 +28,21 @@ export interface UpdateCampaignInput {
   image_url?: string;
   status?: CampaignStatus;
 }
+
+export interface CampaignPlayer {
+  id: string;
+  user_id: string;
+  player_name: string;
+  character_id: string;
+  character_name: string;
+  character_class: string;
+  character_level: number;
+  is_ready: boolean;
+}
+
+export interface CampaignDetail extends Campaign {
+  invite_code: string;
+  invite_password: string;
+  max_players: number;
+  players: CampaignPlayer[];
+}

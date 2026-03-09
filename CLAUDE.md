@@ -1,6 +1,6 @@
-# Drinkie Project - Claude AI Coding Rules
+# DND Project - Claude AI Coding Rules
 
-> This document contains comprehensive coding standards and conventions for the Drinkie project.
+> This document contains comprehensive coding standards and conventions for the D&D project.
 > When working on this project, always follow these rules to maintain consistency.
 
 ---

@@ -102,11 +102,11 @@ export function MasterMainPage() {
   const hasCampaigns = campaigns.length > 0;
 
   function onCreateCampaign() {
-    console.log('Create new campaign');
+    navigate('/master/campaign/create');
   }
 
   function onCampaignClick(campaignId: Campaign['id']) {
-    console.log('Open campaign:', campaignId);
+    navigate(`/master/campaign/${campaignId}`);
   }
 
   function onBackClick() {
